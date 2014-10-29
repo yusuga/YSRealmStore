@@ -1,0 +1,20 @@
+//
+//  PrefixHeader.pch
+//  YSRealmExample
+//
+//  Created by Yu Sugawara on 2014/10/29.
+//  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
+//
+
+#ifndef YSRealmExample_PrefixHeader_pch
+#define YSRealmExample_PrefixHeader_pch
+
+#import <YSCocoaLumberjackHelper/YSCocoaLumberjackHelper.h>
+
+#ifdef DEBUG
+    static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+    static const int ddLogLevel = LOG_LEVEL_ERROR;
+#endif
+
+#endif

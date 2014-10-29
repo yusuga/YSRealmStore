@@ -21,6 +21,7 @@
 - (void)setUp
 {
     [super setUp];
+    
     [TwitterRealm deleteAllObjects];
 }
 
@@ -331,6 +332,7 @@
 }
 
 #pragma mark - Cancel
+#pragma mark Add
 
 - (void)testCancelAdd
 {
@@ -360,6 +362,86 @@
         XCTAssertNil(error, @"error: %@", error);
     }];
 }
+
+- (void)testCancelAdd1000Tweets
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    __weak typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+            XCTAssertFalse(operation.isCancelled);
+            XCTAssertTrue(operation.isExecuting);
+            XCTAssertFalse(operation.isFinished);
+            
+            DDLogWarn(@"will create tweets");
+            NSUInteger count = 1000;
+            NSMutableArray *tweets = [NSMutableArray arrayWithCapacity:count];
+            for (NSUInteger i = 0; i < count; i++) {
+                [tweets addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:i]]];
+            }
+            DDLogWarn(@"did create tweets");
+            
+            [wself cancelOperation:operation afterDelay:0.01];
+            
+            return tweets;
+        } completion:^(YSRealmOperation *operation) {
+            XCTAssertTrue(operation.isCancelled);
+            XCTAssertFalse(operation.isExecuting);
+            XCTAssertTrue(operation.isFinished);
+            
+            XCTAssertEqual([[Tweet allObjects] count], 0);
+            
+            [expectation fulfill];
+        }];
+    });
+    
+    [self waitForExpectationsWithTimeout:100. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+}
+
+- (void)testCancelAdd10000Tweets
+{
+#if TARGET_IPHONE_SIMULATOR
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    __weak typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+            XCTAssertFalse(operation.isCancelled);
+            XCTAssertTrue(operation.isExecuting);
+            XCTAssertFalse(operation.isFinished);
+            
+            DDLogWarn(@"will create tweets");
+            NSUInteger count = 10000;
+            NSMutableArray *tweets = [NSMutableArray arrayWithCapacity:count];
+            for (NSUInteger i = 0; i < count; i++) {
+                [tweets addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:i]]];
+            }
+            DDLogWarn(@"did create tweets");
+            
+            [wself cancelOperation:operation afterDelay:0.01];
+            
+            return tweets;
+        } completion:^(YSRealmOperation *operation) {
+            XCTAssertTrue(operation.isCancelled);
+            XCTAssertFalse(operation.isExecuting);
+            XCTAssertTrue(operation.isFinished);
+            
+            XCTAssertEqual([[Tweet allObjects] count], 0);
+            
+            [expectation fulfill];
+        }];
+    });
+    
+    [self waitForExpectationsWithTimeout:30. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+#endif
+}
+
+#pragma mark Update
 
 - (void)testCancelUpdate
 {
@@ -408,6 +490,52 @@
     }];
 }
 
+- (void)testCancelUpdate1000Tweets
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    __weak typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [wself addTweetsWithCount:1000 completion:^{
+            [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
+                XCTAssertFalse(operation.isCancelled);
+                XCTAssertTrue(operation.isExecuting);
+                XCTAssertFalse(operation.isFinished);
+                
+                DDLogWarn(@"will forin all tweets");
+                for (Tweet *tweet in [Tweet allObjects]) {
+                    tweet.text = @"";
+                    tweet.user = nil;
+                    tweet.entities = nil;
+                }
+                DDLogWarn(@"did forin all tweets");
+                
+                [operation cancel];
+                
+                return YES;
+            } completion:^(YSRealmOperation *operation) {
+                XCTAssertTrue(operation.isCancelled);
+                XCTAssertFalse(operation.isExecuting);
+                XCTAssertTrue(operation.isFinished);
+                
+                for (Tweet *tweet in [Tweet allObjects]) {
+                    XCTAssertGreaterThan(tweet.text.length, 0);
+                    XCTAssertNotNil(tweet.user);
+                    XCTAssertNotNil(tweet.entities);
+                }
+                
+                [expectation fulfill];
+            }];
+        }];
+    });
+    
+    [self waitForExpectationsWithTimeout:30. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+}
+
+#pragma mark Delete
+
 - (void)testCancelDelete
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
@@ -442,6 +570,43 @@
     }];
 }
 
+- (void)testCancelDelete10000Tweets
+{
+#if TARGET_IPHONE_SIMULATOR
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    __weak typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSUInteger count = 100000;
+        
+        [wself addTweetsWithCount:count completion:^{
+            [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+                XCTAssertFalse(operation.isCancelled);
+                XCTAssertTrue(operation.isExecuting);
+                XCTAssertFalse(operation.isFinished);
+                
+                RLMResults *tweets = [Tweet allObjects];
+                [wself cancelOperation:operation afterDelay:0.001];
+                
+                return tweets;
+            } completion:^(YSRealmOperation *operation) {
+                XCTAssertTrue(operation.isCancelled);
+                XCTAssertFalse(operation.isExecuting);
+                XCTAssertTrue(operation.isFinished);
+                
+                XCTAssertEqual([[Tweet allObjects] count], count);
+                
+                [expectation fulfill];
+            }];
+        }];
+    });
+    
+    [self waitForExpectationsWithTimeout:30. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+#endif
+}
+
 #pragma mark - Utility
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject completion:(void(^)(void))completion
@@ -466,6 +631,17 @@
         XCTAssertEqual([[Tweet allObjects] count], count);
         completion();
     }];
+}
+
+- (void)cancelOperation:(YSRealmOperation*)operation afterDelay:(NSTimeInterval)delay
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [NSThread sleepForTimeInterval:delay];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [operation cancel];
+            DDLogWarn(@"Cancel operation: %@", operation);
+        });
+    });
 }
 
 @end

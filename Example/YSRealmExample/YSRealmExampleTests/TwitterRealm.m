@@ -11,6 +11,16 @@
 
 @implementation TwitterRealm
 
++ (void)initialize
+{
+    if (self == [TwitterRealm class]) {
+        [RLMRealm setSchemaVersion:1 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+            DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
+        }];
+        DDLogDebug(@"path: %@", [RLMRealm defaultRealmPath]);
+    }
+}
+
 + (void)addOrUpdateTweet:(Tweet *)tweet
 {
     RLMRealm *realm = [RLMRealm defaultRealm];

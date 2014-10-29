@@ -20,6 +20,7 @@
 - (void)setUp
 {
     [super setUp];
+    
     [TwitterRealm deleteAllObjects];
 }
 
