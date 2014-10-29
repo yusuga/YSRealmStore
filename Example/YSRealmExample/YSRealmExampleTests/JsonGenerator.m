@@ -17,29 +17,61 @@
 
 + (NSDictionary*)tweetWithID:(int64_t)id
 {
-    return @{@"id" : @(id),
+    return [self tweetWithTweetID:id userID:id];
+}
+
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID userID:(int64_t)userID
+{
+    return @{@"id" : @(tweetID),
              @"text" : @"sample text. サンプルテキストです。",
-             @"user" : [self user],
+             @"user" : [self userWithID:userID],
              @"entities" : [self entities],
+             @"source" : @"via Twitter"};
+}
+
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID userID:(int64_t)userID urlCount:(NSUInteger)urlCount
+{
+    return @{@"id" : @(tweetID),
+             @"text" : @"sample text. サンプルテキストです。",
+             @"user" : [self userWithID:userID],
+             @"entities" : [self entitiesWithURLCount:urlCount],
              @"source" : @"via Twitter"};
 }
 
 + (NSDictionary*)user
 {
-    return @{@"id" : @(INT64_MAX),
-             @"name" : @"Yu Sugawara"};
+    return [self userWithID:INT64_MAX];
+}
+
++ (NSDictionary*)userWithID:(int64_t)id
+{
+    return @{@"id" : @(id),
+             @"name" : [NSString stringWithFormat:@"name%zd", id]};
 }
 
 + (NSDictionary*)entities
 {
-    return @{@"urls" : @[[self url],
-                         [self url],
-                         [self url]]};
+    return [self entitiesWithURLCount:1];
 }
 
-+ (NSDictionary*)url
++ (NSDictionary*)entitiesWithURLCount:(NSUInteger)urlCount
 {
-    return @{@"url" : @"http://google.com"};
+    NSMutableArray *urls = @[].mutableCopy;
+    for (NSUInteger i = 0; i < urlCount; i++) {
+        switch (i) {
+            case 0:
+                [urls addObject:@{@"url" : @"http://google.com"}];
+                break;
+            case 1:
+                [urls addObject:@{@"url" : @"http://apple.com"}];
+                break;
+            default:
+                [urls addObject:@{@"url" : @"http://picospec.co.jp"}];
+                break;
+        }
+    }
+    
+    return @{@"urls" : urls};
 }
 
 #pragma mark -

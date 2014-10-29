@@ -12,6 +12,8 @@
 
 + (NSDictionary*)tweet;
 + (NSDictionary*)tweetWithID:(int64_t)id;
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID userID:(int64_t)userID;
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID userID:(int64_t)userID urlCount:(NSUInteger)urlCount;
 + (NSDictionary*)tweetOfContainNSNull;
 + (NSDictionary*)tweetOfContainEmptyArray;
 + (NSDictionary*)tweetOfKeyIsNotEnough;

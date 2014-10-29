@@ -30,8 +30,22 @@
 }
 
 #pragma mark - Thread
+#pragma mark Add
 
-- (void)testStateInAdd
+- (void)testStateInSyncAdd
+{
+    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(operation);
+        XCTAssertFalse(operation.isCancelled);
+        XCTAssertTrue(operation.isExecuting);
+        XCTAssertFalse(operation.isFinished);
+        
+        return nil;
+    }];
+}
+
+- (void)testStateInAsyncAdd
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -60,7 +74,22 @@
     }];
 }
 
-- (void)testStateInUpdate
+#pragma mark Update
+
+- (void)testStateInSycnUpdate
+{
+    [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(operation);
+        XCTAssertFalse(operation.isCancelled);
+        XCTAssertTrue(operation.isExecuting);
+        XCTAssertFalse(operation.isFinished);
+        
+        return NO;
+    }];
+}
+
+- (void)testStateInAsyncUpdate
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -89,7 +118,22 @@
     }];
 }
 
-- (void)testStateInDelete
+#pragma mark Delete
+
+- (void)testStateInSyncDelete
+{
+    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(operation);
+        XCTAssertFalse(operation.isCancelled);
+        XCTAssertTrue(operation.isExecuting);
+        XCTAssertFalse(operation.isFinished);
+        
+        return nil;
+    }];
+}
+
+- (void)testStateInAsyncDelete
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -119,8 +163,18 @@
 }
 
 #pragma mark - Operation
+#pragma mark Add
 
-- (void)testAdd
+- (void)testSyncAdd
+{
+    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        return [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 1);
+}
+
+- (void)testAsyncAdd
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -136,7 +190,7 @@
     }];
 }
 
-- (void)testAddObjects
+- (void)testAsyncAddObjects
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -152,7 +206,34 @@
     }];
 }
 
-- (void)testUpdate
+#pragma mark Update
+
+- (void)testSyncUpdate
+{
+    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
+    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        return [[Tweet alloc] initWithObject:tweetJsonObj];
+    }];
+    
+    [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
+        Tweet *tweet = [[Tweet allObjects] firstObject];
+        tweet.text = @"";
+        tweet.user = nil;
+        tweet.entities = nil;
+        
+        return YES;
+    }];
+    
+    Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
+    Tweet *addedTweet = [[Tweet allObjects] firstObject];
+    
+    XCTAssertEqual(addedTweet.id, tweet.id);
+    XCTAssertEqualObjects(addedTweet.text, @"");
+    XCTAssertNil(addedTweet.user);
+    XCTAssertNil(addedTweet.entities);
+}
+
+- (void)testAsyncUpdate
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -188,7 +269,22 @@
     }];
 }
 
-- (void)testDelete
+#pragma mark Delete
+
+- (void)testSyncDelete
+{
+    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        return [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    }];
+    
+    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        return [[Tweet allObjects] firstObject];
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+}
+
+- (void)testAsyncDelete
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     

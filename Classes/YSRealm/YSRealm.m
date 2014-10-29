@@ -42,6 +42,14 @@
 }
 
 #pragma mark - Operation
+#pragma mark Add
+
+- (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+{
+    NSParameterAssert(objectsBlock != NULL);
+    
+    [YSRealmOperation addOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
+}
 
 - (YSRealmOperation*)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                      completion:(YSRealmCompletion)completion
@@ -58,6 +66,15 @@
     return ope;
 }
 
+#pragma mark Update
+
+- (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
+{
+    NSParameterAssert(updateBlock != NULL);
+    
+    [YSRealmOperation updateOperationWithRealmPath:[[self realm] path] updateBlock:updateBlock];
+}
+
 - (YSRealmOperation*)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
                                        completion:(YSRealmCompletion)completion
 {
@@ -71,6 +88,15 @@
     }];
     [self.operations addObject:ope];
     return ope;
+}
+
+#pragma mark Delete
+
+- (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+{
+    NSParameterAssert(objectsBlock != NULL);
+    
+    [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock

@@ -14,11 +14,23 @@
 + (instancetype)sharedInstance;
 - (RLMRealm*)realm;
 
+/* Add */
+
+- (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
+
 - (YSRealmOperation*)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                      completion:(YSRealmCompletion)completion;
 
+/* Update */
+
+- (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock;
+
 - (YSRealmOperation*)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
                                        completion:(YSRealmCompletion)completion;
+
+/* Delete */
+
+- (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmCompletion)completion;

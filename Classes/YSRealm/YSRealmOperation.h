@@ -16,21 +16,42 @@ typedef void(^YSRealmCompletion)(YSRealmOperation *operation);
 
 @interface YSRealmOperation : NSObject
 
+/* Add */
+
++ (void)addOperationWithRealmPath:(NSString*)realmPath
+                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
+
 + (instancetype)addOperationWithRealmPath:(NSString*)realmPath
                                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                       completion:(YSRealmCompletion)completion;
+
+/* Update */
+
++ (void)updateOperationWithRealmPath:(NSString*)realmPath
+                         updateBlock:(YSRealmOperationUpdateBlock)updateBlock;
 
 + (instancetype)updateOperationWithRealmPath:(NSString*)realmPath
                                  updateBlock:(YSRealmOperationUpdateBlock)updateBlock
                                   completion:(YSRealmCompletion)completion;
 
+/* Delete */
+
++ (void)deleteOperationWithRealmPath:(NSString*)realmPath
+                        objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
+
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmCompletion)completion;
+
+/* State */
 
 - (void)cancel;
 @property (readonly, getter=isCancelled) BOOL cancelled;
 @property (readonly, getter=isExecuting) BOOL executing;
 @property (readonly, getter=isFinished) BOOL finished;
+
+/* Queue */
+
++ (dispatch_queue_t)operationDispatchQueue;
 
 @end
