@@ -92,6 +92,8 @@
 
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
+    DDLogVerbose(@"will addObjects");
+    
     [self setExecuting:YES];
     
     RLMRealm *realm = [self realm];
@@ -99,24 +101,34 @@
     
     id object = objectsBlock(self);
     
+    BOOL enabledCollection = [self enabledCollectionObject:object];
+    
     if (!self.isCancelled && object != nil) {
-        if ([object conformsToProtocol:@protocol(NSFastEnumeration)]) {
+        if (enabledCollection) {
             [realm addOrUpdateObjectsFromArray:object];
+            DDLogVerbose(@"--addOrUpdateObjectsFromArray");
         } else {
             [realm addOrUpdateObject:object];
+            DDLogVerbose(@"--addOrUpdateObject");
         }
         
         if (self.isCancelled) {
+            DDLogWarn(@"--will cancelWriteTransaction");
             [realm cancelWriteTransaction];
+            DDLogWarn(@"--did cancelWriteTransaction");
         } else {
             [realm commitWriteTransaction];
+            DDLogVerbose(@"--commitWriteTransaction");
         }
     } else {
         [realm commitWriteTransaction];
+        DDLogVerbose(@"--commitWriteTransaction");
     }
     
     [self setExecuting:NO];
     [self setFinished:YES];
+    
+    DDLogVerbose(@"did addObjects");
 }
 
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -135,6 +147,8 @@
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
 {
+    DDLogVerbose(@"will updateObjects");
+    
     [self setExecuting:YES];
     
     RLMRealm *realm = [self realm];
@@ -143,13 +157,18 @@
     BOOL updated = updateBlock(self);
     
     if (self.isCancelled && updated) {
+        DDLogWarn(@"--will cancelWriteTransaction");
         [realm cancelWriteTransaction];
+        DDLogWarn(@"--did cancelWriteTransaction");
     } else {
         [realm commitWriteTransaction];
+        DDLogVerbose(@"--commitWriteTransaction");
     }
     
     [self setExecuting:NO];
     [self setFinished:YES];
+    
+    DDLogVerbose(@"did updateObjects");
 }
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
@@ -168,6 +187,8 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
+    DDLogVerbose(@"will deleteObjects");
+    
     [self setExecuting:YES];
     
     RLMRealm *realm = [self realm];
@@ -175,24 +196,34 @@
     
     id object = objectsBlock(self);
     
+    BOOL enabledCollection = [self enabledCollectionObject:object];
+    
     if (!self.isCancelled && object != nil) {
-        if ([object conformsToProtocol:@protocol(NSFastEnumeration)]) {
+        if (enabledCollection) {
             [realm deleteObjects:object];
+            DDLogVerbose(@"--deleteObjects");
         } else {
             [realm deleteObject:object];
+            DDLogVerbose(@"--deleteObject");
         }
         
         if (self.isCancelled) {
+            DDLogWarn(@"--will cancelWriteTransaction");
             [realm cancelWriteTransaction];
+            DDLogWarn(@"--did cancelWriteTransaction");
         } else {
             [realm commitWriteTransaction];
+            DDLogVerbose(@"--commitWriteTransaction");
         }
     } else {
         [realm commitWriteTransaction];
+        DDLogVerbose(@"--commitWriteTransaction");
     }
     
     [self setExecuting:NO];
     [self setFinished:YES];
+    
+    DDLogVerbose(@"did deleteObjects");
 }
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -266,6 +297,13 @@
         __queue = dispatch_queue_create("jp.co.picos.realm.operation.queue", NULL);
     });
     return __queue;
+}
+
+#pragma mark - Utility
+
+- (BOOL)enabledCollectionObject:(id)object
+{
+    return [object respondsToSelector:@selector(count)] && [object count] > 0;
 }
 
 @end
