@@ -13,7 +13,7 @@
 @implementation Tweet
 
 /**
- initWithObjects:をOverrideする理由
+ initWithObjects:をOverrideする理由 (Realm 0.87.4)
  
  - NSNullは許容できないので、手動でNSNullを除外する必要がある
  - デフォルトのinitWithObjects:を使用する場合は、Propertyのキーが
@@ -38,7 +38,7 @@
         
         /**
          文字列の空オブジェクト表現
-         - 文字列にnilは許容できないので空文字列を使用する
+         - 文字列にnilは許容できないので空文字列を使用する (Realm 0.87.4)
          */
         self.text = [self ys_stringWithObject:object forKey:@"text"];
         

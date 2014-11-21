@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B862E74D1A1B64690086F8EC /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = B862E74C1A1B64690086F8EC /* Utility.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
 		B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460119FD00F5008FA04F /* AppDelegate.m */; };
 		B8D5460519FD00F5008FA04F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460419FD00F5008FA04F /* ViewController.m */; };
@@ -40,6 +41,8 @@
 /* Begin PBXFileReference section */
 		B048CC102B064A94AC8B8EC8 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
+		B862E74B1A1B64690086F8EC /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		B862E74C1A1B64690086F8EC /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
 		B8D545F919FD00F5008FA04F /* YSRealmExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSRealmExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D545FD19FD00F5008FA04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B8D545FE19FD00F5008FA04F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -186,6 +189,8 @@
 			children = (
 				B8D5462D19FDC8EF008FA04F /* JsonGenerator.h */,
 				B8D5462E19FDC8EF008FA04F /* JsonGenerator.m */,
+				B862E74B1A1B64690086F8EC /* Utility.h */,
+				B862E74C1A1B64690086F8EC /* Utility.m */,
 				B8D5464619FDCDE3008FA04F /* TwitterRealm.h */,
 				B8D5464719FDCDE3008FA04F /* TwitterRealm.m */,
 				B8D5463019FDC933008FA04F /* Tweet.h */,
@@ -349,6 +354,7 @@
 			files = (
 				B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */,
 				B8D5464D19FDCEC9008FA04F /* YSRealmTests.m in Sources */,
+				B862E74D1A1B64690086F8EC /* Utility.m in Sources */,
 				B8D5463519FDC93B008FA04F /* User.m in Sources */,
 				B8D5463219FDC933008FA04F /* Tweet.m in Sources */,
 				B8D5464819FDCDE3008FA04F /* TwitterRealm.m in Sources */,

@@ -7,7 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "YSRealm.h"
+#import "JsonGenerator.h"
+#import "Tweet.h"
 
 @interface Utility : NSObject
+
++ (void)deleteAllObjects;
+
++ (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject;
++ (void)addTweetsWithCount:(NSUInteger)count;
 
 @end
