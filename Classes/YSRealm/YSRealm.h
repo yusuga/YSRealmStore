@@ -19,25 +19,25 @@
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                     completion:(YSRealmCompletion)completion;
+                                     completion:(YSRealmOperationCompletion)completion;
 
 /* Update */
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock;
 
 - (YSRealmOperation*)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                                       completion:(YSRealmCompletion)completion;
+                                       completion:(YSRealmOperationCompletion)completion;
 
 /* Delete */
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                        completion:(YSRealmCompletion)completion;
+                                        completion:(YSRealmOperationCompletion)completion;
 
 /* Fetch */
 
-- (YSRealmOperation*)fetchObjectsWithFetchBlock:(YSRealmOperationFetchBlock)fetchBlock
-                                     completion:(YSRealmFetchCompletion)completion;
+- (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                       completion:(YSRealmOperationFetchCompletion)completion;
 
 @end

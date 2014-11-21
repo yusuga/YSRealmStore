@@ -12,10 +12,9 @@
 
 typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation);
 typedef BOOL(^YSRealmOperationUpdateBlock)(YSRealmOperation *operation);
-typedef id(^YSRealmOperationFetchBlock)(YSRealmOperation *operation);
 
-typedef void(^YSRealmCompletion)(YSRealmOperation *operation);
-typedef void(^YSRealmFetchCompletion)(YSRealmOperation *operation, NSArray *results);
+typedef void(^YSRealmOperationCompletion)(YSRealmOperation *operation);
+typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, NSArray *results);
 
 @interface YSRealmOperation : NSObject
 
@@ -25,8 +24,8 @@ typedef void(^YSRealmFetchCompletion)(YSRealmOperation *operation, NSArray *resu
                      objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 + (instancetype)addOperationWithRealmPath:(NSString*)realmPath
-                                    objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                      completion:(YSRealmCompletion)completion;
+                             objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                               completion:(YSRealmOperationCompletion)completion;
 
 /* Update */
 
@@ -35,7 +34,7 @@ typedef void(^YSRealmFetchCompletion)(YSRealmOperation *operation, NSArray *resu
 
 + (instancetype)updateOperationWithRealmPath:(NSString*)realmPath
                                  updateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                                  completion:(YSRealmCompletion)completion;
+                                  completion:(YSRealmOperationCompletion)completion;
 
 /* Delete */
 
@@ -44,13 +43,13 @@ typedef void(^YSRealmFetchCompletion)(YSRealmOperation *operation, NSArray *resu
 
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                  completion:(YSRealmCompletion)completion;
+                                  completion:(YSRealmOperationCompletion)completion;
 
 /* Fetch */
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
-                                 fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
-                                 completion:(YSRealmFetchCompletion)completion;
+                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                 completion:(YSRealmOperationFetchCompletion)completion;
 
 /* State */
 

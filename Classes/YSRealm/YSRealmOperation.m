@@ -33,7 +33,7 @@
 
 + (instancetype)addOperationWithRealmPath:(NSString*)realmPath
                              objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                               completion:(YSRealmCompletion)completion
+                               completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     NSParameterAssert(completion != NULL);
@@ -56,7 +56,7 @@
 
 + (instancetype)updateOperationWithRealmPath:(NSString*)realmPath
                                  updateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                                  completion:(YSRealmCompletion)completion
+                                  completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(updateBlock != NULL);
     NSParameterAssert(completion != NULL);
@@ -79,7 +79,7 @@
 
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                  completion:(YSRealmCompletion)completion
+                                  completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     NSParameterAssert(completion != NULL);
@@ -92,14 +92,14 @@
 #pragma mark Fetch
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
-                                 fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
-                                 completion:(YSRealmFetchCompletion)completion
+                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                 completion:(YSRealmOperationFetchCompletion)completion
 {
-    NSParameterAssert(fetchBlock != NULL);
+    NSParameterAssert(objectsBlock != NULL);
     NSParameterAssert(completion != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope fetchOperationWithFetchBlock:fetchBlock completion:completion];
+    [ope fetchOperationWithObjectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
@@ -151,7 +151,7 @@
 }
 
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                        completion:(YSRealmCompletion)completion
+                        completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     dispatch_async([[self class] operationDispatchQueue], ^{
@@ -184,7 +184,7 @@
 }
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                          completion:(YSRealmCompletion)completion
+                          completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     dispatch_async([[self class] operationDispatchQueue], ^{
@@ -222,11 +222,11 @@
     }
     
     [self setExecuting:NO];
-    [self setFinished:YES];    
+    [self setFinished:YES];
 }
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                           completion:(YSRealmCompletion)completion
+                           completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     dispatch_async([[self class] operationDispatchQueue], ^{
@@ -239,8 +239,8 @@
 
 #pragma mark Fetch
 
-- (void)fetchOperationWithFetchBlock:(YSRealmOperationFetchBlock)fetchBlock
-                          completion:(YSRealmFetchCompletion)completion
+- (void)fetchOperationWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                            completion:(YSRealmOperationFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
     dispatch_async([[self class] operationDispatchQueue], ^{
@@ -248,7 +248,7 @@
         
         NSMutableArray *values;
         Class resultClass;
-        id results = fetchBlock(wself);
+        id results = objectsBlock(wself);
         
         if (!wself.isCancelled && results != nil) {
             if (![results conformsToProtocol:@protocol(NSFastEnumeration)]) {

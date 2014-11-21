@@ -164,7 +164,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] fetchObjectsWithFetchBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealm sharedInstance] fetchObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -333,7 +333,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] fetchObjectsWithFetchBlock:^id(YSRealmOperation *operation) {
+    [[YSRealm sharedInstance] fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         RLMResults *tweets = [Tweet allObjects];
         return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
     } completion:^(YSRealmOperation *operation, NSArray *results) {

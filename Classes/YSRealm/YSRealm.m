@@ -50,7 +50,7 @@
 }
 
 - (YSRealmOperation*)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                     completion:(YSRealmCompletion)completion
+                                     completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation addOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
@@ -69,7 +69,7 @@
 }
 
 - (YSRealmOperation*)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                                       completion:(YSRealmCompletion)completion
+                                       completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation updateOperationWithRealmPath:[[self realm] path] updateBlock:updateBlock completion:^(YSRealmOperation *operation) {
@@ -88,7 +88,7 @@
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                        completion:(YSRealmCompletion)completion
+                                        completion:(YSRealmOperationCompletion)completion
 {    
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
@@ -101,11 +101,11 @@
 
 #pragma mark Fetch
 
-- (YSRealmOperation*)fetchObjectsWithFetchBlock:(YSRealmOperationFetchBlock)fetchBlock
-                                     completion:(YSRealmFetchCompletion)completion
+- (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                       completion:(YSRealmOperationFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] fetchBlock:fetchBlock completion:^(YSRealmOperation *operation, NSArray *results) {
+    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, NSArray *results) {
         [wself.operations removeObject:operation];
         completion(operation, results);
     }];
