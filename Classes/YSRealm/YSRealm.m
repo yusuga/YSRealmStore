@@ -46,17 +46,12 @@
 
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    NSParameterAssert(objectsBlock != NULL);
-    
     [YSRealmOperation addOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                      completion:(YSRealmCompletion)completion
 {
-    NSParameterAssert(objectsBlock != NULL);
-    NSParameterAssert(completion != NULL);
-    
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation addOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
@@ -70,17 +65,12 @@
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
 {
-    NSParameterAssert(updateBlock != NULL);
-    
     [YSRealmOperation updateOperationWithRealmPath:[[self realm] path] updateBlock:updateBlock];
 }
 
 - (YSRealmOperation*)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
                                        completion:(YSRealmCompletion)completion
 {
-    NSParameterAssert(updateBlock != NULL);
-    NSParameterAssert(completion != NULL);
-    
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation updateOperationWithRealmPath:[[self realm] path] updateBlock:updateBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
@@ -94,21 +84,31 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    NSParameterAssert(objectsBlock != NULL);
-    
     [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmCompletion)completion
-{
-    NSParameterAssert(objectsBlock != NULL);
-    NSParameterAssert(completion != NULL);
-    
+{    
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
         completion(operation);
+    }];
+    [self.operations addObject:ope];
+    return ope;
+}
+
+#pragma mark Fetch
+
+- (YSRealmOperation*)fetchObjectsWithPrimaryKey:(NSString*)primaryKey
+                                     fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+                                     completion:(YSRealmFetchCompletion)completion
+{
+    __weak typeof(self) wself = self;
+    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] primaryKey:primaryKey fetchBlock:fetchBlock completion:^(YSRealmOperation *operation, NSArray *results) {
+        [wself.operations removeObject:operation];
+        completion(operation, results);
     }];
     [self.operations addObject:ope];
     return ope;

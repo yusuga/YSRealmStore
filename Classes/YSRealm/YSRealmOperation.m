@@ -25,6 +25,8 @@
 + (void)addOperationWithRealmPath:(NSString*)realmPath
                      objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
+    NSParameterAssert(objectsBlock != NULL);
+    
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope addObjectsWithObjectsBlock:objectsBlock];
 }
@@ -33,6 +35,9 @@
                              objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                completion:(YSRealmCompletion)completion
 {
+    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(completion != NULL);
+    
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope addObjectsWithObjectsBlock:objectsBlock completion:completion];
     return ope;
@@ -43,6 +48,8 @@
 + (void)updateOperationWithRealmPath:(NSString*)realmPath
                          updateBlock:(YSRealmOperationUpdateBlock)updateBlock
 {
+    NSParameterAssert(updateBlock != NULL);
+    
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope updateObjectsWithUpdateBlock:updateBlock];
 }
@@ -51,6 +58,9 @@
                                  updateBlock:(YSRealmOperationUpdateBlock)updateBlock
                                   completion:(YSRealmCompletion)completion
 {
+    NSParameterAssert(updateBlock != NULL);
+    NSParameterAssert(completion != NULL);
+    
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope updateObjectsWithUpdateBlock:updateBlock completion:completion];
     return ope;
@@ -61,6 +71,8 @@
 + (void)deleteOperationWithRealmPath:(NSString*)realmPath
                         objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
+    NSParameterAssert(objectsBlock != NULL);
+    
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope deleteObjectsWithObjectsBlock:objectsBlock];
 }
@@ -69,14 +81,36 @@
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmCompletion)completion
 {
+    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(completion != NULL);
+    
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope deleteObjectsWithObjectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
+#pragma mark Fetch
+
++ (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
+                                 primaryKey:(NSString*)primaryKey
+                                 fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+                                 completion:(YSRealmFetchCompletion)completion
+{
+    NSParameterAssert(primaryKey != nil);
+    NSParameterAssert(fetchBlock != NULL);
+    NSParameterAssert(completion != NULL);
+    
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    [ope fetchOperationWithPrimaryKey:primaryKey fetchBlock:fetchBlock completion:completion];
+    return ope;
+}
+
+#pragma mark - Init
+
 - (instancetype)initWithRealmPath:(NSString*)realmPath
 {
     if (self = [super init]) {
+        NSParameterAssert(realmPath != nil);
         self.realmPath = realmPath;
     }
     return self;
@@ -92,8 +126,6 @@
 
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    DDLogVerbose(@"will addObjects");
-    
     [self setExecuting:YES];
     
     RLMRealm *realm = [self realm];
@@ -101,34 +133,23 @@
     
     id object = objectsBlock(self);
     
-    BOOL enabledCollection = [self enabledCollectionObject:object];
-    
     if (!self.isCancelled && object != nil) {
-        if (enabledCollection) {
-            [realm addOrUpdateObjectsFromArray:object];
-            DDLogVerbose(@"--addOrUpdateObjectsFromArray");
-        } else {
-            [realm addOrUpdateObject:object];
-            DDLogVerbose(@"--addOrUpdateObject");
+        if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
+            object = @[object];
         }
+        [realm addOrUpdateObjectsFromArray:object];
         
         if (self.isCancelled) {
-            DDLogWarn(@"--will cancelWriteTransaction");
             [realm cancelWriteTransaction];
-            DDLogWarn(@"--did cancelWriteTransaction");
         } else {
             [realm commitWriteTransaction];
-            DDLogVerbose(@"--commitWriteTransaction");
         }
     } else {
         [realm commitWriteTransaction];
-        DDLogVerbose(@"--commitWriteTransaction");
     }
     
     [self setExecuting:NO];
     [self setFinished:YES];
-    
-    DDLogVerbose(@"did addObjects");
 }
 
 - (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -147,8 +168,6 @@
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
 {
-    DDLogVerbose(@"will updateObjects");
-    
     [self setExecuting:YES];
     
     RLMRealm *realm = [self realm];
@@ -157,18 +176,13 @@
     BOOL updated = updateBlock(self);
     
     if (self.isCancelled && updated) {
-        DDLogWarn(@"--will cancelWriteTransaction");
         [realm cancelWriteTransaction];
-        DDLogWarn(@"--did cancelWriteTransaction");
     } else {
         [realm commitWriteTransaction];
-        DDLogVerbose(@"--commitWriteTransaction");
     }
     
     [self setExecuting:NO];
     [self setFinished:YES];
-    
-    DDLogVerbose(@"did updateObjects");
 }
 
 - (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
@@ -187,8 +201,6 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    DDLogVerbose(@"will deleteObjects");
-    
     [self setExecuting:YES];
     
     RLMRealm *realm = [self realm];
@@ -196,34 +208,23 @@
     
     id object = objectsBlock(self);
     
-    BOOL enabledCollection = [self enabledCollectionObject:object];
-    
     if (!self.isCancelled && object != nil) {
-        if (enabledCollection) {
-            [realm deleteObjects:object];
-            DDLogVerbose(@"--deleteObjects");
-        } else {
-            [realm deleteObject:object];
-            DDLogVerbose(@"--deleteObject");
+        if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
+            object = @[object];
         }
+        [realm deleteObjects:object];
         
         if (self.isCancelled) {
-            DDLogWarn(@"--will cancelWriteTransaction");
             [realm cancelWriteTransaction];
-            DDLogWarn(@"--did cancelWriteTransaction");
         } else {
             [realm commitWriteTransaction];
-            DDLogVerbose(@"--commitWriteTransaction");
         }
     } else {
         [realm commitWriteTransaction];
-        DDLogVerbose(@"--commitWriteTransaction");
     }
     
     [self setExecuting:NO];
-    [self setFinished:YES];
-    
-    DDLogVerbose(@"did deleteObjects");
+    [self setFinished:YES];    
 }
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -234,6 +235,57 @@
         [wself deleteObjectsWithObjectsBlock:objectsBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(wself);
+        });
+    });
+}
+
+#pragma mark Fetch
+
+- (void)fetchOperationWithPrimaryKey:(NSString*)primaryKey
+                          fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+                          completion:(YSRealmFetchCompletion)completion
+{
+    __weak typeof(self) wself = self;
+    dispatch_async([[self class] operationDispatchQueue], ^{
+        [wself setExecuting:YES];
+        
+        NSMutableArray *values;
+        Class resultClass;
+        id results = fetchBlock(wself);
+        
+        if (!wself.isCancelled && results != nil) {
+            if (![results conformsToProtocol:@protocol(NSFastEnumeration)]) {
+                results = @[results];
+            }
+            NSParameterAssert([results isKindOfClass:[NSArray class]]
+                              || [results isKindOfClass:[RLMArray class]]
+                              || [results isKindOfClass:[RLMResults class]]);
+            
+            values = [NSMutableArray arrayWithCapacity:[results count]];
+            RLMObject *result = [results firstObject];
+            resultClass = [result class];
+            
+            if (result && resultClass) {
+                for (RLMObject *obj in results) {
+                    NSParameterAssert([obj isKindOfClass:[RLMObject class]]);
+                    [values addObject:[obj valueForKey:primaryKey]];
+                }
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSMutableArray *results = [NSMutableArray arrayWithCapacity:[values count]];
+            
+            if (!self.isCancelled && resultClass != NULL) {
+                for (NSString *value in values) {
+                    [results addObject:[resultClass objectForPrimaryKey:value]];
+                }
+            }
+            
+            [wself setExecuting:NO];
+            [wself setFinished:YES];
+            
+            completion(wself, [NSArray arrayWithArray:results]);
         });
     });
 }
@@ -297,13 +349,6 @@
         __queue = dispatch_queue_create("jp.co.picos.realm.operation.queue", NULL);
     });
     return __queue;
-}
-
-#pragma mark - Utility
-
-- (BOOL)enabledCollectionObject:(id)object
-{
-    return [object respondsToSelector:@selector(count)] && [object count] > 0;
 }
 
 @end

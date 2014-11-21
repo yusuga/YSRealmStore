@@ -12,7 +12,10 @@
 
 typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation);
 typedef BOOL(^YSRealmOperationUpdateBlock)(YSRealmOperation *operation);
+typedef id(^YSRealmOperationFetchBlock)(YSRealmOperation *operation);
+
 typedef void(^YSRealmCompletion)(YSRealmOperation *operation);
+typedef void(^YSRealmFetchCompletion)(YSRealmOperation *operation, NSArray *results);
 
 @interface YSRealmOperation : NSObject
 
@@ -42,6 +45,13 @@ typedef void(^YSRealmCompletion)(YSRealmOperation *operation);
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmCompletion)completion;
+
+/* Fetch */
+
++ (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
+                                 primaryKey:(NSString*)primaryKey
+                                 fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+                                 completion:(YSRealmFetchCompletion)completion;
 
 /* State */
 

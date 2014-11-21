@@ -35,4 +35,10 @@
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmCompletion)completion;
 
+/* Fetch */
+
+- (YSRealmOperation*)fetchObjectsWithPrimaryKey:(NSString*)primaryKey
+                                     fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+                                     completion:(YSRealmFetchCompletion)completion;
+
 @end
