@@ -101,12 +101,11 @@
 
 #pragma mark Fetch
 
-- (YSRealmOperation*)fetchObjectsWithPrimaryKey:(NSString*)primaryKey
-                                     fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+- (YSRealmOperation*)fetchObjectsWithFetchBlock:(YSRealmOperationFetchBlock)fetchBlock
                                      completion:(YSRealmFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] primaryKey:primaryKey fetchBlock:fetchBlock completion:^(YSRealmOperation *operation, NSArray *results) {
+    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] fetchBlock:fetchBlock completion:^(YSRealmOperation *operation, NSArray *results) {
         [wself.operations removeObject:operation];
         completion(operation, results);
     }];

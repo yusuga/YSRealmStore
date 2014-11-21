@@ -92,16 +92,14 @@
 #pragma mark Fetch
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
-                                 primaryKey:(NSString*)primaryKey
                                  fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
                                  completion:(YSRealmFetchCompletion)completion
 {
-    NSParameterAssert(primaryKey != nil);
     NSParameterAssert(fetchBlock != NULL);
     NSParameterAssert(completion != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope fetchOperationWithPrimaryKey:primaryKey fetchBlock:fetchBlock completion:completion];
+    [ope fetchOperationWithFetchBlock:fetchBlock completion:completion];
     return ope;
 }
 
@@ -241,8 +239,7 @@
 
 #pragma mark Fetch
 
-- (void)fetchOperationWithPrimaryKey:(NSString*)primaryKey
-                          fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+- (void)fetchOperationWithFetchBlock:(YSRealmOperationFetchBlock)fetchBlock
                           completion:(YSRealmFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
@@ -266,6 +263,8 @@
             resultClass = [result class];
             
             if (result && resultClass) {
+                NSString *primaryKey = [resultClass primaryKey];
+                
                 for (RLMObject *obj in results) {
                     NSParameterAssert([obj isKindOfClass:[RLMObject class]]);
                     [values addObject:[obj valueForKey:primaryKey]];

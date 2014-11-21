@@ -37,8 +37,7 @@
 
 /* Fetch */
 
-- (YSRealmOperation*)fetchObjectsWithPrimaryKey:(NSString*)primaryKey
-                                     fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
+- (YSRealmOperation*)fetchObjectsWithFetchBlock:(YSRealmOperationFetchBlock)fetchBlock
                                      completion:(YSRealmFetchCompletion)completion;
 
 @end

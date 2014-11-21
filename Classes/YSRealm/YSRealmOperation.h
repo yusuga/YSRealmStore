@@ -49,7 +49,6 @@ typedef void(^YSRealmFetchCompletion)(YSRealmOperation *operation, NSArray *resu
 /* Fetch */
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
-                                 primaryKey:(NSString*)primaryKey
                                  fetchBlock:(YSRealmOperationFetchBlock)fetchBlock
                                  completion:(YSRealmFetchCompletion)completion;
 
