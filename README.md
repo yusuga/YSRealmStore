@@ -1,5 +1,12 @@
 # YSRealm
 
+## Memo
+
+### Realm 0.87.4 での挙動
+
+- Userを削除したらTweetのUserはnilになる。
+- Urlを削除したらEntitiesは空配列になる。(オブジェクトは削除されない)そのEntitiesを削除すればTweetのEntitiesはnilになる。
+
 ## License
 
     Copyright (c) 2014 Yu Sugawara (https://github.com/yusuga)

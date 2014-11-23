@@ -28,6 +28,8 @@
     [super tearDown];
 }
 
+#pragma mark - Insert
+
 - (void)testInsertTweet
 {
     [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
@@ -145,6 +147,31 @@
     XCTAssertNil(tweet.entities);
 }
 
+- (void)testInsertNestedObject
+{
+    int64_t tweetID = 0;
+    int64_t userID = 0;
+    NSDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID];
+    
+    [Utility addTweetWithTweetJsonObject:tweetObj];
+    XCTAssertNotNil([User objectForPrimaryKey:@(userID)]);
+    
+    int64_t tweetID2 = 1;
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID2 userID:userID]];
+    
+    XCTAssertNotNil([Tweet objectForPrimaryKey:@(tweetID)]);
+    XCTAssertNotNil([Tweet objectForPrimaryKey:@(tweetID)].user);
+    XCTAssertEqual([Tweet objectForPrimaryKey:@(tweetID)].user.id, userID);
+    XCTAssertNotNil([Tweet objectForPrimaryKey:@(tweetID2)]);
+    XCTAssertNotNil([Tweet objectForPrimaryKey:@(tweetID2)].user);
+    XCTAssertEqual([Tweet objectForPrimaryKey:@(tweetID2)].user.id, userID);
+    
+    XCTAssertEqual([[Tweet allObjects] count], 2);
+    XCTAssertEqual([[User allObjects] count], 1);
+}
+
+#pragma mark - Equal
+
 - (void)testEqual
 {
     Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
@@ -155,12 +182,14 @@
     XCTAssertEqualObjects(tweet, addedTweet);
 }
 
+#pragma mark - Update
+
 - (void)testUpdate
 {
     Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
     [self addOrUpdateTweet:tweet];
     
-    [self updateObject:^{
+    [self realmWriteTransaction:^(RLMRealm *realm) {
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
@@ -175,7 +204,76 @@
     XCTAssertNil(addedTweet.entities);
 }
 
-- (void)testCancelAdd
+#pragma mark - Delete
+
+- (void)testDeleteRelationObject
+{
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[User allObjects]];
+    }];
+    
+    Tweet *tweet = [[Tweet allObjects] firstObject];
+    XCTAssertNil(tweet.user);
+}
+
+- (void)testDeleteRelationObjects
+{
+    int64_t count = 10;
+    for (int64_t twID = 0; twID < count; twID++) {
+        [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:twID userID:0]];
+    }
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], 1);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[User allObjects]];
+    }];
+    
+    for (Tweet *tweet in [Tweet allObjects]) {
+        XCTAssertNil(tweet.user);
+    }
+}
+
+- (void)testDeleteToManyRelationObjects
+{
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[Url allObjects]];
+    }];
+    
+    /* RLMArray は空配列になるだけでオブジェクトは削除されない */
+    XCTAssertEqual([[Entities allObjects] count], 1);
+    Entities *entities = [[Entities allObjects] firstObject];
+    XCTAssertEqual([entities.urls count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (Entities *entities in [Entities allObjects]) {
+            if ([entities.urls count] == 0) {
+                [realm deleteObject:entities];
+            }
+        }
+    }];
+    
+    XCTAssertEqual([[Entities allObjects] count], 0);
+    Tweet *tweet = [[Tweet allObjects] firstObject];
+    XCTAssertNil(tweet.entities);
+}
+
+- (void)test
+{
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[Entities allObjects]];
+    }];
+}
+
+#pragma mark - Cancel
+
+- (void)testCancelAddObject
 {
     Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
     
@@ -187,7 +285,7 @@
     XCTAssertEqual([[Tweet allObjects] count], 0);
 }
 
-- (void)testCancelUpdate
+- (void)testCancelUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     [self addOrUpdateTweet:[[Tweet alloc] initWithObject:tweetJsonObj]];
@@ -213,7 +311,7 @@
     XCTAssertNotNil(addedTweet.entities);
 }
 
-- (void)testCancelDelete
+- (void)testCancelDeleteObject
 {
     [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweet]]];
     
@@ -324,14 +422,14 @@
 #endif
 }
 
-#pragma mark - Test
+#pragma mark - Test JsonGenerator
 
 - (void)testURLCount
 {
     NSUInteger count = 5;
     [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:INT64_MAX
-                                                                                          userID:INT64_MAX
-                                                                                        urlCount:count]]];
+                                                                                  userID:INT64_MAX
+                                                                                urlCount:count]]];
     RLMResults *result = [Tweet allObjects];
     XCTAssertEqual([result count], 1);
     Tweet *tweet = [result firstObject];
@@ -353,11 +451,11 @@
     XCTAssertEqual([Tweet objectForPrimaryKey:@(twID)].id, tweet.id);
 }
 
-- (void)updateObject:(void(^)(void))updating
+- (void)realmWriteTransaction:(void(^)(RLMRealm *realm))transaction
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    if (updating) updating();
+    if (transaction) transaction(realm);
     [realm commitWriteTransaction];
 }
 

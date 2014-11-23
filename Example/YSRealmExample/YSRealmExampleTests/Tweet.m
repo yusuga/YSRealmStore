@@ -21,7 +21,7 @@
  もしも仕様変更でキーが削除された場合には必ずクラッシュする。
  (辞書側のキーが増える分には問題ない。キーが削除された場合を考慮する必要がある。)
  
- 以上の2つの理由からinitWithObjects:で手動で初期化する。
+ 以上、2つの理由からinitWithObjects:で手動で初期化する。
  
  
  RLMObjectの空オブジェクト表現
@@ -53,12 +53,5 @@
 {
     return @"id";
 }
-
-#if 0
-+ (NSDictionary *)defaultPropertyValues
-{
-    return @{@"text" : @""};
-}
-#endif
 
 @end

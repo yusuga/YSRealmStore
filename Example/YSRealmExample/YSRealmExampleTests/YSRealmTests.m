@@ -201,7 +201,7 @@
     [Utility addTweetsWithCount:10];
 }
 
-- (void)testAsyncAdd
+- (void)testAsyncAddObject
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -224,7 +224,7 @@
 
 #pragma mark Update
 
-- (void)testUpdate
+- (void)testUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     [Utility addTweetWithTweetJsonObject:tweetJsonObj];
@@ -247,7 +247,7 @@
     XCTAssertNil(addedTweet.entities);
 }
 
-- (void)testAsyncUpdate
+- (void)testAsyncUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     [Utility addTweetWithTweetJsonObject:tweetJsonObj];
@@ -279,6 +279,28 @@
     }];
 }
 
+- (void)testUpdateNestedObject
+{
+    int64_t tweetID = 0;
+    int64_t userID = 0;
+    NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID].mutableCopy;
+    
+    [Utility addTweetWithTweetJsonObject:tweetObj];
+    XCTAssertNotNil([User objectForPrimaryKey:@(userID)]);
+    
+    NSMutableDictionary *userObj = ((NSDictionary*)tweetObj[@"user"]).mutableCopy;
+    NSString *updatedName = @"UPDATED_NAME";
+    XCTAssertFalse([userObj[@"name"] isEqualToString:updatedName]);
+    [userObj setObject:updatedName forKey:@"name"];
+    [tweetObj setObject:userObj forKey:@"user"];
+
+    [Utility addTweetWithTweetJsonObject:tweetObj];
+    
+    XCTAssertEqual([[User allObjects] count], 1);
+    User *user = [User objectForPrimaryKey:@(userID)];
+    XCTAssertEqualObjects(user.name, updatedName);
+}
+
 #pragma mark Delete
 
 - (void)testDeleteObject
@@ -304,7 +326,7 @@
     XCTAssertEqual([[Tweet allObjects] count], count/2);
 }
 
-- (void)testAsyncDelete
+- (void)testAsyncDeleteObject
 {
     [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
@@ -325,7 +347,7 @@
 
 #pragma mark Fetch
 
-- (void)testAsyncFetch
+- (void)testAsyncFetchObjects
 {
     NSUInteger count = 10;
     [Utility addTweetsWithCount:count];
@@ -353,7 +375,7 @@
 #pragma mark - Cancel
 #pragma mark Add
 
-- (void)testCancelAdd
+- (void)testCancelAddObject
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -381,7 +403,7 @@
 
 #pragma mark Update
 
-- (void)testCancelUpdate
+- (void)testCancelUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     [Utility addTweetWithTweetJsonObject:tweetJsonObj];
@@ -424,7 +446,7 @@
 
 #pragma mark Delete
 
-- (void)testCancelDelete
+- (void)testCancelDeleteObject
 {
     [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     

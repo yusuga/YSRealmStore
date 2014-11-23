@@ -21,4 +21,9 @@
     return self;
 }
 
++ (NSString *)primaryKey
+{
+    return @"id";
+}
+
 @end
