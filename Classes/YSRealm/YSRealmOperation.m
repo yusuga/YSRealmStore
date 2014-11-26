@@ -276,7 +276,7 @@
             NSMutableArray *results = [NSMutableArray arrayWithCapacity:[values count]];
             
             if (!self.isCancelled && resultClass != NULL) {
-                for (NSString *value in values) {
+                for (id value in values) {
                     [results addObject:[resultClass objectForPrimaryKey:value]];
                 }
             }
