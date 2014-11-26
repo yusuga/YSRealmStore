@@ -262,13 +262,35 @@
     XCTAssertNil(tweet.entities);
 }
 
-- (void)test
+- (void)testDeleteMultipleToManyRelationObjects
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    [Utility addTweetsWithCount:10];
+    
+    NSUInteger watchersCount = 3;
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
-        [realm deleteObjects:[Entities allObjects]];
+        for (Tweet *tweet in [Tweet allObjects]) {
+            for (NSUInteger userID = 0; userID < watchersCount; userID++) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                if (user == nil) {
+                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                }
+                [tweet.watchers addObject:user];
+            }
+        }
     }];
+    
+    for (Tweet *tweet in [Tweet allObjects]) {
+        XCTAssertEqual([tweet.watchers count], watchersCount);
+    }
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[User allObjects]];
+    }];
+    
+    for (Tweet *tweet in [Tweet allObjects]) {
+        XCTAssertEqual([tweet.watchers count], 0);
+    }
 }
 
 #pragma mark - Cancel

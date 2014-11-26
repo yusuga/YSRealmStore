@@ -23,7 +23,6 @@
 		B8D5463B19FDC952008FA04F /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5463A19FDC952008FA04F /* Url.m */; };
 		B8D5464119FDCAE6008FA04F /* RLMObject+YSRealm.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464019FDCAE6008FA04F /* RLMObject+YSRealm.m */; };
 		B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */; };
-		B8D5464819FDCDE3008FA04F /* TwitterRealm.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464719FDCDE3008FA04F /* TwitterRealm.m */; };
 		B8D5464D19FDCEC9008FA04F /* YSRealmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464C19FDCEC9008FA04F /* YSRealmTests.m */; };
 		C75E721E711F45EF88675542 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D43E803CAFD3473EBDC6A24B /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -72,8 +71,6 @@
 		B8D5463F19FDCAE6008FA04F /* RLMObject+YSRealm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMObject+YSRealm.h"; sourceTree = "<group>"; };
 		B8D5464019FDCAE6008FA04F /* RLMObject+YSRealm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMObject+YSRealm.m"; sourceTree = "<group>"; };
 		B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreRealmTests.m; sourceTree = "<group>"; };
-		B8D5464619FDCDE3008FA04F /* TwitterRealm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterRealm.h; sourceTree = "<group>"; };
-		B8D5464719FDCDE3008FA04F /* TwitterRealm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterRealm.m; sourceTree = "<group>"; };
 		B8D5464C19FDCEC9008FA04F /* YSRealmTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmTests.m; sourceTree = "<group>"; };
 		D43E803CAFD3473EBDC6A24B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -191,8 +188,6 @@
 				B8D5462E19FDC8EF008FA04F /* JsonGenerator.m */,
 				B862E74B1A1B64690086F8EC /* Utility.h */,
 				B862E74C1A1B64690086F8EC /* Utility.m */,
-				B8D5464619FDCDE3008FA04F /* TwitterRealm.h */,
-				B8D5464719FDCDE3008FA04F /* TwitterRealm.m */,
 				B8D5463019FDC933008FA04F /* Tweet.h */,
 				B8D5463119FDC933008FA04F /* Tweet.m */,
 				B8D5463319FDC93B008FA04F /* User.h */,
@@ -357,7 +352,6 @@
 				B862E74D1A1B64690086F8EC /* Utility.m in Sources */,
 				B8D5463519FDC93B008FA04F /* User.m in Sources */,
 				B8D5463219FDC933008FA04F /* Tweet.m in Sources */,
-				B8D5464819FDCDE3008FA04F /* TwitterRealm.m in Sources */,
 				B8D5463B19FDC952008FA04F /* Url.m in Sources */,
 				B8D5464119FDCAE6008FA04F /* RLMObject+YSRealm.m in Sources */,
 				B8D5463819FDC949008FA04F /* Entities.m in Sources */,

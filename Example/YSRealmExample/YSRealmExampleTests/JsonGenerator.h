@@ -18,4 +18,7 @@
 + (NSDictionary*)tweetOfContainEmptyArray;
 + (NSDictionary*)tweetOfKeyIsNotEnough;
 
++ (NSDictionary*)user;
++ (NSDictionary*)userWithID:(int64_t)id;
+
 @end

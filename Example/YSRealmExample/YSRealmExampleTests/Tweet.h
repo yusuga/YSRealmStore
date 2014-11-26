@@ -16,6 +16,7 @@
 @property NSString *text;
 @property User *user;
 @property Entities *entities;
+@property RLMArray<User> *watchers;
 
 @end
 

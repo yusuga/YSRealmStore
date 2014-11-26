@@ -5,7 +5,8 @@
 ### Realm 0.87.4 での挙動
 
 - Userを削除したらTweetのUserはnilになる。
-- Urlを削除したらEntitiesは空配列になる。(オブジェクトは削除されない)そのEntitiesを削除すればTweetのEntitiesはnilになる。
+- Urlを削除したらEntitiesは空配列になる(オブジェクトは削除されない)。そのEntitiesを削除すればTweetのEntitiesはnilになる。
+- Userを削除すればWatchersにも反映される(RLMArray内のオブジェクトに対しても反映される)。
 
 ## License
 

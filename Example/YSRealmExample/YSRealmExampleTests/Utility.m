@@ -13,17 +13,17 @@
 + (void)initialize
 {
     if (self == [Utility class]) {
-        [RLMRealm setSchemaVersion:2 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+        [RLMRealm setSchemaVersion:3 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
                 /**
-                 *  あとからUserのIDをPrimaryKeyに変更。その場合のマイグレーション例。 (Realm 0.87.4)
+                 *  あとからUserのIDをPrimaryKeyに変更した。マイグレーションのメモ。 (Realm 0.87.4)
                  *  IDがない場合そのままだと例外が発生するが、すでにIDがある場合にPrimaryKeyなので変更不可で変更しようとすると例外が発生する。
-                 *  IDがない物に対してIDを設定する。(以下は本来であればIDが重複しないようにする必要があるので重複IDのUserは削除するようにすればいい。)
+                 *  IDがない物に対してIDを設定する。(以下は本来であればIDが重複しないようにする必要があるので重複IDのUserは削除するようにしなければいけない。)
                  */
                 [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
                     static int64_t userID = 0;
-                    if (((User*)newObject).id != 0) {
+                    if (((User*)newObject).id == 0) {
                         NSLog(@"user %@", newObject);
                         ((User*)newObject).id = userID++;
                     }
