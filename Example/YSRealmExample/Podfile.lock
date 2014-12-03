@@ -13,9 +13,9 @@ PODS:
   - NBUCore (2.0.4)
   - NBULog (1.2.2):
     - CocoaLumberjack (>= 2.0.0-beta4)
-  - Realm (0.87.4):
+  - Realm (0.88.0):
     - Realm/Headers
-  - Realm/Headers (0.87.4)
+  - Realm/Headers (0.88.0)
   - YSCocoaLumberjackHelper (0.0.5):
     - CocoaLumberjack
     - LumberjackConsole
@@ -32,7 +32,7 @@ SPEC CHECKSUMS:
   LumberjackConsole: cb05e10656efd74bfbaf9b9cbec87d0412d2a634
   NBUCore: 978f24fdc8d79dc8141032bf0121053e3b25c95c
   NBULog: 50d789289ba22b1b44ef24a419031d8aae49b252
-  Realm: 17d0d9c94b38d15223fa3e806ead0e0562765e46
+  Realm: 56fd06bf4e97da2829f864e2bca229a060825c61
   YSCocoaLumberjackHelper: 0f984b05f18387c544adfb18478e5575e4e6afba
   YSNSFoundationAdditions: f3ec68ae978221d18911baa2bfabd83e30cac54f
 
