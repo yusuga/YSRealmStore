@@ -42,37 +42,18 @@
 }
 
 #pragma mark - Operation
-#pragma mark Add
+#pragma mark Write
 
-- (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation addOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
+    [YSRealmOperation writeOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
 }
 
-- (YSRealmOperation*)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                     completion:(YSRealmOperationCompletion)completion
-{
-    __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation addOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
-        [wself.operations removeObject:operation];
-        completion(operation);
-    }];
-    [self.operations addObject:ope];
-    return ope;
-}
-
-#pragma mark Update
-
-- (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
-{
-    [YSRealmOperation updateOperationWithRealmPath:[[self realm] path] updateBlock:updateBlock];
-}
-
-- (YSRealmOperation*)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
+- (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation updateOperationWithRealmPath:[[self realm] path] updateBlock:updateBlock completion:^(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
         completion(operation);
     }];
@@ -89,7 +70,7 @@
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmOperationCompletion)completion
-{    
+{
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];

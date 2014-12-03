@@ -49,7 +49,7 @@
 
 + (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
 {
-    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet alloc] initWithObject:tweetJsonObject];
     }];
     
@@ -61,7 +61,7 @@
 
 + (void)addTweetsWithCount:(NSUInteger)count
 {
-    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         NSMutableArray *tweets = [NSMutableArray arrayWithCapacity:count];
         for (NSUInteger twID = 0; twID < count; twID++) {
             [tweets addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:twID]]];

@@ -20,47 +20,25 @@
 @synthesize finished = _finished;
 
 #pragma mark - Public
-#pragma mark Add
+#pragma mark Write
 
-+ (void)addOperationWithRealmPath:(NSString*)realmPath
-                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
++ (void)writeOperationWithRealmPath:(NSString*)realmPath
+                       objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     NSParameterAssert(objectsBlock != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope addObjectsWithObjectsBlock:objectsBlock];
+    [ope writeObjectsWithObjectsBlock:objectsBlock];
 }
 
-+ (instancetype)addOperationWithRealmPath:(NSString*)realmPath
-                             objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                               completion:(YSRealmOperationCompletion)completion
++ (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
+                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                 completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope addObjectsWithObjectsBlock:objectsBlock completion:completion];
-    return ope;
-}
-
-#pragma mark Update
-
-+ (void)updateOperationWithRealmPath:(NSString*)realmPath
-                         updateBlock:(YSRealmOperationUpdateBlock)updateBlock
-{
-    NSParameterAssert(updateBlock != NULL);
-    
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope updateObjectsWithUpdateBlock:updateBlock];
-}
-
-+ (instancetype)updateOperationWithRealmPath:(NSString*)realmPath
-                                 updateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                                  completion:(YSRealmOperationCompletion)completion
-{
-    NSParameterAssert(updateBlock != NULL);
-    
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope updateObjectsWithUpdateBlock:updateBlock completion:completion];
+    [ope writeObjectsWithObjectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
@@ -116,9 +94,9 @@
 }
 
 #pragma mark - Operation
-#pragma mark Add
+#pragma mark Write
 
-- (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     [self setExecuting:YES];
     
@@ -127,7 +105,7 @@
     
     id object = objectsBlock(self);
     
-    if (!self.isCancelled && object != nil) {
+    if (object != nil) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
         }
@@ -146,45 +124,12 @@
     [self setFinished:YES];
 }
 
-- (void)addObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                        completion:(YSRealmOperationCompletion)completion
-{
-    __weak typeof(self) wself = self;
-    dispatch_async([[self class] operationDispatchQueue], ^{
-        [wself addObjectsWithObjectsBlock:objectsBlock];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) completion(wself);
-        });
-    });
-}
-
-#pragma mark Update
-
-- (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
-{
-    [self setExecuting:YES];
-    
-    RLMRealm *realm = [self realm];
-    [realm beginWriteTransaction];
-    
-    BOOL updated = updateBlock(self);
-    
-    if (self.isCancelled && updated) {
-        [realm cancelWriteTransaction];
-    } else {
-        [realm commitWriteTransaction];
-    }
-    
-    [self setExecuting:NO];
-    [self setFinished:YES];
-}
-
-- (void)updateObjectsWithUpdateBlock:(YSRealmOperationUpdateBlock)updateBlock
+- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                           completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     dispatch_async([[self class] operationDispatchQueue], ^{
-        [wself updateObjectsWithUpdateBlock:updateBlock];
+        [wself writeObjectsWithObjectsBlock:objectsBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion) completion(wself);
         });

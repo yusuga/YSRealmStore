@@ -11,30 +11,20 @@
 @class YSRealmOperation;
 
 typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation);
-typedef BOOL(^YSRealmOperationUpdateBlock)(YSRealmOperation *operation);
 
 typedef void(^YSRealmOperationCompletion)(YSRealmOperation *operation);
 typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, NSArray *results);
 
 @interface YSRealmOperation : NSObject
 
-/* Add */
+/* Write */
 
-+ (void)addOperationWithRealmPath:(NSString*)realmPath
-                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
++ (void)writeOperationWithRealmPath:(NSString*)realmPath
+                       objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
-+ (instancetype)addOperationWithRealmPath:(NSString*)realmPath
-                             objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                               completion:(YSRealmOperationCompletion)completion;
-
-/* Update */
-
-+ (void)updateOperationWithRealmPath:(NSString*)realmPath
-                         updateBlock:(YSRealmOperationUpdateBlock)updateBlock;
-
-+ (instancetype)updateOperationWithRealmPath:(NSString*)realmPath
-                                 updateBlock:(YSRealmOperationUpdateBlock)updateBlock
-                                  completion:(YSRealmOperationCompletion)completion;
++ (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
+                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                 completion:(YSRealmOperationCompletion)completion;
 
 /* Delete */
 

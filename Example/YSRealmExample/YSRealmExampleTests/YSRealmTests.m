@@ -28,12 +28,12 @@
     [super tearDown];
 }
 
-#pragma mark - Thread
+#pragma mark - State
 #pragma mark Add
 
 - (void)testStateInSyncAdd
 {
-    [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -48,7 +48,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -56,49 +56,6 @@
         XCTAssertFalse(operation.isFinished);
         
         return nil;
-    } completion:^(YSRealmOperation *operation) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(operation);
-        XCTAssertFalse(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
-        
-        [expectation fulfill];
-    }];
-    XCTAssertNotNil(ope);
-    
-    [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-}
-
-#pragma mark Update
-
-- (void)testStateInSycnUpdate
-{
-    [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(operation);
-        XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
-        
-        return NO;
-    }];
-}
-
-- (void)testStateInAsyncUpdate
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    YSRealmOperation *ope = [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
-        XCTAssertFalse([NSThread isMainThread]);
-        XCTAssertNotNil(operation);
-        XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
-        
-        return NO;
     } completion:^(YSRealmOperation *operation) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
@@ -208,7 +165,7 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     NSNumber *tweetID = tweetJsonObj[@"id"];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet alloc] initWithObject:tweetJsonObj];
     } completion:^(YSRealmOperation *operation) {
         Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
@@ -229,13 +186,12 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     [Utility addTweetWithTweetJsonObject:tweetJsonObj];
     
-    [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
+    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         Tweet *tweet = [[Tweet allObjects] firstObject];
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
-        
-        return YES;
+        return tweet;
     }];
     
     Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
@@ -254,14 +210,13 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
+    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertEqual([[Tweet allObjects] count], 1);
         Tweet *tweet = [[Tweet allObjects] firstObject];
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
-        
-        return YES;
+        return tweet;
     } completion:^(YSRealmOperation *operation) {
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
         Tweet *addedTweet = [[Tweet allObjects] firstObject];
@@ -379,7 +334,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] addObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);
@@ -410,7 +365,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] updateObjectsWithUpdateBlock:^BOOL(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);
@@ -421,7 +376,7 @@
         tweet.user = nil;
         tweet.entities = nil;
         
-        return YES;
+        return tweet;
     } completion:^(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
@@ -438,7 +393,7 @@
         [expectation fulfill];
     }];
     [ope cancel];
-
+    
     [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
