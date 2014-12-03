@@ -36,7 +36,6 @@
                                completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
-    NSParameterAssert(completion != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope addObjectsWithObjectsBlock:objectsBlock completion:completion];
@@ -59,7 +58,6 @@
                                   completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(updateBlock != NULL);
-    NSParameterAssert(completion != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope updateObjectsWithUpdateBlock:updateBlock completion:completion];
@@ -82,7 +80,6 @@
                                   completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
-    NSParameterAssert(completion != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope deleteObjectsWithObjectsBlock:objectsBlock completion:completion];
@@ -96,7 +93,6 @@
                                  completion:(YSRealmOperationFetchCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
-    NSParameterAssert(completion != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
     [ope fetchOperationWithObjectsBlock:objectsBlock completion:completion];
@@ -157,7 +153,7 @@
     dispatch_async([[self class] operationDispatchQueue], ^{
         [wself addObjectsWithObjectsBlock:objectsBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(wself);
+            if (completion) completion(wself);
         });
     });
 }
@@ -190,7 +186,7 @@
     dispatch_async([[self class] operationDispatchQueue], ^{
         [wself updateObjectsWithUpdateBlock:updateBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(wself);
+            if (completion) completion(wself);
         });
     });
 }
@@ -232,7 +228,7 @@
     dispatch_async([[self class] operationDispatchQueue], ^{
         [wself deleteObjectsWithObjectsBlock:objectsBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(wself);
+            if (completion) completion(wself);
         });
     });
 }
@@ -284,7 +280,7 @@
             [wself setExecuting:NO];
             [wself setFinished:YES];
             
-            completion(wself, [NSArray arrayWithArray:results]);
+            if (completion) completion(wself, [NSArray arrayWithArray:results]);
         });
     });
 }
