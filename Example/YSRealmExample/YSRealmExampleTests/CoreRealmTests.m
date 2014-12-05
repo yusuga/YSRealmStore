@@ -385,6 +385,89 @@
     XCTAssertEqual(tweet.user.id, id);
 }
 
+- (void)testANY
+{
+    NSUInteger count = 10;
+    [Utility addTweetsWithCount:count];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (Tweet *tweet in [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:YES]) {
+            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                if (user == nil) {
+                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                }
+                [tweet.watchers addObject:user];
+            }
+        }
+    }];
+    
+    XCTAssertEqual([[User allObjects] count], count);
+    
+    for (NSUInteger i = 0; i < count; i++) {
+        RLMResults *tweets = [Tweet objectsWhere:@"ANY watchers.id = %d", i];
+        XCTAssertEqual([tweets count], count - i);
+    }
+}
+
+- (void)testCount
+{
+#warning Unsupported (Realm 0.88.0)
+#if 0
+    [Utility addTweetsWithCount:1];
+    XCTAssertEqual([[Tweet allObjects] count], 1);
+    
+    NSUInteger watchersCount = 3;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        Tweet *tweet = [[Tweet allObjects] firstObject];
+        for (NSUInteger userID = 0; userID < watchersCount; userID++) {
+            User *user = [User objectForPrimaryKey:@(userID)];
+            if (user == nil) {
+                user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+            }
+            [tweet.watchers addObject:user];
+        }
+    }];
+    
+    XCTAssertEqual([[User allObjects] count], watchersCount);
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"watchers.@count = %d", watchersCount];
+    XCTAssertTrue([[Tweet objectsWithPredicate:predicate] count]);
+#endif
+}
+
+- (void)testCount2
+{
+#warning Unsupported (Realm 0.88.0)
+#if 0
+    for (NSUInteger i = 0; i < 10; i++) {
+        [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:i userID:i urlCount:0]];
+    }
+    
+    int64_t id = INT64_MAX;
+    NSUInteger urlCount = 3;
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
+    
+#if 1
+    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)]];
+#else
+    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)],
+                            [NSPredicate predicateWithFormat:@"entities.urls.@count = 3"]];
+#endif
+    
+    for (NSPredicate *predicate in predicates) {
+        RLMResults *results = [Tweet objectsWithPredicate:predicate];
+        XCTAssertEqual([results count], 1);
+        Tweet *tweet = [results firstObject];
+        XCTAssertEqual(tweet.id, id);
+        XCTAssertEqual(tweet.user.id, id);
+        XCTAssertEqual([tweet.entities.urls count], urlCount);
+    }
+#endif
+}
+
 - (void)testToManyWithBEGINSWITH
 {
 #warning Unsupported (Realm 0.87.1)
@@ -403,36 +486,6 @@
     NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH %@", @"h"],
                             [NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH 'h'"]];
 #endif
-    for (NSPredicate *predicate in predicates) {
-        RLMResults *results = [Tweet objectsWithPredicate:predicate];
-        XCTAssertEqual([results count], 1);
-        Tweet *tweet = [results firstObject];
-        XCTAssertEqual(tweet.id, id);
-        XCTAssertEqual(tweet.user.id, id);
-        XCTAssertEqual([tweet.entities.urls count], urlCount);
-    }
-#endif
-}
-
-- (void)testToManyWithCount
-{
-#warning Unsupported (Realm 0.87.1)
-#if 0
-    for (NSUInteger i = 0; i < 10; i++) {
-        [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:i userID:i urlCount:0]];
-    }
-    
-    int64_t id = INT64_MAX;
-    NSUInteger urlCount = 3;
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
-    
-#if 1
-    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)]];
-#else
-    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)],
-                            [NSPredicate predicateWithFormat:@"entities.urls.@count = 3"]];
-#endif
-    
     for (NSPredicate *predicate in predicates) {
         RLMResults *results = [Tweet objectsWithPredicate:predicate];
         XCTAssertEqual([results count], 1);
