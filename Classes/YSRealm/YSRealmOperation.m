@@ -149,7 +149,7 @@
     
     id object = objectsBlock(self);
     
-    if (!self.isCancelled && object != nil) {
+    if (object != nil) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
         }
@@ -160,6 +160,8 @@
         } else {
             [realm commitWriteTransaction];
         }
+    } else if (self.isCancelled) {
+        [realm cancelWriteTransaction];
     } else {
         [realm commitWriteTransaction];
     }
