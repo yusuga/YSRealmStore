@@ -378,6 +378,50 @@
     }];
 }
 
+#pragma mark Transaction
+
+- (void)testWriteTransaction
+{
+    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
+    NSNumber *tweetID = tweetJsonObj[@"id"];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+    
+    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
+        [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 1);
+    
+    Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
+    XCTAssertNotNil(tweet);
+}
+
+- (void)testAsyncWriteTransaction
+{
+    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
+    NSNumber *tweetID = tweetJsonObj[@"id"];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
+        [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+    } completion:^{
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 1);
+    
+    Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
+    XCTAssertNotNil(tweet);
+}
+
 #pragma mark - Cancel
 #pragma mark Add
 
