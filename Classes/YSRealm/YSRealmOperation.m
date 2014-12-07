@@ -104,19 +104,14 @@
     [realm beginWriteTransaction];
     
     id object = objectsBlock(self);
-    
-    if (object != nil) {
+    if (object) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
         }
         [realm addOrUpdateObjectsFromArray:object];
-        
-        if (self.isCancelled) {
-            [realm cancelWriteTransaction];
-        } else {
-            [realm commitWriteTransaction];
-        }
-    } else if (self.isCancelled) {
+    }
+    
+    if (self.isCancelled) {
         [realm cancelWriteTransaction];
     } else {
         [realm commitWriteTransaction];
@@ -148,19 +143,14 @@
     [realm beginWriteTransaction];
     
     id object = objectsBlock(self);
-    
-    if (object != nil) {
+    if (object) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
         }
         [realm deleteObjects:object];
-        
-        if (self.isCancelled) {
-            [realm cancelWriteTransaction];
-        } else {
-            [realm commitWriteTransaction];
-        }
-    } else if (self.isCancelled) {
+    }
+    
+    if (self.isCancelled) {
         [realm cancelWriteTransaction];
     } else {
         [realm commitWriteTransaction];
@@ -195,7 +185,7 @@
         Class resultClass;
         id results = objectsBlock(wself);
         
-        if (!wself.isCancelled && results != nil) {
+        if (!wself.isCancelled && results) {
             if (![results conformsToProtocol:@protocol(NSFastEnumeration)]) {
                 results = @[results];
             }
@@ -220,7 +210,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSMutableArray *results = [NSMutableArray arrayWithCapacity:[values count]];
             
-            if (!self.isCancelled && resultClass != NULL) {
+            if (!wself.isCancelled && resultClass != NULL) {
                 for (id value in values) {
                     [results addObject:[resultClass objectForPrimaryKey:value]];
                 }
