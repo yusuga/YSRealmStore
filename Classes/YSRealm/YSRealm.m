@@ -94,4 +94,30 @@
     return ope;
 }
 
+#pragma mark Transaction
+
+- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block
+{
+    if (block == NULL) return;
+    
+    RLMRealm *realm = [self realm];
+    [realm beginWriteTransaction];
+    
+    block(realm);
+    
+    [realm commitWriteTransaction];
+}
+
+- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block
+                       completion:(void(^)(void))completion
+{
+    __weak typeof(self) wself = self;
+    dispatch_async([YSRealmOperation operationDispatchQueue], ^{
+        [wself writeTransactionWithBlock:block];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) completion();
+        });
+    });
+}
+
 @end

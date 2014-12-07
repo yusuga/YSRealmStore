@@ -145,6 +145,33 @@
     }];
 }
 
+#pragma mark Transaction
+
+- (void)testStateInWriteTransaction
+{
+    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
+        XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(realm);
+    }];
+}
+
+- (void)testStateInAsyncWriteTransaction
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
+        XCTAssertFalse([NSThread isMainThread]);
+        XCTAssertNotNil(realm);
+    } completion:^{
+        XCTAssertTrue([NSThread isMainThread]);
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+}
+
 #pragma mark - Operation
 #pragma mark Add
 

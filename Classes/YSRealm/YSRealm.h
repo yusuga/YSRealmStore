@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "YSRealmOperation.h"
 
+typedef void(^YSRealmWriteTransactionBlock)(RLMRealm *realm);
+
 @interface YSRealm : NSObject
 
 + (instancetype)sharedInstance;
@@ -32,5 +34,13 @@
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmOperationFetchCompletion)completion;
+
+/* Transaction */
+
+- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block;
+
+- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block
+                       completion:(void(^)(void))completion;
+
 
 @end
