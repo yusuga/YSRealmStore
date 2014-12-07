@@ -116,6 +116,8 @@
         } else {
             [realm commitWriteTransaction];
         }
+    } else if (self.isCancelled) {
+        [realm cancelWriteTransaction];
     } else {
         [realm commitWriteTransaction];
     }
