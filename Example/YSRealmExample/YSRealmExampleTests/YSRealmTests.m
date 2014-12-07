@@ -300,6 +300,30 @@
     }];
 }
 
+- (void)testDeleteNestedRelationObjects
+{
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    
+    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        NSMutableArray *objs = @[].mutableCopy;
+        
+        Tweet *tweet = [[Tweet allObjects] firstObject];
+        [objs addObject:tweet];
+        if (tweet.entities) {
+            [objs addObject:tweet.entities];
+            for (Url *url in tweet.entities.urls) {
+                [objs addObject:url];
+            }
+        }
+        
+        return objs;
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+    XCTAssertEqual([[Entities allObjects] count], 0);
+    XCTAssertEqual([[Url allObjects] count], 0);
+}
+
 #pragma mark Fetch
 
 - (void)testAsyncFetchObjects

@@ -262,6 +262,24 @@
     XCTAssertNil(tweet.entities);
 }
 
+- (void)testDeleteNestedRelationObjects
+{
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        Tweet *tweet = [[Tweet allObjects] firstObject];
+        for (Url *url in tweet.entities.urls) {
+            [realm deleteObject:url];
+        }
+        [realm deleteObject:tweet.entities];
+        [realm deleteObject:tweet];
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+    XCTAssertEqual([[Entities allObjects] count], 0);
+    XCTAssertEqual([[Url allObjects] count], 0);
+}
+
 - (void)testDeleteMultipleToManyRelationObjects
 {
     [Utility addTweetsWithCount:10];
