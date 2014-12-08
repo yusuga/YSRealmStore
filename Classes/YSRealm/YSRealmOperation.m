@@ -125,7 +125,7 @@
                           completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    dispatch_async([[self class] operationDispatchQueue], ^{
+    dispatch_async([[self class] operationQueue], ^{
         [wself writeObjectsWithObjectsBlock:objectsBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion) completion(wself);
@@ -164,7 +164,7 @@
                            completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    dispatch_async([[self class] operationDispatchQueue], ^{
+    dispatch_async([[self class] operationQueue], ^{
         [wself deleteObjectsWithObjectsBlock:objectsBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion) completion(wself);
@@ -178,7 +178,7 @@
                             completion:(YSRealmOperationFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
-    dispatch_async([[self class] operationDispatchQueue], ^{
+    dispatch_async([[self class] operationQueue], ^{
         [wself setExecuting:YES];
         
         NSMutableArray *values;
@@ -275,7 +275,7 @@
 
 #pragma mark - Queue
 
-+ (dispatch_queue_t)operationDispatchQueue
++ (dispatch_queue_t)operationQueue
 {
     static dispatch_queue_t __queue;
     static dispatch_once_t onceToken;

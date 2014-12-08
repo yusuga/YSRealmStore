@@ -50,6 +50,6 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, NSAr
 
 /* Queue */
 
-+ (dispatch_queue_t)operationDispatchQueue;
++ (dispatch_queue_t)operationQueue;
 
 @end
