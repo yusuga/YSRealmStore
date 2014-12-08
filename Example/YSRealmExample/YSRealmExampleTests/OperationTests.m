@@ -10,11 +10,11 @@
 #import <XCTest/XCTest.h>
 #import "Utility.h"
 
-@interface YSRealmTests : XCTestCase
+@interface OperationTests : XCTestCase
 
 @end
 
-@implementation YSRealmTests
+@implementation OperationTests
 
 - (void)setUp
 {
@@ -141,33 +141,6 @@
     XCTAssertNotNil(ope);
     
     [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-}
-
-#pragma mark Transaction
-
-- (void)testStateInWriteTransaction
-{
-    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(realm);
-    }];
-}
-
-- (void)testStateInAsyncWriteTransaction
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
-        XCTAssertFalse([NSThread isMainThread]);
-        XCTAssertNotNil(realm);
-    } completion:^{
-        XCTAssertTrue([NSThread isMainThread]);
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
 }
@@ -376,50 +349,6 @@
     [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
-}
-
-#pragma mark Transaction
-
-- (void)testWriteTransaction
-{
-    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    NSNumber *tweetID = tweetJsonObj[@"id"];
-    
-    XCTAssertEqual([[Tweet allObjects] count], 0);
-    
-    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
-        [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
-    }];
-    
-    XCTAssertEqual([[Tweet allObjects] count], 1);
-    
-    Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
-    XCTAssertNotNil(tweet);
-}
-
-- (void)testAsyncWriteTransaction
-{
-    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    NSNumber *tweetID = tweetJsonObj[@"id"];
-    
-    XCTAssertEqual([[Tweet allObjects] count], 0);
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    [[YSRealm sharedInstance] writeTransactionWithBlock:^(RLMRealm *realm) {
-        [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
-    } completion:^{
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-    
-    XCTAssertEqual([[Tweet allObjects] count], 1);
-    
-    Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
-    XCTAssertNotNil(tweet);
 }
 
 #pragma mark - Cancel

@@ -46,7 +46,8 @@
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation writeOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
+    [YSRealmOperation writeOperationWithRealmPath:[[self realm] path]
+                                     objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -65,7 +66,8 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock];
+    [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path]
+                                      objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -96,28 +98,22 @@
 
 #pragma mark Transaction
 
-- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block
+- (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
-    if (block == NULL) return;
-    
-    RLMRealm *realm = [self realm];
-    [realm beginWriteTransaction];
-    
-    block(realm);
-    
-    [realm commitWriteTransaction];
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path]
+                                                writeBlock:writeBlock];
 }
 
-- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block
-                       completion:(void(^)(void))completion
+- (YSRealmWriteTransaction *)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
+                                                 completion:(YSRealmWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;
-    dispatch_async([YSRealmOperation operationDispatchQueue], ^{
-        [wself writeTransactionWithBlock:block];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) completion();
-        });
-    });
+    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
+        [wself.operations removeObject:transaction];
+        if (completion) completion(transaction);
+    }];
+    [self.operations addObject:trans];
+    return trans;
 }
 
 @end

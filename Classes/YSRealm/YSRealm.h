@@ -8,39 +8,40 @@
 
 #import <Foundation/Foundation.h>
 #import "YSRealmOperation.h"
-
-typedef void(^YSRealmWriteTransactionBlock)(RLMRealm *realm);
+#import "YSRealmWriteTransaction.h"
 
 @interface YSRealm : NSObject
 
 + (instancetype)sharedInstance;
 - (RLMRealm*)realm;
 
-/* Wirte */
+/* Operation */
+
+// Wirte
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmOperationCompletion)completion;
 
-/* Delete */
+// Delete
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmOperationCompletion)completion;
 
-/* Fetch */
+// Fetch
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmOperationFetchCompletion)completion;
 
 /* Transaction */
 
-- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block;
+- (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock;
 
-- (void)writeTransactionWithBlock:(YSRealmWriteTransactionBlock)block
-                       completion:(void(^)(void))completion;
+- (YSRealmWriteTransaction*)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
+                                                completion:(YSRealmWriteTransactionCompletion)completion;
 
 
 @end
