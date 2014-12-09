@@ -56,7 +56,7 @@
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
-        completion(operation);
+        if (completion) completion(operation);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -76,7 +76,7 @@
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
-        completion(operation);
+        if (completion) completion(operation);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -90,7 +90,7 @@
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, NSArray *results) {
         [wself.operations removeObject:operation];
-        completion(operation, results);
+        if (completion) completion(operation, results);
     }];
     [self.operations addObject:ope];
     return ope;

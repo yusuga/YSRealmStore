@@ -103,7 +103,8 @@
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     
-    id object = objectsBlock(self);
+    id object = objectsBlock ? objectsBlock(self) : nil;
+    
     if (object) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
@@ -142,7 +143,8 @@
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     
-    id object = objectsBlock(self);
+    id object = objectsBlock ? objectsBlock(self) : nil;
+    
     if (object) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
@@ -183,7 +185,7 @@
         
         NSMutableArray *values;
         Class resultClass;
-        id results = objectsBlock(wself);
+        id results = objectsBlock ? objectsBlock(wself) : nil;
         
         if (!wself.isCancelled && results) {
             if (![results conformsToProtocol:@protocol(NSFastEnumeration)]) {
