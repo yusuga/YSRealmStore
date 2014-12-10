@@ -403,6 +403,29 @@
     XCTAssertEqual(tweet.user.id, id);
 }
 
+- (void)testNil
+{
+    NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:0 userID:0].mutableCopy;
+    [tweetObj removeObjectForKey:@"entities"];
+    
+    [Utility addTweetWithTweetJsonObject:tweetObj];
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:1 userID:1]];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 2);
+    
+    RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"entities = nil"]];
+    XCTAssertEqual([results count], 1);
+    Tweet *tweet = [results firstObject];
+    XCTAssertEqual(tweet.id, 0);
+    XCTAssertNil(tweet.entities);
+    
+    results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"entities != nil"]];
+    XCTAssertEqual([results count], 1);
+    tweet = [results firstObject];
+    XCTAssertEqual(tweet.id, 1);
+    XCTAssertNotNil(tweet.entities);
+}
+
 - (void)testANY
 {
     NSUInteger count = 10;
