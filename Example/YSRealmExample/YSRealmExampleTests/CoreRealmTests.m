@@ -452,6 +452,42 @@
     }
 }
 
+- (void)testAlternativeMethodOfCountFunction
+{
+    NSUInteger count = 10;
+    [Utility addTweetsWithCount:count];
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t tweetID = 0; tweetID < count; tweetID++) {
+            if (tweetID < count/2) {
+                Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
+                
+                NSUInteger watchersCount = arc4random_uniform(5) + 1;
+                for (NSUInteger userID = 0; userID < watchersCount; userID++) {
+                    User *user = [User objectForPrimaryKey:@(userID)];
+                    if (user == nil) {
+                        user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    }
+                    [tweet.watchers addObject:user];
+                }
+            }
+        }
+    }];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"ANY watchers.id >= 0"]];
+    XCTAssertEqual([results count], count/2);
+    for (Tweet *tweet in results) {
+        XCTAssertGreaterThan([tweet.watchers count], 0);
+    }
+    
+    results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"!(ANY watchers.id >= 0)"]];
+    XCTAssertEqual([results count], count/2);
+    for (Tweet *tweet in results) {
+        XCTAssertEqual([tweet.watchers count], 0);
+    }
+}
+
 - (void)testCount
 {
 #warning Unsupported (Realm 0.88.0)
