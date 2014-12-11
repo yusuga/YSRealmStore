@@ -384,7 +384,7 @@
     [Utility addTweetsWithCount:10];
     [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:INT64_MAX]]];
     
-    RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"id = %@", @(INT64_MAX)]];
+    RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"id = %lld", INT64_MAX]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
     XCTAssertEqual(tweet.id, INT64_MAX);
