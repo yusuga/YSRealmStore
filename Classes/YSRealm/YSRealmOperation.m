@@ -185,6 +185,8 @@
         
         NSMutableArray *values;
         Class resultClass;
+        NSString *primaryKey;
+        
         id results = objectsBlock ? objectsBlock(wself) : nil;
         
         if (!wself.isCancelled && results) {
@@ -198,30 +200,30 @@
             values = [NSMutableArray arrayWithCapacity:[results count]];
             RLMObject *result = [results firstObject];
             resultClass = [result class];
+            primaryKey = [resultClass primaryKey];
             
-            if (result && resultClass) {
-                NSString *primaryKey = [resultClass primaryKey];
-                
-                for (RLMObject *obj in results) {
-                    NSParameterAssert([obj isKindOfClass:[RLMObject class]]);
-                    [values addObject:[obj valueForKey:primaryKey]];
+            if (result) {
+                if (resultClass && primaryKey) {
+                    for (RLMObject *obj in results) {
+                        NSParameterAssert([obj isKindOfClass:[RLMObject class]]);
+                        [values addObject:[obj valueForKey:primaryKey]];
+                    }
+                } else {
+                    DDLogWarn(@"%s; Unsupported class; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
                 }
             }
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSMutableArray *results = [NSMutableArray arrayWithCapacity:[values count]];
-            
-            if (!wself.isCancelled && resultClass != NULL) {
-                for (id value in values) {
-                    [results addObject:[resultClass objectForPrimaryKey:value]];
-                }
+            RLMResults *results;
+            if (!wself.isCancelled && [values count] > 0 && resultClass && primaryKey) {
+                results = [resultClass objectsWhere:@"%K IN %@", primaryKey, values];
             }
             
             [wself setExecuting:NO];
             [wself setFinished:YES];
             
-            if (completion) completion(wself, [NSArray arrayWithArray:results]);
+            if (completion) completion(wself, results);
         });
     });
 }

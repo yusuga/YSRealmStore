@@ -13,7 +13,7 @@
 typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation);
 
 typedef void(^YSRealmOperationCompletion)(YSRealmOperation *operation);
-typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, NSArray *results);
+typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMResults *results);
 
 @interface YSRealmOperation : NSObject
 

@@ -88,7 +88,7 @@
                                        completion:(YSRealmOperationFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, NSArray *results) {
+    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
         [wself.operations removeObject:operation];
         if (completion) completion(operation, results);
     }];

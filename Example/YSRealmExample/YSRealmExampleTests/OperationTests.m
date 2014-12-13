@@ -129,7 +129,7 @@
         XCTAssertFalse(operation.isFinished);
         
         return nil;
-    } completion:^(YSRealmOperation *operation, NSArray *results) {
+    } completion:^(YSRealmOperation *operation, RLMResults *results) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -337,16 +337,39 @@
     [[YSRealm sharedInstance] fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         RLMResults *tweets = [Tweet allObjects];
         return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
-    } completion:^(YSRealmOperation *operation, NSArray *results) {
+    } completion:^(YSRealmOperation *operation, RLMResults *results) {
         XCTAssertEqual([results count], count);
-        
-        [results enumerateObjectsUsingBlock:^(Tweet *tweet, NSUInteger idx, BOOL *stop) {
-            XCTAssertEqual(tweet.id, idx);
-        }];
+        for (NSUInteger i = 0; i < [results count]; i++) {
+            XCTAssertEqual(((Tweet*)[results objectAtIndex:i]).id, i);
+        }        
         [expectation fulfill];
     }];
     
     [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+}
+
+- (void)testAsyncFetchObjectsWitchDontHavePrimaryKey
+{
+    YSRealm *ysRealm = [YSRealm sharedInstance];
+    NSUInteger count = 10;
+    
+    [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+        for (NSUInteger i = 0; i < count; i++) {
+            [realm addObject:[[Url alloc] initWithObject:@{@"url" : [NSString stringWithFormat:@"http://%zd.com", i]}]];
+        }
+    }];
+    XCTAssertEqual([[Url allObjects] count], count);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    [ysRealm fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        return [Url allObjects];
+    } completion:^(YSRealmOperation *operation, RLMResults *results) {
+        XCTAssertNil(results);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
 }
