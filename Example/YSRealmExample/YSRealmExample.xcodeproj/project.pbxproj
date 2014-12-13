@@ -10,6 +10,8 @@
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
 		B862E74D1A1B64690086F8EC /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = B862E74C1A1B64690086F8EC /* Utility.m */; };
+		B8C003FD1A3C94B700130815 /* RLMArray+YSRealm.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FC1A3C94B700130815 /* RLMArray+YSRealm.m */; };
+		B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FE1A3C94E200130815 /* CategoryTests.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
 		B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460119FD00F5008FA04F /* AppDelegate.m */; };
 		B8D5460519FD00F5008FA04F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460419FD00F5008FA04F /* ViewController.m */; };
@@ -47,6 +49,9 @@
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
 		B862E74B1A1B64690086F8EC /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		B862E74C1A1B64690086F8EC /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
+		B8C003FB1A3C94B700130815 /* RLMArray+YSRealm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealm.h"; sourceTree = "<group>"; };
+		B8C003FC1A3C94B700130815 /* RLMArray+YSRealm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealm.m"; sourceTree = "<group>"; };
+		B8C003FE1A3C94E200130815 /* CategoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTests.m; sourceTree = "<group>"; };
 		B8D545F919FD00F5008FA04F /* YSRealmExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSRealmExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D545FD19FD00F5008FA04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B8D545FE19FD00F5008FA04F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -160,6 +165,7 @@
 				B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */,
 				B8D5464C19FDCEC9008FA04F /* OperationTests.m */,
 				B8191B201A352E500063FE1F /* WriteTransactionTests.m */,
+				B8C003FE1A3C94E200130815 /* CategoryTests.m */,
 				B8D5461619FD00F6008FA04F /* Supporting Files */,
 			);
 			path = YSRealmExampleTests;
@@ -184,6 +190,8 @@
 				B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */,
 				B8D5463F19FDCAE6008FA04F /* RLMObject+YSRealm.h */,
 				B8D5464019FDCAE6008FA04F /* RLMObject+YSRealm.m */,
+				B8C003FB1A3C94B700130815 /* RLMArray+YSRealm.h */,
+				B8C003FC1A3C94B700130815 /* RLMArray+YSRealm.m */,
 			);
 			name = YSRealm;
 			path = ../../Classes/YSRealm;
@@ -347,6 +355,7 @@
 				B8D5462519FD0291008FA04F /* YSRealm.m in Sources */,
 				B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */,
 				B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */,
+				B8C003FD1A3C94B700130815 /* RLMArray+YSRealm.m in Sources */,
 				B8D545FF19FD00F5008FA04F /* main.m in Sources */,
 				B8D5462819FD029B008FA04F /* YSRealmOperation.m in Sources */,
 			);
@@ -359,6 +368,7 @@
 				B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */,
 				B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */,
 				B862E74D1A1B64690086F8EC /* Utility.m in Sources */,
+				B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */,
 				B8D5463519FDC93B008FA04F /* User.m in Sources */,
 				B8D5463219FDC933008FA04F /* Tweet.m in Sources */,
 				B8D5463B19FDC952008FA04F /* Url.m in Sources */,

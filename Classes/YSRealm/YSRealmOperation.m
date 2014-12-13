@@ -209,7 +209,7 @@
                         [values addObject:[obj valueForKey:primaryKey]];
                     }
                 } else {
-                    DDLogWarn(@"%s; Unsupported class; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
+                    DDLogWarn(@"%s; Primary key is required; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
                 }
             }
         }
