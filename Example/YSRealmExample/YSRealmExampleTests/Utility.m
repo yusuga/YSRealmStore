@@ -13,7 +13,7 @@
 + (void)initialize
 {
     if (self == [Utility class]) {
-        [RLMRealm setSchemaVersion:3 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+        [RLMRealm setSchemaVersion:4 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
                 /**

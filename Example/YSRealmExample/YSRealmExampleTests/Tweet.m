@@ -44,11 +44,13 @@
          文字列の空オブジェクト表現
          - 文字列にnilは許容できないので空文字列を使用する (Realm 0.87.4)
          */
-        self.text = [self ys_stringWithObject:object forKey:@"text"];
+        self.text = [self ys_stringWithObject:object forKey:@"text"];        
         
         self.user = [[User alloc] initWithObject:[object ys_objectOrNilForKey:@"user"]];
         
         self.entities = [[Entities alloc] initWithObject:[object ys_objectOrNilForKey:@"entities"]];
+        
+        self.retweeted = [[object ys_objectOrNilForKey:@"retweeted"] boolValue];
     }
     return self;
 }

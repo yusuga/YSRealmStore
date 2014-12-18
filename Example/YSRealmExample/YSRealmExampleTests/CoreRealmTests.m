@@ -390,6 +390,17 @@
     XCTAssertEqual(tweet.id, INT64_MAX);
 }
 
+- (void)testPredicateWithUint64Max
+{
+    [Utility addTweetsWithCount:10];
+    [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:UINT64_MAX]]];
+    
+    RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"id = %llu", UINT64_MAX]];
+    XCTAssertEqual([results count], 1);
+    Tweet *tweet = [results firstObject];
+    XCTAssertEqual(tweet.id, UINT64_MAX);
+}
+
 - (void)testFetchTweetWithUserID
 {
     [Utility addTweetsWithCount:10];
@@ -397,6 +408,19 @@
     int64_t id = 5;
     
     RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"user.id = %@", @(id)]];
+    XCTAssertEqual([results count], 1);
+    Tweet *tweet = [results firstObject];
+    XCTAssertEqual(tweet.id, id);
+    XCTAssertEqual(tweet.user.id, id);
+}
+
+- (void)testFetchTweetWithUser
+{
+    [Utility addTweetsWithCount:10];
+    
+    int64_t id = 5;
+    
+    RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"user = %@", [User objectForPrimaryKey:@(id)]]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
     XCTAssertEqual(tweet.id, id);
@@ -426,7 +450,7 @@
     XCTAssertNotNil(tweet.entities);
 }
 
-- (void)testANY
+- (void)testANYWithPrimitiveValue
 {
     NSUInteger count = 10;
     [Utility addTweetsWithCount:count];
@@ -450,6 +474,92 @@
         RLMResults *tweets = [Tweet objectsWhere:@"ANY watchers.id = %d", i];
         XCTAssertEqual([tweets count], count - i);
     }
+}
+
+- (void)testANYWithPrimitiveValues
+{
+    NSUInteger count = 10;
+    [Utility addTweetsWithCount:count];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (Tweet *tweet in [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:YES]) {
+            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                if (user == nil) {
+                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                }
+                [tweet.watchers addObject:user];
+            }
+        }
+    }];
+    
+    XCTAssertEqual([[User allObjects] count], count);
+    
+    NSMutableArray *ids = @[].mutableCopy;
+    for (NSUInteger i = 0; i < count; i++) {
+        [ids addObject:@(i)];
+    }
+    XCTAssertEqual([ids count], count);
+    
+    RLMResults *tweets = [Tweet objectsWhere:@"ANY watchers.id IN %@", ids];
+    XCTAssertEqual([tweets count], count);
+}
+
+- (void)testANYWithObject
+{
+    NSUInteger count = 10;
+    [Utility addTweetsWithCount:count];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (Tweet *tweet in [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:YES]) {
+            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                if (user == nil) {
+                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                }
+                [tweet.watchers addObject:user];
+            }
+        }
+    }];
+    
+    XCTAssertEqual([[User allObjects] count], count);
+    
+    for (NSUInteger i = 0; i < count; i++) {
+        RLMResults *tweets = [Tweet objectsWhere:@"ANY watchers = %@", [User objectForPrimaryKey:@(i)]];
+        XCTAssertEqual([tweets count], count - i);
+    }
+}
+
+- (void)testANYWithObjects
+{
+    NSUInteger count = 10;
+    [Utility addTweetsWithCount:count];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (Tweet *tweet in [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:YES]) {
+            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                if (user == nil) {
+                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                }
+                [tweet.watchers addObject:user];
+            }
+        }
+    }];
+    
+    XCTAssertEqual([[User allObjects] count], count);
+    
+    NSMutableArray *users = @[].mutableCopy;
+    for (NSUInteger i = 0; i < count; i++) {
+        [users addObject:[User objectForPrimaryKey:@(i)]];
+    }
+    XCTAssertEqual([users count], count);
+    
+    RLMResults *tweets = [Tweet objectsWhere:@"ANY watchers IN %@", users];
+    XCTAssertEqual([tweets count], count);
 }
 
 - (void)testAlternativeMethodOfCountFunction
@@ -573,6 +683,257 @@
     }
 #endif
 }
+
+#pragma mark - RLMResults
+
+- (void)testRLMResultsWithEqualBool
+{
+    int64_t tweetID = 0;
+    int64_t userID = 0;
+    NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID].mutableCopy;
+    [tweetObj setObject:@YES forKey:@"retweeted"];
+    
+    RLMResults *results = [Tweet objectsWhere:@"retweeted = 1"];
+    XCTAssertEqual([results count], 0);
+    NSLog(@"%@", results);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm addObject:[[Tweet alloc] initWithObject:tweetObj]];
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 1);
+    XCTAssertEqual([results count], 1);
+}
+
+- (void)testRLMResultsWithEqualInteger
+{
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"id = 5"];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], 1);
+}
+
+- (void)testRLMResultsWithEqualIntegerAndEqualBool
+{
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"id = 5 AND retweeted = 1"];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:i userID:i].mutableCopy;
+            [tweetObj setObject:@YES forKey:@"retweeted"];
+            [realm addObject:[[Tweet alloc] initWithObject:tweetObj]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], 1);
+}
+
+- (void)testRLMResultsWithGreaterThanOrEqual
+{
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"id >= %d", count/2];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], count/2);
+}
+
+- (void)testRLMResultsWithIntegerInObject
+{
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"user.id = 5"];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], 1);
+}
+
+- (void)testRLMResultsWithLessThanIntegerInObject
+{
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"user.id < %d", count/2];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], count/2);
+}
+
+- (void)testRLMResultsWithObject
+{
+    int64_t userID = 5;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:userID]]];
+    }];
+    
+    User *user = [User objectForPrimaryKey:@(userID)];
+    XCTAssertNotNil(user);
+    
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"user = %@", user];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], 1);
+}
+
+- (void)testRLMResultsWithObjects
+{
+    NSUInteger userCount = 5;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < userCount; i++) {
+            [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:i]]];
+        }
+    }];
+    XCTAssertEqual([[User allObjects] count], userCount);
+    
+    RLMResults *users = [User allObjects];
+    
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"user IN %@", users];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], userCount);
+}
+
+- (void)testRLMResultsWithANYObject
+{
+    int64_t userID = 5;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:userID]]];
+    }];
+    
+    User *user = [User objectForPrimaryKey:@(userID)];
+    XCTAssertNotNil(user);
+    
+    NSUInteger count = 10;
+    RLMResults *results = [Tweet objectsWhere:@"ANY watchers = %@", user];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]];
+            if (i == userID) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                XCTAssertNotNil(user);
+                [tweet.watchers addObject:user];
+            }
+            [realm addOrUpdateObject:tweet];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], 1);
+}
+
+- (void)testRLMResultsWithANYObjects
+{
+    NSUInteger userCount = 5;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < userCount; i++) {
+            [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:i]]];
+        }
+    }];
+    XCTAssertEqual([[User allObjects] count], userCount);
+    
+    RLMResults *users = [User allObjects];
+    
+    NSUInteger count = 100;
+    RLMResults *results = [Tweet objectsWhere:@"ANY watchers IN %@", users];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]];
+            
+            for (int64_t userID = 0; userID < arc4random_uniform(userCount) + 1; userID++) {
+                User *user = [User objectForPrimaryKey:@(userID)];
+                XCTAssertNotNil(user);
+                [tweet.watchers addObject:user];
+            }
+            
+            [realm addOrUpdateObject:tweet];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    XCTAssertEqual([[User allObjects] count], count);
+    XCTAssertEqual([results count], count);
+}
+
+- (void)testRLMResultsWithDeleteObject
+{
+    NSUInteger count = 10;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+        }
+    }];
+    
+    RLMResults *results = [Tweet objectsWhere:@"user.id >= 0"];
+    XCTAssertEqual([results count], count);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[User allObjects]];
+    }];
+    
+    XCTAssertEqual([results count], 0);
+}
+
 
 #pragma mark - Test JsonGenerator
 
