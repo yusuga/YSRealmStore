@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "RLMObject+YSRealm.h"
-#import "RLMArray+YSRealm.h"
+#import "RLMObject+YSRealmStore.h"
+#import "RLMArray+YSRealmStore.h"
 #import "Utility.h"
 
 @interface CategoryTests : XCTestCase
@@ -31,7 +31,7 @@
 
 - (void)testRLMArray
 {
-    YSRealm *ysRealm = [YSRealm sharedInstance];
+    YSRealmStore *ysRealm = [YSRealmStore sharedInstance];
     int64_t tweetID = 0;
     NSUInteger userCount = 10;
     

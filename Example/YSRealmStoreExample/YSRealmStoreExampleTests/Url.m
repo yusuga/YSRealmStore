@@ -7,7 +7,7 @@
 //
 
 #import "Url.h"
-#import "RLMObject+YSRealm.h"
+#import "RLMObject+YSRealmStore.h"
 
 @implementation Url
 

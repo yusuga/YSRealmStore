@@ -1,20 +1,20 @@
 //
-//  YSRealm.m
-//  YSRealmExample
+//  YSRealmStore.m
+//  YSRealmStoreExample
 //
 //  Created by Yu Sugawara on 2014/10/26.
 //  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
 //
 
-#import "YSRealm.h"
+#import "YSRealmStore.h"
 
-@interface YSRealm ()
+@interface YSRealmStore ()
 
 @property (nonatomic) NSMutableArray *operations;
 
 @end
 
-@implementation YSRealm
+@implementation YSRealmStore
 
 + (instancetype)sharedInstance
 {

@@ -27,7 +27,7 @@
 
 - (void)testStateInWriteTransaction
 {
-    [[YSRealm sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
@@ -41,7 +41,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
@@ -66,7 +66,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmWriteTransaction *trans = [[YSRealm sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    YSRealmWriteTransaction *trans = [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
@@ -98,7 +98,7 @@
     
     XCTAssertEqual([[Tweet allObjects] count], 0);
     
-    [[YSRealm sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
     }];
     
@@ -117,7 +117,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
     } completion:^(YSRealmWriteTransaction *transaction) {
         [expectation fulfill];
@@ -143,7 +143,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmWriteTransaction *trans = [[YSRealm sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    YSRealmWriteTransaction *trans = [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);

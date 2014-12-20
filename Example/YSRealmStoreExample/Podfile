@@ -1,4 +1,4 @@
 platform :ios, '7.0'
-pod 'Realm'
+pod 'Realm', '0.88.0'
 pod 'YSNSFoundationAdditions'
 pod 'YSCocoaLumberjackHelper'

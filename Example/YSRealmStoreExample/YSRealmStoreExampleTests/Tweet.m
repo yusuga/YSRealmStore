@@ -8,7 +8,7 @@
 
 #import "Tweet.h"
 #import <YSNSFoundationAdditions/NSDictionary+YSNSFoundationAdditions.h>
-#import "RLMObject+YSRealm.h"
+#import "RLMObject+YSRealmStore.h"
 
 @implementation Tweet
 

@@ -33,7 +33,7 @@
 
 - (void)testStateInSyncAdd
 {
-    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -48,7 +48,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -76,7 +76,7 @@
 
 - (void)testStateInSyncDelete
 {
-    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -91,7 +91,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -121,7 +121,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] fetchObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] fetchObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
@@ -165,7 +165,7 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     NSNumber *tweetID = tweetJsonObj[@"id"];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet alloc] initWithObject:tweetJsonObj];
     } completion:^(YSRealmOperation *operation) {
         Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
@@ -186,7 +186,7 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     [Utility addTweetWithTweetJsonObject:tweetJsonObj];
     
-    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         Tweet *tweet = [[Tweet allObjects] firstObject];
         tweet.text = @"";
         tweet.user = nil;
@@ -210,7 +210,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertEqual([[Tweet allObjects] count], 1);
         Tweet *tweet = [[Tweet allObjects] firstObject];
         tweet.text = @"";
@@ -262,7 +262,7 @@
 {
     [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
-    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet allObjects] firstObject];
     }];
     
@@ -274,7 +274,7 @@
     NSUInteger count = 10;
     [Utility addTweetsWithCount:count];
     
-    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"id < %d", count/2]];
     }];
     
@@ -287,7 +287,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet allObjects] firstObject];
     } completion:^(YSRealmOperation *operation) {
         XCTAssertEqual([[Tweet allObjects] count], 0);
@@ -304,7 +304,7 @@
 {
     [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
     
-    [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         NSMutableArray *objs = @[].mutableCopy;
         
         Tweet *tweet = [[Tweet allObjects] firstObject];
@@ -334,7 +334,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[YSRealm sharedInstance] fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[YSRealmStore sharedInstance] fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         RLMResults *tweets = [Tweet allObjects];
         return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
     } completion:^(YSRealmOperation *operation, RLMResults *results) {
@@ -352,7 +352,7 @@
 
 - (void)testAsyncFetchObjectsWitchDontHavePrimaryKey
 {
-    YSRealm *ysRealm = [YSRealm sharedInstance];
+    YSRealmStore *ysRealm = [YSRealmStore sharedInstance];
     NSUInteger count = 10;
     
     [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
@@ -381,7 +381,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);
@@ -407,7 +407,7 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);
@@ -438,7 +438,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);
@@ -479,7 +479,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);
@@ -521,7 +521,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[YSRealm sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertTrue(operation.isExecuting);
         XCTAssertFalse(operation.isFinished);

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "YSRealm.h"
+#import "YSRealmStore.h"
 #import "JsonGenerator.h"
 #import "Tweet.h"
 

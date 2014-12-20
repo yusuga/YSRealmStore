@@ -1,15 +1,15 @@
 //
 //  RLMArray+YSRealm.m
-//  YSRealmExample
+//  YSRealmStoreExample
 //
 //  Created by Yu Sugawara on 2014/12/14.
 //  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
 //
 
-#import "RLMArray+YSRealm.h"
+#import "RLMArray+YSRealmStore.h"
 #import <Realm/Realm.h>
 
-@implementation RLMArray (YSRealm)
+@implementation RLMArray (YSRealmStore)
 
 - (BOOL)ys_containsObject:(RLMObject*)object
 {
