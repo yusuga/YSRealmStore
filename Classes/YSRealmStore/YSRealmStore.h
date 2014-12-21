@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "YSRealmOperation.h"
 #import "YSRealmWriteTransaction.h"
+@class YSRealmStore;
+
+typedef void(^YSRealmStoreOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation);
+typedef void(^YSRealmStoreFetchOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results);
+typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRealmWriteTransaction *transaction);
 
 @interface YSRealmStore : NSObject
 
@@ -22,26 +27,26 @@
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                       completion:(YSRealmOperationCompletion)completion;
+                                       completion:(YSRealmStoreOperationCompletion)completion;
 
 // Delete
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                        completion:(YSRealmOperationCompletion)completion;
+                                        completion:(YSRealmStoreOperationCompletion)completion;
 
 // Fetch
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                       completion:(YSRealmOperationFetchCompletion)completion;
+                                       completion:(YSRealmStoreFetchOperationCompletion)completion;
 
 /* Transaction */
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock;
 
 - (YSRealmWriteTransaction*)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-                                                completion:(YSRealmWriteTransactionCompletion)completion;
+                                                completion:(YSRealmStoreWriteTransactionCompletion)completion;
 
 
 @end

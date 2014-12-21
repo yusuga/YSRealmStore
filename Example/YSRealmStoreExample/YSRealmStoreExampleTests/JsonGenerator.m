@@ -60,7 +60,7 @@
     for (NSUInteger i = 0; i < urlCount; i++) {
         switch (i) {
             case 0:
-                [urls addObject:@{@"url" : @"http://google.com"}];
+                [urls addObject:@{@"url" : @"http://realm.io"}];
                 break;
             case 1:
                 [urls addObject:@{@"url" : @"http://apple.com"}];

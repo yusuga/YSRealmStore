@@ -78,5 +78,46 @@
         XCTAssertEqual([watchers count], 1);
     }];
 }
-
+/*
+- (void)testRLMArrayOfStandalone
+{
+    RLMArray *urls = [[RLMArray alloc] initWithObjectClassName:@"Url"];
+    Url *url = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];
+    
+    [urls addObject:url];
+    XCTAssertEqual([urls count], 1);
+    
+    XCTAssertTrue([urls ys_containsObject:url]);
+    
+    [urls ys_addUniqueObject:url];
+    XCTAssertEqual([urls count], 1);
+    
+    [urls ys_removeObject:url];
+    XCTAssertEqual([urls count], 0);
+    
+    Url *url2 = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];
+    [url2 isEqual:url];
+}
+ */
+/*
+- (void)testRLMArrayOfNonPrimaryKeyObject
+{
+    YSRealm *ysRealm = [YSRealm sharedInstance];
+    int64_t tweetID = 0;
+    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0 urlCount:1]];
+    
+    [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+        Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
+        XCTAssertNotNil(tweet);
+        
+        Url *url = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];        
+        [tweet.entities.urls addObject:url];
+        XCTAssertEqual([tweet.entities.urls count], 2);
+        
+        XCTAssertTrue([tweet.entities.urls ys_containsObject:url]);
+        
+        [tweet.entities.urls indexOfObject:url];
+    }];
+}
+*/
 @end

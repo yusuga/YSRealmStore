@@ -51,12 +51,12 @@
 }
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                       completion:(YSRealmOperationCompletion)completion
+                                       completion:(YSRealmStoreOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
-        if (completion) completion(operation);
+        if (completion) completion(wself, operation);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -71,12 +71,12 @@
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                        completion:(YSRealmOperationCompletion)completion
+                                        completion:(YSRealmStoreOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
-        if (completion) completion(operation);
+        if (completion) completion(wself, operation);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -85,12 +85,12 @@
 #pragma mark Fetch
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                       completion:(YSRealmOperationFetchCompletion)completion
+                                       completion:(YSRealmStoreFetchOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
         [wself.operations removeObject:operation];
-        if (completion) completion(operation, results);
+        if (completion) completion(wself, operation, results);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -105,12 +105,12 @@
 }
 
 - (YSRealmWriteTransaction *)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-                                                 completion:(YSRealmWriteTransactionCompletion)completion
+                                                 completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;
     YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
         [wself.operations removeObject:transaction];
-        if (completion) completion(transaction);
+        if (completion) completion(wself, transaction);
     }];
     [self.operations addObject:trans];
     return trans;

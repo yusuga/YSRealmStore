@@ -195,7 +195,7 @@
 				B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */,
 			);
 			name = YSRealmStore;
-			path = ../../Classes/YSRealm;
+			path = ../../Classes/YSRealmStore;
 			sourceTree = "<group>";
 		};
 		B8D5462C19FDC8D0008FA04F /* Utility */ = {

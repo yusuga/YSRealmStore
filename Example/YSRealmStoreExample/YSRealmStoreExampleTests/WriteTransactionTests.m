@@ -48,8 +48,9 @@
         XCTAssertFalse(transaction.isInterrupted);
         XCTAssertTrue(transaction.isExecuting);
         XCTAssertFalse(transaction.isFinished);
-    } completion:^(YSRealmWriteTransaction *transaction) {
+    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(store);
         XCTAssertNotNil(transaction);
         XCTAssertFalse(transaction.isInterrupted);
         XCTAssertFalse(transaction.isExecuting);
@@ -73,7 +74,7 @@
         XCTAssertTrue(transaction.isInterrupted);
         XCTAssertTrue(transaction.isExecuting);
         XCTAssertFalse(transaction.isFinished);
-    } completion:^(YSRealmWriteTransaction *transaction) {
+    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(transaction);
         XCTAssertTrue(transaction.isInterrupted);
@@ -119,7 +120,7 @@
     
     [[YSRealmStore sharedInstance] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
-    } completion:^(YSRealmWriteTransaction *transaction) {
+    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         [expectation fulfill];
     }];
     
@@ -153,7 +154,7 @@
         if (!transaction.isInterrupted) {
             [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
         }
-    } completion:^(YSRealmWriteTransaction *transaction) {
+    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         [expectation fulfill];
     }];
     [trans interrupt];

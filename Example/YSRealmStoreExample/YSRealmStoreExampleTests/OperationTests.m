@@ -56,8 +56,9 @@
         XCTAssertFalse(operation.isFinished);
         
         return nil;
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
@@ -99,8 +100,9 @@
         XCTAssertFalse(operation.isFinished);
         
         return nil;
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
@@ -129,8 +131,9 @@
         XCTAssertFalse(operation.isFinished);
         
         return nil;
-    } completion:^(YSRealmOperation *operation, RLMResults *results) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
         XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
@@ -167,7 +170,7 @@
     
     YSRealmOperation *ope = [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet alloc] initWithObject:tweetJsonObj];
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
         XCTAssertNotNil(tweet);
         [expectation fulfill];
@@ -217,7 +220,7 @@
         tweet.user = nil;
         tweet.entities = nil;
         return tweet;
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
         Tweet *addedTweet = [[Tweet allObjects] firstObject];
         
@@ -289,7 +292,7 @@
     
     [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet allObjects] firstObject];
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertEqual([[Tweet allObjects] count], 0);
         
         [expectation fulfill];
@@ -337,7 +340,7 @@
     [[YSRealmStore sharedInstance] fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         RLMResults *tweets = [Tweet allObjects];
         return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
-    } completion:^(YSRealmOperation *operation, RLMResults *results) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
         XCTAssertEqual([results count], count);
         for (NSUInteger i = 0; i < [results count]; i++) {
             XCTAssertEqual(((Tweet*)[results objectAtIndex:i]).id, i);
@@ -365,7 +368,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     [ysRealm fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [Url allObjects];
-    } completion:^(YSRealmOperation *operation, RLMResults *results) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
         XCTAssertNil(results);
         [expectation fulfill];
     }];
@@ -387,7 +390,7 @@
         XCTAssertFalse(operation.isFinished);
         
         return @[[[Tweet alloc] initWithObject:[JsonGenerator tweet]]];
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
         XCTAssertTrue(operation.isFinished);
@@ -413,7 +416,7 @@
         XCTAssertFalse(operation.isFinished);
         
         return nil;
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
         XCTAssertTrue(operation.isFinished);
@@ -450,7 +453,7 @@
         tweet.entities = nil;
         
         return tweet;
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
         XCTAssertTrue(operation.isFinished);
@@ -491,7 +494,7 @@
         tweet.entities = nil;
         
         return nil;
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
         XCTAssertTrue(operation.isFinished);
@@ -527,7 +530,7 @@
         XCTAssertFalse(operation.isFinished);
         
         return [Tweet allObjects];
-    } completion:^(YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
         XCTAssertTrue(operation.isCancelled);
         XCTAssertFalse(operation.isExecuting);
         XCTAssertTrue(operation.isFinished);
