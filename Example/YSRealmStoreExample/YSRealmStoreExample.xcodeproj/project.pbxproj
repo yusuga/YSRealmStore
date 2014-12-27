@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
-		B862E74D1A1B64690086F8EC /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = B862E74C1A1B64690086F8EC /* Utility.m */; };
+		B862E74D1A1B64690086F8EC /* TwitterRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B862E74C1A1B64690086F8EC /* TwitterRealmStore.m */; };
 		B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */; };
 		B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FE1A3C94E200130815 /* CategoryTests.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
@@ -49,8 +49,8 @@
 		B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmWriteTransaction.m; sourceTree = "<group>"; };
 		B8191B201A352E500063FE1F /* WriteTransactionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriteTransactionTests.m; sourceTree = "<group>"; };
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
-		B862E74B1A1B64690086F8EC /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
-		B862E74C1A1B64690086F8EC /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
+		B862E74B1A1B64690086F8EC /* TwitterRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterRealmStore.h; sourceTree = "<group>"; };
+		B862E74C1A1B64690086F8EC /* TwitterRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterRealmStore.m; sourceTree = "<group>"; };
 		B8C003FB1A3C94B700130815 /* RLMArray+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealmStore.h"; sourceTree = "<group>"; };
 		B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8C003FE1A3C94E200130815 /* CategoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTests.m; sourceTree = "<group>"; };
@@ -111,6 +111,21 @@
 				0AAE81F79A0CF1ECCDF8F05D /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B886DE771A4EFB4200F98485 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B8D5463019FDC933008FA04F /* Tweet.h */,
+				B8D5463119FDC933008FA04F /* Tweet.m */,
+				B8D5463319FDC93B008FA04F /* User.h */,
+				B8D5463419FDC93B008FA04F /* User.m */,
+				B8D5463619FDC949008FA04F /* Entities.h */,
+				B8D5463719FDC949008FA04F /* Entities.m */,
+				B8D5463919FDC952008FA04F /* Url.h */,
+				B8D5463A19FDC952008FA04F /* Url.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		B8D545F019FD00F5008FA04F = {
@@ -203,16 +218,9 @@
 			children = (
 				B8D5462D19FDC8EF008FA04F /* JsonGenerator.h */,
 				B8D5462E19FDC8EF008FA04F /* JsonGenerator.m */,
-				B862E74B1A1B64690086F8EC /* Utility.h */,
-				B862E74C1A1B64690086F8EC /* Utility.m */,
-				B8D5463019FDC933008FA04F /* Tweet.h */,
-				B8D5463119FDC933008FA04F /* Tweet.m */,
-				B8D5463319FDC93B008FA04F /* User.h */,
-				B8D5463419FDC93B008FA04F /* User.m */,
-				B8D5463619FDC949008FA04F /* Entities.h */,
-				B8D5463719FDC949008FA04F /* Entities.m */,
-				B8D5463919FDC952008FA04F /* Url.h */,
-				B8D5463A19FDC952008FA04F /* Url.m */,
+				B862E74B1A1B64690086F8EC /* TwitterRealmStore.h */,
+				B862E74C1A1B64690086F8EC /* TwitterRealmStore.m */,
+				B886DE771A4EFB4200F98485 /* Model */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -377,7 +385,7 @@
 			files = (
 				B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */,
 				B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */,
-				B862E74D1A1B64690086F8EC /* Utility.m in Sources */,
+				B862E74D1A1B64690086F8EC /* TwitterRealmStore.m in Sources */,
 				B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */,
 				B8D5463519FDC93B008FA04F /* User.m in Sources */,
 				B8D5463219FDC933008FA04F /* Tweet.m in Sources */,

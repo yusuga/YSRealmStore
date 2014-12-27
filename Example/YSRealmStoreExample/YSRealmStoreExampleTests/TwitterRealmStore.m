@@ -6,13 +6,13 @@
 //  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
 //
 
-#import "Utility.h"
+#import "TwitterRealmStore.h"
 
-@implementation Utility
+@implementation TwitterRealmStore
 
 + (void)initialize
 {
-    if (self == [Utility class]) {
+    if (self == [TwitterRealmStore class]) {
         [RLMRealm setSchemaVersion:4 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
@@ -34,22 +34,9 @@
     }
 }
 
-+ (void)deleteAllObjects
+- (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
 {
-    RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm beginWriteTransaction];
-    [realm deleteAllObjects];
-    [realm commitWriteTransaction];
-    
-    NSAssert([[Tweet allObjects] count] == 0, nil);
-    NSAssert([[User allObjects] count] == 0, nil);
-    NSAssert([[Entities allObjects] count] == 0, nil);
-    NSAssert([[Url allObjects] count] == 0, nil);
-}
-
-+ (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
-{
-    [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet alloc] initWithObject:tweetJsonObject];
     }];
     
@@ -59,9 +46,9 @@
     }
 }
 
-+ (void)addTweetsWithCount:(NSUInteger)count
+- (void)addTweetsWithCount:(NSUInteger)count
 {
-    [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         NSMutableArray *tweets = [NSMutableArray arrayWithCapacity:count];
         for (NSUInteger twID = 0; twID < count; twID++) {
             [tweets addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:twID]]];

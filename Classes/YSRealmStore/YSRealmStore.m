@@ -116,4 +116,26 @@
     return trans;
 }
 
+#pragma mark - Utility
+
+- (void)deleteAllObjects
+{
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+        [realm deleteAllObjects];
+    }];
+}
+
+- (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion
+{
+    __weak typeof(self) wself = self;
+    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+        [realm deleteAllObjects];
+    } completion:^(YSRealmWriteTransaction *transaction) {
+        [wself.operations removeObject:transaction];
+        if (completion) completion(wself, transaction);
+    }];
+    [self.operations addObject:trans];
+}
+
+
 @end

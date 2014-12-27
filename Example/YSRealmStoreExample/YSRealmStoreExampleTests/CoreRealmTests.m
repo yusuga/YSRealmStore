@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "Utility.h"
+#import "TwitterRealmStore.h"
 
 @interface CoreRealmTests : XCTestCase
 
@@ -20,7 +20,7 @@
 {
     [super setUp];
     
-    [Utility deleteAllObjects];
+    [[TwitterRealmStore sharedInstance] deleteAllObjects];
 }
 
 - (void)tearDown
@@ -32,7 +32,7 @@
 
 - (void)testInsertTweet
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     Tweet *addedTweet = [[Tweet allObjects] firstObject];
     XCTAssertNotNil(addedTweet);
@@ -57,7 +57,7 @@
 - (void)testInsertTweets
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     
     XCTAssertEqual([[Tweet allObjects] count], count);
     XCTAssertEqual([[User allObjects] count], count);
@@ -72,7 +72,7 @@
 
 - (void)testInsertTweetOfEmptyArray
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetOfContainEmptyArray]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetOfContainEmptyArray]];
     
     Tweet *addedTweet = [[Tweet allObjects] firstObject];
     XCTAssertNotNil(addedTweet);
@@ -91,7 +91,7 @@
 
 - (void)testInsertTweetOfConstainNSNull
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetOfContainNSNull]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetOfContainNSNull]];
     
     Tweet *addedTweet = [[Tweet allObjects] firstObject];
     XCTAssertNotNil(addedTweet);
@@ -110,7 +110,7 @@
 
 - (void)testInsetTweetOfKeyIsNotEnough
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetOfKeyIsNotEnough]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetOfKeyIsNotEnough]];
     
     Tweet *addedTweet = [[Tweet allObjects] firstObject];
     XCTAssertNotNil(addedTweet);
@@ -129,7 +129,7 @@
 
 - (void)testUniqueInsert
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     Tweet *addedTweet = [[Tweet allObjects] firstObject];
     XCTAssertNotNil(addedTweet);
@@ -153,11 +153,11 @@
     int64_t userID = 0;
     NSDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID];
     
-    [Utility addTweetWithTweetJsonObject:tweetObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetObj];
     XCTAssertNotNil([User objectForPrimaryKey:@(userID)]);
     
     int64_t tweetID2 = 1;
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID2 userID:userID]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID2 userID:userID]];
     
     XCTAssertNotNil([Tweet objectForPrimaryKey:@(tweetID)]);
     XCTAssertNotNil([Tweet objectForPrimaryKey:@(tweetID)].user);
@@ -208,7 +208,7 @@
 
 - (void)testDeleteRelationObject
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         [realm deleteObjects:[User allObjects]];
@@ -222,7 +222,7 @@
 {
     int64_t count = 10;
     for (int64_t twID = 0; twID < count; twID++) {
-        [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:twID userID:0]];
+        [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:twID userID:0]];
     }
     XCTAssertEqual([[Tweet allObjects] count], count);
     XCTAssertEqual([[User allObjects] count], 1);
@@ -238,7 +238,7 @@
 
 - (void)testDeleteToManyRelationObjects
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         [realm deleteObjects:[Url allObjects]];
@@ -264,7 +264,7 @@
 
 - (void)testDeleteNestedRelationObjects
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         Tweet *tweet = [[Tweet allObjects] firstObject];
@@ -282,7 +282,7 @@
 
 - (void)testDeleteMultipleToManyRelationObjects
 {
-    [Utility addTweetsWithCount:10];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:10];
     
     NSUInteger watchersCount = 3;
     
@@ -381,7 +381,7 @@
 
 - (void)testPredicateWithInt64Max
 {
-    [Utility addTweetsWithCount:10];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:10];
     [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:INT64_MAX]]];
     
     RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"id = %lld", INT64_MAX]];
@@ -392,7 +392,7 @@
 
 - (void)testPredicateWithUint64Max
 {
-    [Utility addTweetsWithCount:10];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:10];
     [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:UINT64_MAX]]];
     
     RLMResults *results = [Tweet objectsWithPredicate:[NSPredicate predicateWithFormat:@"id = %llu", UINT64_MAX]];
@@ -403,7 +403,7 @@
 
 - (void)testFetchTweetWithUserID
 {
-    [Utility addTweetsWithCount:10];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:10];
     
     int64_t id = 5;
     
@@ -416,7 +416,7 @@
 
 - (void)testFetchTweetWithUser
 {
-    [Utility addTweetsWithCount:10];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:10];
     
     int64_t id = 5;
     
@@ -432,8 +432,8 @@
     NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:0 userID:0].mutableCopy;
     [tweetObj removeObjectForKey:@"entities"];
     
-    [Utility addTweetWithTweetJsonObject:tweetObj];
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:1 userID:1]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:1 userID:1]];
     
     XCTAssertEqual([[Tweet allObjects] count], 2);
     
@@ -453,7 +453,7 @@
 - (void)testANYWithPrimitiveValue
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     XCTAssertEqual([[Tweet allObjects] count], count);
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
@@ -479,7 +479,7 @@
 - (void)testANYWithPrimitiveValues
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     XCTAssertEqual([[Tweet allObjects] count], count);
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
@@ -509,7 +509,7 @@
 - (void)testANYWithObject
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     XCTAssertEqual([[Tweet allObjects] count], count);
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
@@ -535,7 +535,7 @@
 - (void)testANYWithObjects
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     XCTAssertEqual([[Tweet allObjects] count], count);
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
@@ -565,7 +565,7 @@
 - (void)testAlternativeMethodOfCountFunction
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t tweetID = 0; tweetID < count; tweetID++) {
@@ -933,7 +933,6 @@
     
     XCTAssertEqual([results count], 0);
 }
-
 
 #pragma mark - Test JsonGenerator
 

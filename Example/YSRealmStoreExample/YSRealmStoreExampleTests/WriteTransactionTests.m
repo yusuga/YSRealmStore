@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "Utility.h"
+#import "TwitterRealmStore.h"
 
 @interface WriteTransactionTests : XCTestCase
 
@@ -20,7 +20,7 @@
 {
     [super setUp];
     
-    [Utility deleteAllObjects];
+    [[TwitterRealmStore sharedInstance] deleteAllObjects];
 }
 
 #pragma mark - State
@@ -84,6 +84,25 @@
     }];
     XCTAssertNotNil(trans);
     [trans interrupt];
+    
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+}
+
+- (void)testStateInAsyncDeleteAllObjects
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    [[TwitterRealmStore sharedInstance] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
+        XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(store);
+        XCTAssertNotNil(transaction);
+        XCTAssertFalse(transaction.interrupted);
+        XCTAssertFalse(transaction.isExecuting);
+        XCTAssertTrue(transaction.isFinished);
+        [expectation fulfill];
+    }];
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
@@ -158,6 +177,40 @@
         [expectation fulfill];
     }];
     [trans interrupt];
+    
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+}
+
+#pragma mark - Delete
+
+- (void)testDeleteAllObjects
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedInstance];
+    NSUInteger count = 10;
+    [store addTweetsWithCount:count];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    [store deleteAllObjects];
+    
+    XCTAssertEqual([[Tweet allObjects] count], 0);
+}
+
+- (void)testAsyncDeleteAllObjects
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedInstance];
+    NSUInteger count = 10;
+    [store addTweetsWithCount:count];
+    XCTAssertEqual([[Tweet allObjects] count], count);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    
+    [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
+        [expectation fulfill];
+    }];
     
     [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);

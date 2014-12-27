@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "Utility.h"
+#import "TwitterRealmStore.h"
 
 @interface OperationTests : XCTestCase
 
@@ -20,7 +20,7 @@
 {
     [super setUp];
     
-    [Utility deleteAllObjects];
+    [[TwitterRealmStore sharedInstance] deleteAllObjects];
 }
 
 - (void)tearDown
@@ -153,12 +153,12 @@
 
 - (void)testAddObject
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
 }
 
 - (void)testAddObjects
 {
-    [Utility addTweetsWithCount:10];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:10];
 }
 
 - (void)testAsyncAddObject
@@ -187,7 +187,7 @@
 - (void)testUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [Utility addTweetWithTweetJsonObject:tweetJsonObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetJsonObj];
     
     [[YSRealmStore sharedInstance] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         Tweet *tweet = [[Tweet allObjects] firstObject];
@@ -209,7 +209,7 @@
 - (void)testAsyncUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [Utility addTweetWithTweetJsonObject:tweetJsonObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetJsonObj];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -243,7 +243,7 @@
     int64_t userID = 0;
     NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID].mutableCopy;
     
-    [Utility addTweetWithTweetJsonObject:tweetObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetObj];
     XCTAssertNotNil([User objectForPrimaryKey:@(userID)]);
     
     NSMutableDictionary *userObj = ((NSDictionary*)tweetObj[@"user"]).mutableCopy;
@@ -252,7 +252,7 @@
     [userObj setObject:updatedName forKey:@"name"];
     [tweetObj setObject:userObj forKey:@"user"];
 
-    [Utility addTweetWithTweetJsonObject:tweetObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetObj];
     
     XCTAssertEqual([[User allObjects] count], 1);
     User *user = [User objectForPrimaryKey:@(userID)];
@@ -263,7 +263,7 @@
 
 - (void)testDeleteObject
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet allObjects] firstObject];
@@ -275,7 +275,7 @@
 - (void)testDeleteObjects
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     
     [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         return [[Tweet allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"id < %d", count/2]];
@@ -286,7 +286,7 @@
 
 - (void)testAsyncDeleteObject
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -305,7 +305,7 @@
 
 - (void)testDeleteNestedRelationObjects
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
     
     [[YSRealmStore sharedInstance] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
         NSMutableArray *objs = @[].mutableCopy;
@@ -332,7 +332,7 @@
 - (void)testAsyncFetchObjects
 {
     NSUInteger count = 10;
-    [Utility addTweetsWithCount:count];
+    [[TwitterRealmStore sharedInstance] addTweetsWithCount:count];
     NSString *primaryKey = @"id";
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
@@ -437,7 +437,7 @@
 - (void)testCancelUpdateObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [Utility addTweetWithTweetJsonObject:tweetJsonObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetJsonObj];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -478,7 +478,7 @@
 - (void)testCancelUpdateObjectWithNotReturnObject
 {
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [Utility addTweetWithTweetJsonObject:tweetJsonObj];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:tweetJsonObj];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -520,7 +520,7 @@
 
 - (void)testCancelDeleteObject
 {
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     

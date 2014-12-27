@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 #import "RLMObject+YSRealmStore.h"
 #import "RLMArray+YSRealmStore.h"
-#import "Utility.h"
+#import "TwitterRealmStore.h"
 
 @interface CategoryTests : XCTestCase
 
@@ -21,7 +21,7 @@
 - (void)setUp
 {
     [super setUp];
-    [Utility deleteAllObjects];
+    [[TwitterRealmStore sharedInstance] deleteAllObjects];
 }
 
 - (void)tearDown {
@@ -35,7 +35,7 @@
     int64_t tweetID = 0;
     NSUInteger userCount = 10;
     
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
+    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
     [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         for (NSUInteger userID = 0; userID < userCount; userID++) {
             User *user = [User objectForPrimaryKey:@(userID)];

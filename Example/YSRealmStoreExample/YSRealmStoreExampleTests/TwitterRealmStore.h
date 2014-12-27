@@ -11,11 +11,9 @@
 #import "JsonGenerator.h"
 #import "Tweet.h"
 
-@interface Utility : NSObject
+@interface TwitterRealmStore : YSRealmStore
 
-+ (void)deleteAllObjects;
-
-+ (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject;
-+ (void)addTweetsWithCount:(NSUInteger)count;
+- (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject;
+- (void)addTweetsWithCount:(NSUInteger)count;
 
 @end

@@ -48,5 +48,9 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (YSRealmWriteTransaction*)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                                 completion:(YSRealmStoreWriteTransactionCompletion)completion;
 
+/* Utility */
+- (void)deleteAllObjects;
+
+- (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion;
 
 @end
