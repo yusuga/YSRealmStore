@@ -30,6 +30,7 @@
 {
     if (self = [super init]) {
         self.operations = [NSMutableArray array];
+        DDLogDebug(@"%@; self.realm.path = %@", NSStringFromClass([self class]), self.realm.path);
     }
     return self;
 }

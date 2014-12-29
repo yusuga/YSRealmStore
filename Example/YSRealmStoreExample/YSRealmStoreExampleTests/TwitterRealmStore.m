@@ -30,7 +30,7 @@
                 }];
             }
         }];
-        DDLogDebug(@"path: %@", [RLMRealm defaultRealmPath]);
+//        DDLogDebug(@"path: %@", [RLMRealm defaultRealmPath]);
     }
 }
 
