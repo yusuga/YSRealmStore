@@ -17,39 +17,36 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 @interface YSRealmStore : NSObject
 
+/* Realm */
+
 - (RLMRealm*)realm;
+
+/* Transaction */
+
+- (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock;
+- (YSRealmWriteTransaction*)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
+                                                completion:(YSRealmStoreWriteTransactionCompletion)completion;
 
 /* Operation */
 
 // Wirte
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
-
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreOperationCompletion)completion;
 
 // Delete
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
-
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmStoreOperationCompletion)completion;
+
+- (void)deleteAllObjects;
+- (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion;
 
 // Fetch
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion;
-
-/* Transaction */
-
-- (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock;
-
-- (YSRealmWriteTransaction*)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-                                                completion:(YSRealmStoreWriteTransactionCompletion)completion;
-
-/* Utility */
-- (void)deleteAllObjects;
-
-- (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion;
 
 @end
