@@ -16,16 +16,6 @@
 
 @implementation YSRealmStore
 
-+ (instancetype)sharedInstance
-{
-    static id __sharedInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __sharedInstance =  [[self alloc] init];
-    });
-    return __sharedInstance;
-}
-
 - (instancetype)init
 {
     if (self = [super init]) {

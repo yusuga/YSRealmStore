@@ -21,7 +21,7 @@
 - (void)setUp
 {
     [super setUp];
-    [[TwitterRealmStore sharedInstance] deleteAllObjects];
+    [[TwitterRealmStore sharedStore] deleteAllObjects];
 }
 
 - (void)tearDown {
@@ -31,12 +31,12 @@
 
 - (void)testRLMArray
 {
-    YSRealmStore *ysRealm = [YSRealmStore sharedInstance];
+    YSRealmStore *store = [[YSRealmStore alloc] init];
     int64_t tweetID = 0;
     NSUInteger userCount = 10;
     
-    [[TwitterRealmStore sharedInstance] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
-    [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
+    [store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         for (NSUInteger userID = 0; userID < userCount; userID++) {
             User *user = [User objectForPrimaryKey:@(userID)];
             if (user == nil) {
@@ -47,7 +47,7 @@
     }];
     XCTAssertEqual([[User allObjects] count], userCount);
     
-    [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
         XCTAssertNotNil(tweet);
         RLMArray *watchers = tweet.watchers;

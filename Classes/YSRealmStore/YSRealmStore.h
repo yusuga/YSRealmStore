@@ -17,7 +17,6 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 @interface YSRealmStore : NSObject
 
-+ (instancetype)sharedInstance;
 - (RLMRealm*)realm;
 
 /* Operation */
