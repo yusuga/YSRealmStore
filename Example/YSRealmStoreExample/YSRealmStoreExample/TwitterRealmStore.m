@@ -13,7 +13,7 @@
 + (void)initialize
 {
     if (self == [TwitterRealmStore class]) {
-        [RLMRealm setSchemaVersion:4 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+        [RLMRealm setSchemaVersion:5 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
                 /**

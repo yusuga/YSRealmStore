@@ -20,7 +20,8 @@
     return [self tweetWithTweetID:id userID:id];
 }
 
-+ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID userID:(int64_t)userID
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
+                           userID:(int64_t)userID
 {
     return @{@"id" : @(tweetID),
              @"text" : @"sample text. サンプルテキストです。",
@@ -29,11 +30,29 @@
              @"source" : @"via Twitter"};
 }
 
-+ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID userID:(int64_t)userID urlCount:(NSUInteger)urlCount
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
+                           userID:(int64_t)userID
+                         urlCount:(NSUInteger)urlCount
 {
+    return [self tweetWithTweetID:tweetID
+                             text:@"sample text. サンプルテキストです。"
+                           userID:userID
+                             name:nil
+                       screenName:nil
+                         urlCount:urlCount];
+}
+
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
+                             text:(NSString*)text
+                           userID:(int64_t)userID
+                             name:(NSString*)name
+                       screenName:(NSString*)screenName
+                         urlCount:(NSUInteger)urlCount
+{
+    // 超簡易なTwitterのJSON (本来のJSON https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid )
     return @{@"id" : @(tweetID),
-             @"text" : @"sample text. サンプルテキストです。",
-             @"user" : [self userWithID:userID],
+             @"text" : text,
+             @"user" : [self userWithID:userID name:name screenName:screenName],
              @"entities" : [self entitiesWithURLCount:urlCount],
              @"source" : @"via Twitter"};
 }
@@ -43,10 +62,20 @@
     return [self userWithID:INT64_MAX];
 }
 
-+ (NSDictionary*)userWithID:(int64_t)id
++ (NSDictionary*)userWithID:(int64_t)userID
 {
-    return @{@"id" : @(id),
-             @"name" : [NSString stringWithFormat:@"name%zd", id]};
+    return [self userWithID:userID
+                       name:nil
+                 screenName:nil];
+}
+
++ (NSDictionary*)userWithID:(int64_t)userID
+                       name:(NSString*)name
+                 screenName:(NSString*)screenName
+{
+    return @{@"id" : @(userID),
+             @"name" : name ? name : [NSString stringWithFormat:@"name%zd", userID],
+             @"screen_name" : screenName ? screenName : [NSString stringWithFormat:@"screen_name%zd", userID]};
 }
 
 + (NSDictionary*)entities

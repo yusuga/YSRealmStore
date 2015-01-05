@@ -9,7 +9,13 @@
 /* Begin PBXBuildFile section */
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
-		B862E74D1A1B64690086F8EC /* TwitterRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B862E74C1A1B64690086F8EC /* TwitterRealmStore.m */; };
+		B88DA10B1A5A103F00DF36D3 /* Entities.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1041A5A103F00DF36D3 /* Entities.m */; };
+		B88DA10C1A5A103F00DF36D3 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1061A5A103F00DF36D3 /* Tweet.m */; };
+		B88DA10D1A5A103F00DF36D3 /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1081A5A103F00DF36D3 /* Url.m */; };
+		B88DA10E1A5A103F00DF36D3 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA10A1A5A103F00DF36D3 /* User.m */; };
+		B88DA1121A5A105D00DF36D3 /* JsonGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1111A5A105D00DF36D3 /* JsonGenerator.m */; };
+		B88DA1151A5A107000DF36D3 /* TwitterRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1141A5A107000DF36D3 /* TwitterRealmStore.m */; };
+		B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */; };
 		B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */; };
 		B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FE1A3C94E200130815 /* CategoryTests.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
@@ -20,11 +26,6 @@
 		B8D5460D19FD00F5008FA04F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8D5460B19FD00F5008FA04F /* LaunchScreen.xib */; };
 		B8D5462519FD0291008FA04F /* YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5462419FD0291008FA04F /* YSRealmStore.m */; };
 		B8D5462819FD029B008FA04F /* YSRealmOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5462719FD029B008FA04F /* YSRealmOperation.m */; };
-		B8D5462F19FDC8EF008FA04F /* JsonGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5462E19FDC8EF008FA04F /* JsonGenerator.m */; };
-		B8D5463219FDC933008FA04F /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5463119FDC933008FA04F /* Tweet.m */; };
-		B8D5463519FDC93B008FA04F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5463419FDC93B008FA04F /* User.m */; };
-		B8D5463819FDC949008FA04F /* Entities.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5463719FDC949008FA04F /* Entities.m */; };
-		B8D5463B19FDC952008FA04F /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5463A19FDC952008FA04F /* Url.m */; };
 		B8D5464119FDCAE6008FA04F /* RLMObject+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */; };
 		B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */; };
 		B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464C19FDCEC9008FA04F /* OperationTests.m */; };
@@ -49,8 +50,20 @@
 		B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmWriteTransaction.m; sourceTree = "<group>"; };
 		B8191B201A352E500063FE1F /* WriteTransactionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriteTransactionTests.m; sourceTree = "<group>"; };
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
-		B862E74B1A1B64690086F8EC /* TwitterRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterRealmStore.h; sourceTree = "<group>"; };
-		B862E74C1A1B64690086F8EC /* TwitterRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterRealmStore.m; sourceTree = "<group>"; };
+		B88DA1031A5A103F00DF36D3 /* Entities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entities.h; path = YSRealmStoreExample/Entities.h; sourceTree = "<group>"; };
+		B88DA1041A5A103F00DF36D3 /* Entities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Entities.m; path = YSRealmStoreExample/Entities.m; sourceTree = "<group>"; };
+		B88DA1051A5A103F00DF36D3 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tweet.h; path = YSRealmStoreExample/Tweet.h; sourceTree = "<group>"; };
+		B88DA1061A5A103F00DF36D3 /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Tweet.m; path = YSRealmStoreExample/Tweet.m; sourceTree = "<group>"; };
+		B88DA1071A5A103F00DF36D3 /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Url.h; path = YSRealmStoreExample/Url.h; sourceTree = "<group>"; };
+		B88DA1081A5A103F00DF36D3 /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Url.m; path = YSRealmStoreExample/Url.m; sourceTree = "<group>"; };
+		B88DA1091A5A103F00DF36D3 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = YSRealmStoreExample/User.h; sourceTree = "<group>"; };
+		B88DA10A1A5A103F00DF36D3 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = YSRealmStoreExample/User.m; sourceTree = "<group>"; };
+		B88DA1101A5A105D00DF36D3 /* JsonGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JsonGenerator.h; path = YSRealmStoreExample/JsonGenerator.h; sourceTree = "<group>"; };
+		B88DA1111A5A105D00DF36D3 /* JsonGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JsonGenerator.m; path = YSRealmStoreExample/JsonGenerator.m; sourceTree = "<group>"; };
+		B88DA1131A5A107000DF36D3 /* TwitterRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterRealmStore.h; path = YSRealmStoreExample/TwitterRealmStore.h; sourceTree = "<group>"; };
+		B88DA1141A5A107000DF36D3 /* TwitterRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterRealmStore.m; path = YSRealmStoreExample/TwitterRealmStore.m; sourceTree = "<group>"; };
+		B88DA1181A5A10FF00DF36D3 /* TwitterRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterRequest.h; sourceTree = "<group>"; };
+		B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterRequest.m; sourceTree = "<group>"; };
 		B8C003FB1A3C94B700130815 /* RLMArray+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealmStore.h"; sourceTree = "<group>"; };
 		B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8C003FE1A3C94E200130815 /* CategoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTests.m; sourceTree = "<group>"; };
@@ -70,16 +83,6 @@
 		B8D5462419FD0291008FA04F /* YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmStore.m; sourceTree = "<group>"; };
 		B8D5462619FD029B008FA04F /* YSRealmOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmOperation.h; sourceTree = "<group>"; };
 		B8D5462719FD029B008FA04F /* YSRealmOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmOperation.m; sourceTree = "<group>"; };
-		B8D5462D19FDC8EF008FA04F /* JsonGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonGenerator.h; sourceTree = "<group>"; };
-		B8D5462E19FDC8EF008FA04F /* JsonGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonGenerator.m; sourceTree = "<group>"; };
-		B8D5463019FDC933008FA04F /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
-		B8D5463119FDC933008FA04F /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
-		B8D5463319FDC93B008FA04F /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		B8D5463419FDC93B008FA04F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
-		B8D5463619FDC949008FA04F /* Entities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entities.h; sourceTree = "<group>"; };
-		B8D5463719FDC949008FA04F /* Entities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entities.m; sourceTree = "<group>"; };
-		B8D5463919FDC952008FA04F /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Url.h; sourceTree = "<group>"; };
-		B8D5463A19FDC952008FA04F /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Url.m; sourceTree = "<group>"; };
 		B8D5463F19FDCAE6008FA04F /* RLMObject+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMObject+YSRealmStore.h"; sourceTree = "<group>"; };
 		B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMObject+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreRealmTests.m; sourceTree = "<group>"; };
@@ -113,19 +116,41 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B886DE771A4EFB4200F98485 /* Model */ = {
+		B88DA1011A5A102000DF36D3 /* TwitterStore */ = {
 			isa = PBXGroup;
 			children = (
-				B8D5463019FDC933008FA04F /* Tweet.h */,
-				B8D5463119FDC933008FA04F /* Tweet.m */,
-				B8D5463319FDC93B008FA04F /* User.h */,
-				B8D5463419FDC93B008FA04F /* User.m */,
-				B8D5463619FDC949008FA04F /* Entities.h */,
-				B8D5463719FDC949008FA04F /* Entities.m */,
-				B8D5463919FDC952008FA04F /* Url.h */,
-				B8D5463A19FDC952008FA04F /* Url.m */,
+				B88DA1131A5A107000DF36D3 /* TwitterRealmStore.h */,
+				B88DA1141A5A107000DF36D3 /* TwitterRealmStore.m */,
+				B88DA10F1A5A105400DF36D3 /* Utility */,
+				B88DA1021A5A103100DF36D3 /* Model */,
+			);
+			name = TwitterStore;
+			sourceTree = "<group>";
+		};
+		B88DA1021A5A103100DF36D3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B88DA1051A5A103F00DF36D3 /* Tweet.h */,
+				B88DA1061A5A103F00DF36D3 /* Tweet.m */,
+				B88DA1091A5A103F00DF36D3 /* User.h */,
+				B88DA10A1A5A103F00DF36D3 /* User.m */,
+				B88DA1031A5A103F00DF36D3 /* Entities.h */,
+				B88DA1041A5A103F00DF36D3 /* Entities.m */,
+				B88DA1071A5A103F00DF36D3 /* Url.h */,
+				B88DA1081A5A103F00DF36D3 /* Url.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		B88DA10F1A5A105400DF36D3 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				B88DA1101A5A105D00DF36D3 /* JsonGenerator.h */,
+				B88DA1111A5A105D00DF36D3 /* JsonGenerator.m */,
+				B88DA1181A5A10FF00DF36D3 /* TwitterRequest.h */,
+				B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 		B8D545F019FD00F5008FA04F = {
@@ -133,6 +158,7 @@
 			children = (
 				B8D545FB19FD00F5008FA04F /* YSRealmStoreExample */,
 				B8D5462219FD0281008FA04F /* YSRealmStore */,
+				B88DA1011A5A102000DF36D3 /* TwitterStore */,
 				B8D5461519FD00F6008FA04F /* YSRealmStoreExampleTests */,
 				B8D545FA19FD00F5008FA04F /* Products */,
 				550B28108FDB4CC39DB022D0 /* Frameworks */,
@@ -177,7 +203,6 @@
 		B8D5461519FD00F6008FA04F /* YSRealmStoreExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				B8D5462C19FDC8D0008FA04F /* Utility */,
 				B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */,
 				B8D5464C19FDCEC9008FA04F /* OperationTests.m */,
 				B8191B201A352E500063FE1F /* WriteTransactionTests.m */,
@@ -211,18 +236,6 @@
 			);
 			name = YSRealmStore;
 			path = ../../Classes/YSRealmStore;
-			sourceTree = "<group>";
-		};
-		B8D5462C19FDC8D0008FA04F /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-				B8D5462D19FDC8EF008FA04F /* JsonGenerator.h */,
-				B8D5462E19FDC8EF008FA04F /* JsonGenerator.m */,
-				B862E74B1A1B64690086F8EC /* TwitterRealmStore.h */,
-				B862E74C1A1B64690086F8EC /* TwitterRealmStore.m */,
-				B886DE771A4EFB4200F98485 /* Model */,
-			);
-			name = Utility;
 			sourceTree = "<group>";
 		};
 		DA63751ED27EAB693E5C9480 /* Pods */ = {
@@ -369,13 +382,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B88DA10C1A5A103F00DF36D3 /* Tweet.m in Sources */,
+				B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */,
+				B88DA1151A5A107000DF36D3 /* TwitterRealmStore.m in Sources */,
 				B8D5460519FD00F5008FA04F /* ViewController.m in Sources */,
 				B8D5462519FD0291008FA04F /* YSRealmStore.m in Sources */,
+				B88DA10B1A5A103F00DF36D3 /* Entities.m in Sources */,
 				B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */,
+				B88DA10D1A5A103F00DF36D3 /* Url.m in Sources */,
+				B88DA10E1A5A103F00DF36D3 /* User.m in Sources */,
 				B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */,
 				B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */,
 				B8D545FF19FD00F5008FA04F /* main.m in Sources */,
 				B8D5462819FD029B008FA04F /* YSRealmOperation.m in Sources */,
+				B88DA1121A5A105D00DF36D3 /* JsonGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,15 +405,9 @@
 			files = (
 				B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */,
 				B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */,
-				B862E74D1A1B64690086F8EC /* TwitterRealmStore.m in Sources */,
 				B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */,
-				B8D5463519FDC93B008FA04F /* User.m in Sources */,
-				B8D5463219FDC933008FA04F /* Tweet.m in Sources */,
-				B8D5463B19FDC952008FA04F /* Url.m in Sources */,
 				B8D5464119FDCAE6008FA04F /* RLMObject+YSRealmStore.m in Sources */,
-				B8D5463819FDC949008FA04F /* Entities.m in Sources */,
 				B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */,
-				B8D5462F19FDC8EF008FA04F /* JsonGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
