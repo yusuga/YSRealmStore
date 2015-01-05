@@ -10,6 +10,10 @@
 
 @interface RLMObject (YSRealmStore)
 
-- (NSString *)ys_stringWithObject:(NSDictionary *)object forKey:(NSString *)key;
++ (NSString *)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key;
+- (NSString *)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key;
+
++ (NSString *)ys_stringWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key;
+- (NSString *)ys_stringWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key;
 
 @end

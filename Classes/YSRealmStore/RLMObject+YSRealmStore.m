@@ -7,15 +7,34 @@
 //
 
 #import "RLMObject+YSRealmStore.h"
-#import <YSNSFoundationAdditions/NSDictionary+YSNSFoundationAdditions.h>
 
 @implementation RLMObject (YSRealmStore)
 
-- (NSString *)ys_stringWithObject:(NSDictionary *)object forKey:(NSString *)key
++ (NSString *)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
 {
-    NSString *value = [object ys_objectOrNilForKey:key];
+    id obj = [dictionary objectForKey:key];
+    if (obj == [NSNull null]) {
+        return nil;
+    } else {
+        return obj;
+    }
+}
+
+- (NSString *)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
+{
+    return [[self class] ys_objectOrNilWithDictionary:dictionary forKey:key];
+}
+
++ (NSString *)ys_stringWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
+{
+    NSString *value = [self ys_objectOrNilWithDictionary:dictionary forKey:key];
     if (value) return value;
     return @"";
+}
+
+- (NSString *)ys_stringWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
+{
+    return [[self class] ys_stringWithDictionary:dictionary forKey:key];
 }
 
 @end
