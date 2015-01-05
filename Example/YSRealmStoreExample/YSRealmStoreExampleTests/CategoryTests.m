@@ -29,6 +29,28 @@
     [super tearDown];
 }
 
+#pragma mark - RLMObject
+
+- (void)testObjectOrNilWithDictionary
+{
+    NSString *key = @"key";
+    NSString *value = @"value";
+    
+    XCTAssertNotNil([RLMObject ys_objectOrNilWithDictionary:@{key : value} forKey:key]);
+    XCTAssertNil([RLMObject ys_objectOrNilWithDictionary:@{key : [NSNull null]} forKey:key]);
+}
+
+- (void)testStringWithDictionary
+{
+    NSString *key = @"key";
+    NSString *value = @"value";
+    
+    XCTAssertNotNil([RLMObject ys_stringWithDictionary:@{key : value} forKey:key]);
+    XCTAssertEqualObjects([RLMObject ys_stringWithDictionary:@{key : [NSNull null]} forKey:key], @"");
+}
+
+#pragma mark - RLMArray
+
 - (void)testRLMArray
 {
     YSRealmStore *store = [[YSRealmStore alloc] init];

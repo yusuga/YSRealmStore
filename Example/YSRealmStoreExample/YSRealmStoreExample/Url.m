@@ -14,7 +14,7 @@
 - (instancetype)initWithObject:(id)object
 {
     if (self = [super init]) {
-        self.url = [self ys_stringWithObject:object forKey:@"url"];
+        self.url = [self ys_stringWithDictionary:object forKey:@"url"];
     }
     return self;
 }

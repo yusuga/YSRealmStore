@@ -7,14 +7,14 @@
 //
 
 #import "Entities.h"
-#import <YSNSFoundationAdditions/NSDictionary+YSNSFoundationAdditions.h>
+#import "RLMObject+YSRealmStore.h"
 
 @implementation Entities
 
 - (instancetype)initWithObject:(id)object
 {
     if (self = [super init]) {
-        for (NSDictionary *urlJson in [object ys_objectOrNilForKey:@"urls"]) {
+        for (NSDictionary *urlJson in [self ys_objectOrNilWithDictionary:object forKey:@"urls"]) {
             [self.urls addObject:[[Url alloc] initWithObject:urlJson]];
         }
         

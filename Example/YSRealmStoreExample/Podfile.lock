@@ -20,12 +20,10 @@ PODS:
     - CocoaLumberjack
     - LumberjackConsole
     - NBULog
-  - YSNSFoundationAdditions (0.0.8)
 
 DEPENDENCIES:
   - Realm (= 0.88.0)
   - YSCocoaLumberjackHelper
-  - YSNSFoundationAdditions
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
@@ -34,6 +32,5 @@ SPEC CHECKSUMS:
   NBULog: 029ea974252f6d8e09de38985f67b9740098aa7f
   Realm: 56fd06bf4e97da2829f864e2bca229a060825c61
   YSCocoaLumberjackHelper: 0f984b05f18387c544adfb18478e5575e4e6afba
-  YSNSFoundationAdditions: f3ec68ae978221d18911baa2bfabd83e30cac54f
 
 COCOAPODS: 0.35.0

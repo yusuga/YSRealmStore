@@ -11,6 +11,8 @@
 
 #import <YSCocoaLumberjackHelper/YSCocoaLumberjackHelper.h>
 
+#import <CocoaLumberjack/CocoaLumberjack.h>
+
 #ifdef DEBUG
     static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 #else

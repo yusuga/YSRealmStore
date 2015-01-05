@@ -7,7 +7,6 @@
 //
 
 #import "Tweet.h"
-#import <YSNSFoundationAdditions/NSDictionary+YSNSFoundationAdditions.h>
 #import "RLMObject+YSRealmStore.h"
 
 @implementation Tweet
@@ -38,19 +37,19 @@
 - (instancetype)initWithObject:(id)object
 {
     if (self = [super init]) {
-        self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
+        self.id = [[self ys_objectOrNilWithDictionary:object forKey:@"id"] longLongValue];
         
         /**
          文字列の空オブジェクト表現
          - 文字列にnilは許容できないので空文字列を使用する (Realm 0.87.4)
          */
-        self.text = [self ys_stringWithObject:object forKey:@"text"];        
+        self.text = [self ys_stringWithDictionary:object forKey:@"text"];        
         
-        self.user = [[User alloc] initWithObject:[object ys_objectOrNilForKey:@"user"]];
+        self.user = [[User alloc] initWithObject:[self ys_objectOrNilWithDictionary:object forKey:@"user"]];
         
-        self.entities = [[Entities alloc] initWithObject:[object ys_objectOrNilForKey:@"entities"]];
+        self.entities = [[Entities alloc] initWithObject:[self ys_objectOrNilWithDictionary:object forKey:@"entities"]];
         
-        self.retweeted = [[object ys_objectOrNilForKey:@"retweeted"] boolValue];
+        self.retweeted = [[self ys_objectOrNilWithDictionary:object forKey:@"retweeted"] boolValue];
     }
     return self;
 }

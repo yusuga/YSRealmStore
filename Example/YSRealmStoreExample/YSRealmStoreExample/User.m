@@ -7,7 +7,6 @@
 //
 
 #import "User.h"
-#import <YSNSFoundationAdditions/NSDictionary+YSNSFoundationAdditions.h>
 #import "RLMObject+YSRealmStore.h"
 
 @implementation User
@@ -15,9 +14,9 @@
 - (instancetype)initWithObject:(id)object
 {
     if (self = [super init]) {
-        self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
-        self.name = [self ys_stringWithObject:object forKey:@"name"];
-        self.screen_name = [self ys_stringWithObject:object forKey:@"screen_name"];
+        self.id = [[self ys_objectOrNilWithDictionary:object forKey:@"id"] longLongValue];
+        self.name = [self ys_stringWithDictionary:object forKey:@"name"];
+        self.screen_name = [self ys_stringWithDictionary:object forKey:@"screen_name"];
     }
     return self;
 }
