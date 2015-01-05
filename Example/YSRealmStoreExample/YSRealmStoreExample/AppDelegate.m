@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <YSCocoaLumberjackHelper/YSCocoaLumberjackHelper.h>
 
 @interface AppDelegate ()
 

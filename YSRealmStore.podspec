@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'YSRealmStore'
-  s.version = '0.2.1'
+  s.version = '0.2.2'
   s.summary = 'Realm helper.'
   s.homepage = 'https://github.com/yusuga/YSRealmStore'
   s.license = 'MIT'
@@ -13,10 +13,9 @@ Pod::Spec.new do |s|
   s.compiler_flags = '-fmodules'
   
   s.dependency 'Realm', '0.88.0'
-  s.dependency 'YSNSFoundationAdditions'
-  s.dependency 'YSCocoaLumberjackHelper'
+  s.dependency 'CocoaLumberjack', '~> 2.0.0-rc'
   
-  s.prefix_header_contents = "#import <YSCocoaLumberjackHelper/YSCocoaLumberjackHelper.h>
+  s.prefix_header_contents = "#import <CocoaLumberjack/CocoaLumberjack.h>
 #ifdef DEBUG
     static const DDLogLevel ddLogLevel = DDLogLevelAll;
 #else

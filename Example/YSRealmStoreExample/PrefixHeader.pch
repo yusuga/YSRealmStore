@@ -9,12 +9,9 @@
 #ifndef YSRealmExample_PrefixHeader_pch
 #define YSRealmExample_PrefixHeader_pch
 
-#import <YSCocoaLumberjackHelper/YSCocoaLumberjackHelper.h>
-
 #import <CocoaLumberjack/CocoaLumberjack.h>
-
 #ifdef DEBUG
-    static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+    static const DDLogLevel ddLogLevel = DDLogLevelAll;
 #else
     static const DDLogLevel ddLogLevel = DDLogLevelError;
 #endif
