@@ -34,12 +34,6 @@ static NSString * const kCellIdentifier = @"Cell";
     [super viewDidLoad];
     
     [self.tableView registerNib:[TweetCell nib] forCellReuseIdentifier:kCellIdentifier];
-    /*
-    __weak typeof(self) wself = self;
-    self.notificationToken = [[[TwitterRealmStore sharedStore] realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        [wself.tableView reloadData];
-    }];
-     */
 }
 
 #pragma mark - Table view data source

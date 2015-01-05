@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <YSCocoaLumberjackHelper/YSCocoaLumberjackHelper.h>
 
 @interface AppDelegate ()
 
@@ -18,7 +17,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [YSCocoaLumberjackHelper launchLogger];
+    DDTTYLogger *logger = [DDTTYLogger sharedInstance];
+    [DDLog addLogger:logger];
+    [logger setColorsEnabled:YES];
+    
     return YES;
 }
 
