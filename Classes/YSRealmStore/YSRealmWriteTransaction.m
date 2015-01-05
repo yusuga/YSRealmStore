@@ -11,6 +11,7 @@
 @interface YSRealmWriteTransaction ()
 
 @property (copy, nonatomic) NSString *realmPath;
+@property (nonatomic) RLMNotificationToken *notificationToken;
 
 @end
 
@@ -72,11 +73,14 @@
                             completion:(YSRealmWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;
+    
+    self.notificationToken = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+        [realm removeNotification:wself.notificationToken];
+        if (completion) completion(wself);
+    }];
+    
     dispatch_async([[self class] transactionQueue], ^{
         [wself writeTransactionWithWriteBlock:writeBlock];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) completion(wself);
-        });
     });
 }
 
