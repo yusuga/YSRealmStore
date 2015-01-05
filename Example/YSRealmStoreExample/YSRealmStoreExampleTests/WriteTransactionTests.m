@@ -32,8 +32,6 @@
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
         XCTAssertFalse(transaction.isInterrupted);
-        XCTAssertTrue(transaction.isExecuting);
-        XCTAssertFalse(transaction.isFinished);
     }];
 }
 
@@ -48,15 +46,11 @@
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
         XCTAssertFalse(transaction.isInterrupted);
-        XCTAssertTrue(transaction.isExecuting);
-        XCTAssertFalse(transaction.isFinished);
     } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(store);
         XCTAssertNotNil(transaction);
         XCTAssertFalse(transaction.isInterrupted);
-        XCTAssertFalse(transaction.isExecuting);
-        XCTAssertTrue(transaction.isFinished);
         [expectation fulfill];
     }];
     
@@ -74,14 +68,10 @@
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
         XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertTrue(transaction.isExecuting);
-        XCTAssertFalse(transaction.isFinished);
     } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(transaction);
         XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertFalse(transaction.isExecuting);
-        XCTAssertTrue(transaction.isFinished);
         [expectation fulfill];
     }];
     XCTAssertNotNil(trans);
@@ -101,8 +91,6 @@
         XCTAssertNotNil(store);
         XCTAssertNotNil(transaction);
         XCTAssertFalse(transaction.interrupted);
-        XCTAssertFalse(transaction.isExecuting);
-        XCTAssertTrue(transaction.isFinished);
         [expectation fulfill];
     }];
     
@@ -170,8 +158,6 @@
         XCTAssertNotNil(realm);
         XCTAssertNotNil(transaction);
         XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertTrue(transaction.isExecuting);
-        XCTAssertFalse(transaction.isFinished);
         if (!transaction.isInterrupted) {
             [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
         }

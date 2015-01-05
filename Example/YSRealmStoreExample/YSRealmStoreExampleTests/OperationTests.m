@@ -37,8 +37,6 @@
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return nil;
     }];
@@ -54,8 +52,6 @@
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return nil;
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
@@ -63,8 +59,6 @@
         XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         [expectation fulfill];
     }];
@@ -83,8 +77,6 @@
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return nil;
     }];
@@ -100,8 +92,6 @@
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return nil;
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
@@ -109,8 +99,6 @@
         XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         [expectation fulfill];
     }];
@@ -133,8 +121,6 @@
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return nil;
     } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
@@ -142,8 +128,6 @@
         XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         [expectation fulfill];
     }];
@@ -391,15 +375,13 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
     YSRealmOperation *ope = [[[YSRealmStore alloc] init] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+        XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return @[[[Tweet alloc] initWithObject:[JsonGenerator tweet]]];
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         XCTAssertEqual([[Tweet allObjects] count], 0);
         
@@ -417,15 +399,13 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
     YSRealmOperation *ope = [[[YSRealmStore alloc] init] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+        XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return nil;
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         XCTAssertEqual([[Tweet allObjects] count], 0);
         
@@ -448,9 +428,8 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
     YSRealmOperation *ope = [[[YSRealmStore alloc] init] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         XCTAssertEqual([[Tweet allObjects] count], 1);
         Tweet *tweet = [[Tweet allObjects] firstObject];
@@ -460,9 +439,8 @@
         
         return tweet;
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
         Tweet *addedTweet = [[Tweet allObjects] firstObject];
@@ -489,9 +467,8 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
     YSRealmOperation *ope = [[[YSRealmStore alloc] init] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         XCTAssertEqual([[Tweet allObjects] count], 1);
         Tweet *tweet = [[Tweet allObjects] firstObject];
@@ -501,9 +478,8 @@
         
         return nil;
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
         Tweet *addedTweet = [[Tweet allObjects] firstObject];
@@ -531,15 +507,13 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
     YSRealmOperation *ope = [[[YSRealmStore alloc] init] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+        XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertTrue(operation.isExecuting);
-        XCTAssertFalse(operation.isFinished);
         
         return [Tweet allObjects];
     } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+        XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        XCTAssertFalse(operation.isExecuting);
-        XCTAssertTrue(operation.isFinished);
         
         XCTAssertEqual([[Tweet allObjects] count], 1);
         
