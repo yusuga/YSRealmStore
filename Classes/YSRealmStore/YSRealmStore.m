@@ -43,14 +43,12 @@
 - (YSRealmWriteTransaction *)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                                  completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    __weak typeof(self) wself = self;
-    
+    __weak typeof(self) wself = self;    
     YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
         [wself.operations removeObject:transaction];
         if (completion) completion(wself, transaction);
     }];
     [self.operations addObject:trans];
-    
     return trans;
 }
 

@@ -11,6 +11,7 @@
 @interface YSRealmOperation ()
 
 @property (copy, nonatomic) NSString *realmPath;
+@property (nonatomic) RLMNotificationToken *notificationToken;
 
 @end
 
@@ -96,7 +97,7 @@
 #pragma mark - Operation
 #pragma mark Write
 
-- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     [self setExecuting:YES];
     
@@ -112,31 +113,43 @@
         [realm addOrUpdateObjectsFromArray:object];
     }
     
+    [self setExecuting:NO];
+    [self setFinished:YES];
+    
+    BOOL isCommitted = NO;
+    
     if (self.isCancelled) {
         [realm cancelWriteTransaction];
     } else {
+        isCommitted = YES;
         [realm commitWriteTransaction];
     }
     
-    [self setExecuting:NO];
-    [self setFinished:YES];
+    return isCommitted;
 }
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                           completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
+    
+    self.notificationToken = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+        [realm removeNotification:wself.notificationToken];
+        if (completion) completion(wself);
+    }];
+    
     dispatch_async([[self class] operationQueue], ^{
-        [wself writeObjectsWithObjectsBlock:objectsBlock];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) completion(wself);
-        });
+        if (![wself writeObjectsWithObjectsBlock:objectsBlock]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(wself);
+            });
+        }
     });
 }
 
 #pragma mark Delete
 
-- (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (BOOL)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     [self setExecuting:YES];
     
@@ -152,25 +165,37 @@
         [realm deleteObjects:object];
     }
     
+    [self setExecuting:NO];
+    [self setFinished:YES];
+    
+    BOOL isCommitted = NO;
+    
     if (self.isCancelled) {
         [realm cancelWriteTransaction];
     } else {
+        isCommitted = YES;
         [realm commitWriteTransaction];
     }
     
-    [self setExecuting:NO];
-    [self setFinished:YES];
+    return isCommitted;
 }
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                            completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
+    
+    self.notificationToken = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+        [realm removeNotification:wself.notificationToken];
+        if (completion) completion(wself);
+    }];
+    
     dispatch_async([[self class] operationQueue], ^{
-        [wself deleteObjectsWithObjectsBlock:objectsBlock];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) completion(wself);
-        });
+        if (![wself deleteObjectsWithObjectsBlock:objectsBlock]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) completion(wself);
+            });
+        };
     });
 }
 
