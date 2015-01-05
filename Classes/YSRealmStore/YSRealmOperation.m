@@ -8,6 +8,11 @@
 
 #import "YSRealmOperation.h"
 
+typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
+    YSRealmOperationTypeAddOrUpdate,
+    YSRealmOperationTypeDelete,
+};
+
 @interface YSRealmOperation ()
 
 @property (copy, nonatomic) NSString *realmPath;
@@ -97,25 +102,8 @@
 
 - (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    RLMRealm *realm = [self realm];
-    [realm beginWriteTransaction];
-    
-    id object = objectsBlock ? objectsBlock(self) : nil;
-    
-    if (object) {
-        if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
-            object = @[object];
-        }
-        [realm addOrUpdateObjectsFromArray:object];
-    }
-    
-    if (self.isCancelled) {
-        [realm cancelWriteTransaction];
-        return NO;
-    } else {
-        [realm commitWriteTransaction];
-        return YES;
-    }
+    return [self writeObjectsWithObjectsBlock:objectsBlock
+                                         type:YSRealmOperationTypeAddOrUpdate];
 }
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -141,25 +129,8 @@
 
 - (BOOL)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    RLMRealm *realm = [self realm];
-    [realm beginWriteTransaction];
-    
-    id object = objectsBlock ? objectsBlock(self) : nil;
-    
-    if (object) {
-        if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
-            object = @[object];
-        }
-        [realm deleteObjects:object];
-    }
-    
-    if (self.isCancelled) {
-        [realm cancelWriteTransaction];
-        return NO;
-    } else {
-        [realm commitWriteTransaction];
-        return YES;
-    }
+    return [self writeObjectsWithObjectsBlock:objectsBlock
+                                         type:YSRealmOperationTypeDelete];
 }
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -228,6 +199,42 @@
             if (completion) completion(wself, results);
         });
     });
+}
+
+#pragma mark Private
+
+- (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                type:(YSRealmOperationType)type
+{
+    RLMRealm *realm = [self realm];
+    [realm beginWriteTransaction];
+    
+    id object = objectsBlock ? objectsBlock(self) : nil;
+    
+    if (object) {
+        if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
+            object = @[object];
+        }
+        switch (type) {
+            case YSRealmOperationTypeAddOrUpdate:
+                [realm addOrUpdateObjectsFromArray:object];
+                break;
+            case YSRealmOperationTypeDelete:
+                [realm deleteObjects:object];
+                break;
+            default:
+                NSAssert1(false, @"Unsupported operation type = %zd;", type);
+                break;
+        }
+    }
+    
+    if (self.isCancelled) {
+        [realm cancelWriteTransaction];
+        return NO;
+    } else {
+        [realm commitWriteTransaction];
+        return YES;
+    }
 }
 
 #pragma mark - State
