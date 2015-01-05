@@ -28,8 +28,6 @@ typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transa
 
 - (void)interrupt;
 @property (readonly, getter=isInterrupted) BOOL interrupted;
-@property (readonly, getter=isExecuting) BOOL executing;
-@property (readonly, getter=isFinished) BOOL finished;
 
 /* Queue */
 

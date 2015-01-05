@@ -17,8 +17,6 @@
 
 @implementation YSRealmWriteTransaction
 @synthesize interrupted = _interrupted;
-@synthesize executing = _executing;
-@synthesize finished = _finished;
 
 + (void)writeTransactionWithRealmPath:(NSString*)realmPath
                            writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
@@ -55,18 +53,13 @@
 #pragma mark - Transaction
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-{
-    [self setExecuting:YES];
-    
+{    
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     
     if (writeBlock) writeBlock(realm, self);
     
     [realm commitWriteTransaction];
-    
-    [self setExecuting:NO];
-    [self setFinished:YES];
 }
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
@@ -102,34 +95,6 @@
 {
     @synchronized(self) {
         return _interrupted;
-    }
-}
-
-- (void)setExecuting:(BOOL)executing
-{
-    @synchronized(self) {
-        _executing = executing;
-    }
-}
-
-- (BOOL)isExecuting
-{
-    @synchronized(self) {
-        return _executing;
-    }
-}
-
-- (void)setFinished:(BOOL)finished
-{
-    @synchronized(self) {
-        _finished = finished;
-    }
-}
-
-- (BOOL)isFinished
-{
-    @synchronized(self) {
-        return _finished;
     }
 }
 

@@ -17,8 +17,6 @@
 
 @implementation YSRealmOperation
 @synthesize cancelled = _cancelled;
-@synthesize executing = _executing;
-@synthesize finished = _finished;
 
 #pragma mark - Public
 #pragma mark Write
@@ -99,8 +97,6 @@
 
 - (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [self setExecuting:YES];
-    
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     
@@ -113,19 +109,13 @@
         [realm addOrUpdateObjectsFromArray:object];
     }
     
-    [self setExecuting:NO];
-    [self setFinished:YES];
-    
-    BOOL isCommitted = NO;
-    
     if (self.isCancelled) {
         [realm cancelWriteTransaction];
+        return NO;
     } else {
-        isCommitted = YES;
         [realm commitWriteTransaction];
+        return YES;
     }
-    
-    return isCommitted;
 }
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -151,8 +141,6 @@
 
 - (BOOL)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [self setExecuting:YES];
-    
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     
@@ -165,19 +153,13 @@
         [realm deleteObjects:object];
     }
     
-    [self setExecuting:NO];
-    [self setFinished:YES];
-    
-    BOOL isCommitted = NO;
-    
     if (self.isCancelled) {
         [realm cancelWriteTransaction];
+        return NO;
     } else {
-        isCommitted = YES;
         [realm commitWriteTransaction];
+        return YES;
     }
-    
-    return isCommitted;
 }
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -206,8 +188,6 @@
 {
     __weak typeof(self) wself = self;
     dispatch_async([[self class] operationQueue], ^{
-        [wself setExecuting:YES];
-        
         NSMutableArray *values;
         Class resultClass;
         NSString *primaryKey;
@@ -243,10 +223,7 @@
             RLMResults *results;
             if (!wself.isCancelled && [values count] > 0 && resultClass && primaryKey) {
                 results = [resultClass objectsWhere:@"%K IN %@", primaryKey, values];
-            }
-            
-            [wself setExecuting:NO];
-            [wself setFinished:YES];
+            }            
             
             if (completion) completion(wself, results);
         });
@@ -271,34 +248,6 @@
 {
     @synchronized(self) {
         return _cancelled;
-    }
-}
-
-- (void)setExecuting:(BOOL)executing
-{
-    @synchronized(self) {
-        _executing = executing;
-    }
-}
-
-- (BOOL)isExecuting
-{
-    @synchronized(self) {
-        return _executing;
-    }
-}
-
-- (void)setFinished:(BOOL)finished
-{
-    @synchronized(self) {
-        _finished = finished;
-    }
-}
-
-- (BOOL)isFinished
-{
-    @synchronized(self) {
-        return _finished;
     }
 }
 

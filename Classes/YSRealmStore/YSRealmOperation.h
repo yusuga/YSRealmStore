@@ -45,8 +45,6 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
 
 - (void)cancel;
 @property (readonly, getter=isCancelled) BOOL cancelled;
-@property (readonly, getter=isExecuting) BOOL executing;
-@property (readonly, getter=isFinished) BOOL finished;
 
 /* Queue */
 
