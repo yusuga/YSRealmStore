@@ -16,17 +16,19 @@
 		B88DA1121A5A105D00DF36D3 /* JsonGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1111A5A105D00DF36D3 /* JsonGenerator.m */; };
 		B88DA1151A5A107000DF36D3 /* TwitterRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1141A5A107000DF36D3 /* TwitterRealmStore.m */; };
 		B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */; };
+		B88DA11D1A5A166000DF36D3 /* TweetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA11C1A5A166000DF36D3 /* TweetCell.m */; };
+		B88DA1201A5A173D00DF36D3 /* TweetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA11F1A5A173D00DF36D3 /* TweetViewController.m */; };
+		B88DA1211A5A1DDA00DF36D3 /* RLMObject+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */; };
+		B88DA1231A5A1F5700DF36D3 /* TweetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B88DA1221A5A1F5700DF36D3 /* TweetCell.xib */; };
 		B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */; };
 		B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FE1A3C94E200130815 /* CategoryTests.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
 		B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460119FD00F5008FA04F /* AppDelegate.m */; };
-		B8D5460519FD00F5008FA04F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460419FD00F5008FA04F /* ViewController.m */; };
 		B8D5460819FD00F5008FA04F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8D5460619FD00F5008FA04F /* Main.storyboard */; };
 		B8D5460A19FD00F5008FA04F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B8D5460919FD00F5008FA04F /* Images.xcassets */; };
 		B8D5460D19FD00F5008FA04F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8D5460B19FD00F5008FA04F /* LaunchScreen.xib */; };
 		B8D5462519FD0291008FA04F /* YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5462419FD0291008FA04F /* YSRealmStore.m */; };
 		B8D5462819FD029B008FA04F /* YSRealmOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5462719FD029B008FA04F /* YSRealmOperation.m */; };
-		B8D5464119FDCAE6008FA04F /* RLMObject+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */; };
 		B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */; };
 		B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464C19FDCEC9008FA04F /* OperationTests.m */; };
 		CD61284CB44F3AE3BFE86B01 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAE81F79A0CF1ECCDF8F05D /* libPods.a */; };
@@ -64,6 +66,11 @@
 		B88DA1141A5A107000DF36D3 /* TwitterRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterRealmStore.m; path = YSRealmStoreExample/TwitterRealmStore.m; sourceTree = "<group>"; };
 		B88DA1181A5A10FF00DF36D3 /* TwitterRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterRequest.h; sourceTree = "<group>"; };
 		B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterRequest.m; sourceTree = "<group>"; };
+		B88DA11B1A5A166000DF36D3 /* TweetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetCell.h; sourceTree = "<group>"; };
+		B88DA11C1A5A166000DF36D3 /* TweetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetCell.m; sourceTree = "<group>"; };
+		B88DA11E1A5A173D00DF36D3 /* TweetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetViewController.h; sourceTree = "<group>"; };
+		B88DA11F1A5A173D00DF36D3 /* TweetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetViewController.m; sourceTree = "<group>"; };
+		B88DA1221A5A1F5700DF36D3 /* TweetCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TweetCell.xib; sourceTree = "<group>"; };
 		B8C003FB1A3C94B700130815 /* RLMArray+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealmStore.h"; sourceTree = "<group>"; };
 		B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8C003FE1A3C94E200130815 /* CategoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTests.m; sourceTree = "<group>"; };
@@ -72,8 +79,6 @@
 		B8D545FE19FD00F5008FA04F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B8D5460019FD00F5008FA04F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B8D5460119FD00F5008FA04F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B8D5460319FD00F5008FA04F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B8D5460419FD00F5008FA04F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		B8D5460719FD00F5008FA04F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B8D5460919FD00F5008FA04F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B8D5460C19FD00F5008FA04F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -180,8 +185,11 @@
 			children = (
 				B8D5460019FD00F5008FA04F /* AppDelegate.h */,
 				B8D5460119FD00F5008FA04F /* AppDelegate.m */,
-				B8D5460319FD00F5008FA04F /* ViewController.h */,
-				B8D5460419FD00F5008FA04F /* ViewController.m */,
+				B88DA11E1A5A173D00DF36D3 /* TweetViewController.h */,
+				B88DA11F1A5A173D00DF36D3 /* TweetViewController.m */,
+				B88DA11B1A5A166000DF36D3 /* TweetCell.h */,
+				B88DA11C1A5A166000DF36D3 /* TweetCell.m */,
+				B88DA1221A5A1F5700DF36D3 /* TweetCell.xib */,
 				B8D5460619FD00F5008FA04F /* Main.storyboard */,
 				B8D5460919FD00F5008FA04F /* Images.xcassets */,
 				B8D5460B19FD00F5008FA04F /* LaunchScreen.xib */,
@@ -204,8 +212,8 @@
 			isa = PBXGroup;
 			children = (
 				B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */,
-				B8D5464C19FDCEC9008FA04F /* OperationTests.m */,
 				B8191B201A352E500063FE1F /* WriteTransactionTests.m */,
+				B8D5464C19FDCEC9008FA04F /* OperationTests.m */,
 				B8C003FE1A3C94E200130815 /* CategoryTests.m */,
 				B8D5461619FD00F6008FA04F /* Supporting Files */,
 			);
@@ -225,10 +233,10 @@
 			children = (
 				B8D5462319FD0291008FA04F /* YSRealmStore.h */,
 				B8D5462419FD0291008FA04F /* YSRealmStore.m */,
-				B8D5462619FD029B008FA04F /* YSRealmOperation.h */,
-				B8D5462719FD029B008FA04F /* YSRealmOperation.m */,
 				B8191B1D1A35275D0063FE1F /* YSRealmWriteTransaction.h */,
 				B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */,
+				B8D5462619FD029B008FA04F /* YSRealmOperation.h */,
+				B8D5462719FD029B008FA04F /* YSRealmOperation.m */,
 				B8D5463F19FDCAE6008FA04F /* RLMObject+YSRealmStore.h */,
 				B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */,
 				B8C003FB1A3C94B700130815 /* RLMArray+YSRealmStore.h */,
@@ -332,6 +340,7 @@
 				B8D5460819FD00F5008FA04F /* Main.storyboard in Resources */,
 				B8D5460D19FD00F5008FA04F /* LaunchScreen.xib in Resources */,
 				B8D5460A19FD00F5008FA04F /* Images.xcassets in Resources */,
+				B88DA1231A5A1F5700DF36D3 /* TweetCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,12 +394,14 @@
 				B88DA10C1A5A103F00DF36D3 /* Tweet.m in Sources */,
 				B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */,
 				B88DA1151A5A107000DF36D3 /* TwitterRealmStore.m in Sources */,
-				B8D5460519FD00F5008FA04F /* ViewController.m in Sources */,
+				B88DA11D1A5A166000DF36D3 /* TweetCell.m in Sources */,
 				B8D5462519FD0291008FA04F /* YSRealmStore.m in Sources */,
 				B88DA10B1A5A103F00DF36D3 /* Entities.m in Sources */,
 				B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */,
+				B88DA1201A5A173D00DF36D3 /* TweetViewController.m in Sources */,
 				B88DA10D1A5A103F00DF36D3 /* Url.m in Sources */,
 				B88DA10E1A5A103F00DF36D3 /* User.m in Sources */,
+				B88DA1211A5A1DDA00DF36D3 /* RLMObject+YSRealmStore.m in Sources */,
 				B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */,
 				B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */,
 				B8D545FF19FD00F5008FA04F /* main.m in Sources */,
@@ -406,7 +417,6 @@
 				B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */,
 				B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */,
 				B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */,
-				B8D5464119FDCAE6008FA04F /* RLMObject+YSRealmStore.m in Sources */,
 				B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

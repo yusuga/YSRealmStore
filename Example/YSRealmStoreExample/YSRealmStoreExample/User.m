@@ -17,6 +17,7 @@
     if (self = [super init]) {
         self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
         self.name = [self ys_stringWithObject:object forKey:@"name"];
+        self.screen_name = [self ys_stringWithObject:object forKey:@"screen_name"];
     }
     return self;
 }

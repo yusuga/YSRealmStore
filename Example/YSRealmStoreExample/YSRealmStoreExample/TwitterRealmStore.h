@@ -18,4 +18,9 @@
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject;
 - (void)addTweetsWithCount:(NSUInteger)count;
 
+- (YSRealmWriteTransaction*)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects
+                                               completion:(YSRealmStoreWriteTransactionCompletion)completion;
+
+- (RLMResults*)fetchAllTweets;
+
 @end

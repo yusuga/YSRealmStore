@@ -74,8 +74,8 @@
                  screenName:(NSString*)screenName
 {
     return @{@"id" : @(userID),
-             @"name" : name ? name : [NSString stringWithFormat:@"name%zd", userID],
-             @"screen_name" : screenName ? screenName : [NSString stringWithFormat:@"screen_name%zd", userID]};
+             @"name" : name ? name : [NSString stringWithFormat:@"name%lld", userID],
+             @"screen_name" : screenName ? screenName : [NSString stringWithFormat:@"screen_name%lld", userID]};
 }
 
 + (NSDictionary*)entities

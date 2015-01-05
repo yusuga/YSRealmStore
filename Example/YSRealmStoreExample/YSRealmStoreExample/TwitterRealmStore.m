@@ -13,7 +13,7 @@
 + (void)initialize
 {
     if (self == [TwitterRealmStore class]) {
-        [RLMRealm setSchemaVersion:5 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+        [RLMRealm setSchemaVersion:7 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
                 /**
@@ -30,7 +30,6 @@
                 }];
             }
         }];
-//        DDLogDebug(@"path: %@", [RLMRealm defaultRealmPath]);
     }
 }
 
@@ -56,6 +55,17 @@
     }
 }
 
+- (YSRealmWriteTransaction*)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects
+                                               completion:(YSRealmStoreWriteTransactionCompletion)completion
+{
+    return [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+        for (NSDictionary *tweetObj in tweetJsonObjects) {
+            if (transaction.isInterrupted) return ;
+            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];
+        }
+    } completion:completion];
+}
+
 - (void)addTweetsWithCount:(NSUInteger)count
 {
     [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
@@ -69,6 +79,11 @@
     for (NSUInteger twID = 0; twID < count; twID++) {
         NSAssert([Tweet objectForPrimaryKey:@(twID)] != nil, nil);
     }
+}
+
+- (RLMResults *)fetchAllTweets
+{
+    return [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:NO];
 }
 
 @end
