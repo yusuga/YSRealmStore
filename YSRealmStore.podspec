@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'YSRealmStore'
-  s.version = '0.2.2'
+  s.version = '0.2.3'
   s.summary = 'Realm helper.'
   s.homepage = 'https://github.com/yusuga/YSRealmStore'
   s.license = 'MIT'
