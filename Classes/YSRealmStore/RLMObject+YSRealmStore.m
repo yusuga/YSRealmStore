@@ -10,7 +10,7 @@
 
 @implementation RLMObject (YSRealmStore)
 
-+ (NSString *)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
++ (id)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
 {
     id obj = [dictionary objectForKey:key];
     if (obj == [NSNull null]) {
@@ -20,7 +20,7 @@
     }
 }
 
-- (NSString *)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
+- (id)ys_objectOrNilWithDictionary:(NSDictionary *)dictionary forKey:(NSString *)key
 {
     return [[self class] ys_objectOrNilWithDictionary:dictionary forKey:key];
 }
