@@ -9,13 +9,15 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealm:[RLMRealm defaultRealm
 
 ##Write transaction
 ```
-// Sync
-[store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+/* Sync */
+[store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+    // Can be operated for the realm. (Main thread)
     [realm addOrUpdateObject:[[Tweet alloc] initWithObject:obj]];
 }];
 
-// Async
-[store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+/* Async */
+[store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+    // Can be operated for the realm. (Background thread)
     [realm addOrUpdateObject:[[Tweet alloc] initWithObject:obj]];
 } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
         
@@ -25,13 +27,15 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealm:[RLMRealm defaultRealm
 ##Operation
 ###Add
 ```
-// Sync
-[store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+/* Sync */
+[store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+    // Can be operated for the realm. (Main thread)
     return [[Tweet alloc] initWithObject:tweetJsonObj];
 }];
 
-// Async
-[store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+/* Async */
+[store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+    // Can be operated for the realm. (Background thread)
     return [[Tweet alloc] initWithObject:tweetJsonObj];
 } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
 
@@ -40,13 +44,15 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealm:[RLMRealm defaultRealm
 
 ###Delete
 ```
-// Sync
-[store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+/* Sync */
+[store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+    // Can be operated for the realm. (Main thread)
     return [Tweet allObjects];
 }];
 
-// Async
-[store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+/* Async */
+[store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+    // Can be operated for the realm. (Background thread)
     return [Tweet allObjects];
 } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
 
@@ -57,12 +63,12 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealm:[RLMRealm defaultRealm
 *Fetched object is require primary key.
 
 ```
-// Async
-[store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-    // Background thread
+/* Async */
+[store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+    // Can be operated for the realm. (Background thread)
     RLMResults *tweets = [Tweet allObjects];
     return [tweets sortedResultsUsingProperty:@"id" ascending:YES];
-} completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
+} completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results) {
 
 }];
 ```
