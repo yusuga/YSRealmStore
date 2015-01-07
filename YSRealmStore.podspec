@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'YSRealmStore'
-  s.version = '0.2.3'
+  s.version = '0.2.4'
   s.summary = 'Realm helper.'
   s.homepage = 'https://github.com/yusuga/YSRealmStore'
   s.license = 'MIT'
@@ -21,4 +21,8 @@ Pod::Spec.new do |s|
 #else
     static const DDLogLevel ddLogLevel = DDLogLevelError;
 #endif"
+
+  s.subspec 'Category' do |ss|
+    ss.source_files = 'Classes/YSRealmStore/Category/*.{h,m}'
+  end
 end
