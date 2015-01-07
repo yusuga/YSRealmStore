@@ -36,11 +36,11 @@
 
 - (void)testRLMArray
 {
-    YSRealmStore *store = [[YSRealmStore alloc] init];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     int64_t tweetID = 0;
     NSUInteger userCount = 10;
     
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
     [store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
         for (NSUInteger userID = 0; userID < userCount; userID++) {
             User *user = [User objectForPrimaryKey:@(userID)];

@@ -10,26 +10,28 @@
 
 @interface YSRealmStore ()
 
+@property (nonatomic, readwrite) RLMRealm *realm;
 @property (nonatomic) NSMutableArray *operations;
 
 @end
 
 @implementation YSRealmStore
 
-- (instancetype)init
+- (instancetype)initWithRealm:(RLMRealm *)realm
 {
     if (self = [super init]) {
-        self.operations = [NSMutableArray array];
-        DDLogDebug(@"%@; self.realm.path = %@", NSStringFromClass([self class]), self.realm.path);
+        self.realm = realm;
     }
     return self;
 }
 
-#pragma mark - Realm
-
-- (RLMRealm*)realm
+- (instancetype)init
 {
-    return [RLMRealm defaultRealm];
+    if (self = [super init]) {
+        self.operations = [NSMutableArray array];
+        DDLogDebug(@"class = %@; self.realm.path = %@;", NSStringFromClass([self class]), self.realm.path);
+    }
+    return self;
 }
 
 #pragma mark - Transaction

@@ -17,9 +17,8 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 @interface YSRealmStore : NSObject
 
-/* Realm */
-
-- (RLMRealm*)realm;
+- (instancetype)initWithRealm:(RLMRealm *)realm;
+@property (nonatomic, readonly) RLMRealm *realm;
 
 /* Transaction */
 

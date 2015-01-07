@@ -48,7 +48,7 @@
     static id __instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __instance =  [[self alloc] init];
+        __instance =  [[self alloc] initWithRealm:[RLMRealm defaultRealm]];
     });
     return __instance;
 }
@@ -94,6 +94,13 @@
 - (RLMResults *)fetchAllTweets
 {
     return [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:NO];
+}
+
+#pragma mark - YSRealmStoreProtocol
+
++ (RLMRealm *)realm
+{
+    return [RLMRealm defaultRealm];
 }
 
 @end
