@@ -33,11 +33,11 @@
 
 - (void)testStateInSyncAdd
 {
-    [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         return nil;
     }];
 }
@@ -48,18 +48,18 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         return nil;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         [expectation fulfill];
     }];
     XCTAssertNotNil(ope);
@@ -73,11 +73,11 @@
 
 - (void)testStateInSyncDelete
 {
-    [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         return nil;
     }];
 }
@@ -88,18 +88,18 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         return nil;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         [expectation fulfill];
     }];
     XCTAssertNotNil(ope);
@@ -111,24 +111,39 @@
 
 #pragma mark Fetch
 
+- (void)testStateInSyncFetch
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
+    RLMResults *results = [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        XCTAssertTrue([NSThread isMainThread]);
+        XCTAssertNotNil(operation);
+        XCTAssertFalse(operation.isCancelled);
+        XCTAssertNotNil(realm);
+        return nil;
+    }];
+    XCTAssertNil(results);
+}
+
 - (void)testStateInAsyncFetch
 {
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [store fetchObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         return nil;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertNotNil(store);
         XCTAssertNotNil(operation);
         XCTAssertFalse(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
+        XCTAssertNil(results);
         [expectation fulfill];
     }];
     XCTAssertNotNil(ope);
@@ -158,10 +173,10 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     NSNumber *tweetID = tweetJsonObj[@"id"];
     
-    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         return [[Tweet alloc] initWithObject:tweetJsonObj];
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
-        Tweet *tweet = [Tweet objectForPrimaryKey:tweetID];
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
+        Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:tweetID];
         XCTAssertNotNil(tweet);
         [expectation fulfill];
     }];
@@ -176,11 +191,13 @@
 
 - (void)testUpdateObject
 {
-    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:tweetJsonObj];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
-    [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        Tweet *tweet = [[Tweet allObjects] firstObject];
+    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
+    [store addTweetWithTweetJsonObject:tweetJsonObj];
+    
+    [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        Tweet *tweet = [[Tweet allObjectsInRealm:realm] firstObject];
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
@@ -188,7 +205,7 @@
     }];
     
     Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
-    Tweet *addedTweet = [[Tweet allObjects] firstObject];
+    Tweet *addedTweet = [[Tweet allObjectsInRealm:store.realm] firstObject];
     
     XCTAssertEqual(addedTweet.id, tweet.id);
     XCTAssertEqualObjects(addedTweet.text, @"");
@@ -198,21 +215,24 @@
 
 - (void)testAsyncUpdateObject
 {
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:tweetJsonObj];
+    [store addTweetWithTweetJsonObject:tweetJsonObj];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        XCTAssertEqual([[Tweet allObjects] count], 1);
-        Tweet *tweet = [[Tweet allObjects] firstObject];
+    [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        RLMResults *results = [Tweet allObjectsInRealm:realm];
+        XCTAssertEqual([results count], 1);
+        Tweet *tweet = [results firstObject];
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
         return tweet;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
-        Tweet *addedTweet = [[Tweet allObjects] firstObject];
+        Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
         
         XCTAssertEqual(addedTweet.id, tweet.id);
         XCTAssertEqualObjects(addedTweet.text, @"");
@@ -229,12 +249,13 @@
 
 - (void)testUpdateNestedObject
 {
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     int64_t tweetID = 0;
     int64_t userID = 0;
     NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID].mutableCopy;
     
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:tweetObj];
-    XCTAssertNotNil([User objectForPrimaryKey:@(userID)]);
+    [store addTweetWithTweetJsonObject:tweetObj];
+    XCTAssertNotNil([User objectInRealm:store.realm forPrimaryKey:@(userID)]);
     
     NSMutableDictionary *userObj = ((NSDictionary*)tweetObj[@"user"]).mutableCopy;
     NSString *updatedName = @"UPDATED_NAME";
@@ -242,10 +263,10 @@
     [userObj setObject:updatedName forKey:@"name"];
     [tweetObj setObject:userObj forKey:@"user"];
 
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:tweetObj];
+    [store addTweetWithTweetJsonObject:tweetObj];
     
-    XCTAssertEqual([[User allObjects] count], 1);
-    User *user = [User objectForPrimaryKey:@(userID)];
+    XCTAssertEqual([[User allObjectsInRealm:store.realm] count], 1);
+    User *user = [User objectInRealm:store.realm forPrimaryKey:@(userID)];
     XCTAssertEqualObjects(user.name, updatedName);
 }
 
@@ -253,37 +274,43 @@
 
 - (void)testDeleteObject
 {
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
-    [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        return [[Tweet allObjects] firstObject];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    
+    [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        return [[Tweet allObjectsInRealm:realm] firstObject];
     }];
     
-    XCTAssertEqual([[Tweet allObjects] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
 }
 
 - (void)testDeleteObjects
 {
-    NSUInteger count = 10;
-    [[TwitterRealmStore sharedStore] addTweetsWithCount:count];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
-    [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        return [[Tweet allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"id < %d", count/2]];
+    NSUInteger count = 10;
+    [store addTweetsWithCount:count];
+    
+    [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        return [[Tweet allObjectsInRealm:realm] objectsWithPredicate:[NSPredicate predicateWithFormat:@"id < %d", count/2]];
     }];
     
-    XCTAssertEqual([[Tweet allObjects] count], count/2);
+    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], count/2);
 }
 
 - (void)testAsyncDeleteObject
 {
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        return [[Tweet allObjects] firstObject];
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
-        XCTAssertEqual([[Tweet allObjects] count], 0);
+    [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        return [[Tweet allObjectsInRealm:realm] firstObject];
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
+        XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 0);
         
         [expectation fulfill];
     }];
@@ -295,12 +322,14 @@
 
 - (void)testDeleteNestedRelationObjects
 {
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
-    [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    
+    [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         NSMutableArray *objs = @[].mutableCopy;
         
-        Tweet *tweet = [[Tweet allObjects] firstObject];
+        Tweet *tweet = [[Tweet allObjectsInRealm:realm] firstObject];
         [objs addObject:tweet];
         if (tweet.entities) {
             [objs addObject:tweet.entities];
@@ -312,25 +341,46 @@
         return objs;
     }];
     
-    XCTAssertEqual([[Tweet allObjects] count], 0);
-    XCTAssertEqual([[Entities allObjects] count], 0);
-    XCTAssertEqual([[Url allObjects] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Entities allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Url allObjectsInRealm:store.realm] count], 0);
 }
 
 #pragma mark Fetch
 
+- (void)testFetchObjects
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    NSUInteger count = 10;
+    
+    [store addTweetsWithCount:count];
+    NSString *primaryKey = @"id";
+    
+    RLMResults *results = [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        RLMResults *tweets = [Tweet allObjectsInRealm:realm];
+        return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
+    }];
+    
+    XCTAssertEqual([results count], count);
+    for (NSUInteger i = 0; i < [results count]; i++) {
+        XCTAssertEqual(((Tweet*)[results objectAtIndex:i]).id, i);
+    }
+}
+
 - (void)testAsyncFetchObjects
 {
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     NSUInteger count = 10;
-    [[TwitterRealmStore sharedStore] addTweetsWithCount:count];
+    
+    [store addTweetsWithCount:count];
     NSString *primaryKey = @"id";
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    [[TwitterRealmStore sharedStore] fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        RLMResults *tweets = [Tweet allObjects];
+    [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        RLMResults *tweets = [Tweet allObjectsInRealm:realm];
         return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results) {
         XCTAssertEqual([results count], count);
         for (NSUInteger i = 0; i < [results count]; i++) {
             XCTAssertEqual(((Tweet*)[results objectAtIndex:i]).id, i);
@@ -348,20 +398,22 @@
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     NSUInteger count = 10;
     
-    [store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSUInteger i = 0; i < count; i++) {
             [realm addObject:[[Url alloc] initWithObject:@{@"url" : [NSString stringWithFormat:@"http://%zd.com", i]}]];
         }
     }];
-    XCTAssertEqual([[Url allObjects] count], count);
+    XCTAssertEqual([[Url allObjectsInRealm:store.realm] count], count);
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
-        return [Url allObjects];
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
+    
+    [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        return [Url allObjectsInRealm:realm];
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results) {
         XCTAssertNil(results);
         [expectation fulfill];
     }];
+    
     [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
@@ -374,16 +426,18 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
         return @[[[Tweet alloc] initWithObject:[JsonGenerator tweet]]];
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
-        XCTAssertEqual([[Tweet allObjects] count], 0);
+        XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 0);
         
         [expectation fulfill];
     }];
@@ -398,16 +452,17 @@
 {
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^NSArray *(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
-        
+        XCTAssertNotNil(realm);
         return nil;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
-        XCTAssertEqual([[Tweet allObjects] count], 0);
+        XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 0);
         
         [expectation fulfill];
     }];
@@ -422,28 +477,33 @@
 
 - (void)testCancelUpdateObject
 {
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:tweetJsonObj];
+    [store addTweetWithTweetJsonObject:tweetJsonObj];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
-        XCTAssertEqual([[Tweet allObjects] count], 1);
-        Tweet *tweet = [[Tweet allObjects] firstObject];
+        RLMResults *results = [Tweet allObjectsInRealm:realm];
+        XCTAssertEqual([results count], 1);
+        Tweet *tweet = [results firstObject];
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
         
         return tweet;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
-        Tweet *addedTweet = [[Tweet allObjects] firstObject];
+        Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
         
         XCTAssertEqual(addedTweet.id, tweet.id);
         XCTAssertEqualObjects(addedTweet.text, tweet.text);
@@ -461,28 +521,33 @@
 
 - (void)testCancelUpdateObjectWithNotReturnObject
 {
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:tweetJsonObj];
+    [store addTweetWithTweetJsonObject:tweetJsonObj];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
-        XCTAssertEqual([[Tweet allObjects] count], 1);
-        Tweet *tweet = [[Tweet allObjects] firstObject];
+        RLMResults *results = [Tweet allObjectsInRealm:realm];
+        XCTAssertEqual([results count], 1);
+        Tweet *tweet = [results firstObject];
         tweet.text = @"";
         tweet.user = nil;
         tweet.entities = nil;
         
         return nil;
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
         Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
-        Tweet *addedTweet = [[Tweet allObjects] firstObject];
+        Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
         
         XCTAssertEqual(addedTweet.id, tweet.id);
         XCTAssertEqualObjects(addedTweet.text, tweet.text);
@@ -502,20 +567,24 @@
 
 - (void)testCancelDeleteObject
 {
-    [[TwitterRealmStore sharedStore] addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
-    YSRealmOperation *ope = [[TwitterRealmStore sharedStore] deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertFalse([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
-        return [Tweet allObjects];
-    } completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+        return [Tweet allObjectsInRealm:realm];
+    } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
         XCTAssertTrue([NSThread isMainThread]);
         XCTAssertTrue(operation.isCancelled);
+        XCTAssertNotNil(realm);
         
-        XCTAssertEqual([[Tweet allObjects] count], 1);
+        XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 1);
         
         [expectation fulfill];
     }];

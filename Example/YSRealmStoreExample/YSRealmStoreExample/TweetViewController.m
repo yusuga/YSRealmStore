@@ -73,7 +73,7 @@ static NSString * const kCellIdentifier = @"Cell";
     
     NSArray *tweetObjects = [TwitterRequest requestTweetsWithMaxCount:self.limitOfRequestTweet];
     
-    [[TwitterRealmStore sharedStore] addTweetsWithTweetJsonObjects:tweetObjects completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
+    [[TwitterRealmStore sharedStore] addTweetsWithTweetJsonObjects:tweetObjects completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[tweetObjects count]];
         for (NSUInteger i = 0; i < [tweetObjects count]; i++) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
@@ -88,7 +88,7 @@ static NSString * const kCellIdentifier = @"Cell";
     [TwitterRequest resetState];
     
     __weak typeof(self) wself = self;
-    [[TwitterRealmStore sharedStore] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
+    [[TwitterRealmStore sharedStore] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {        
         [wself.tableView reloadData];
     }];
 }

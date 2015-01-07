@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "TwitterRealmStore.h"
+#import "RLMRealm+YSRealmStore.h"
 #import "RLMArray+YSRealmStore.h"
 #import "NSDictionary+YSRealmStore.h"
 #import "NSString+YSRealmStore.h"
@@ -32,6 +33,23 @@
     [super tearDown];
 }
 
+#pragma mark - RLMRealm
+
+- (void)testRealmWithFileName
+{
+    NSString *fileName = @"database";
+    RLMRealm *realm = [RLMRealm ys_realmWithFileName:fileName];
+    NSString *path = realm.path;
+    DDLogDebug(@"%s; path = %@;", __func__, path);
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    XCTAssertTrue([fileManager fileExistsAtPath:path]);
+    
+    NSError *error = nil;
+    XCTAssertTrue([fileManager removeItemAtPath:path error:&error]);
+    XCTAssertNil(error);
+}
+
 #pragma mark - RLMArray
 
 - (void)testRLMArray
@@ -41,26 +59,27 @@
     NSUInteger userCount = 10;
     
     [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
-    [store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    
+    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSUInteger userID = 0; userID < userCount; userID++) {
-            User *user = [User objectForPrimaryKey:@(userID)];
+            User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
             if (user == nil) {
                 user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
             }
             [realm addObject:user];
         }
     }];
-    XCTAssertEqual([[User allObjects] count], userCount);
+    XCTAssertEqual([[User allObjectsInRealm:[store realm]] count], userCount);
     
-    [store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
-        Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
+    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
         XCTAssertNotNil(tweet);
         RLMArray *watchers = tweet.watchers;
         XCTAssertNotNil(watchers);
         XCTAssertEqual([watchers count], 0);
         
-        User *user0 = [User objectForPrimaryKey:@(0)];
-        User *user1 = [User objectForPrimaryKey:@(1)];
+        User *user0 = [User objectInRealm:realm forPrimaryKey:@(0)];
+        User *user1 = [User objectInRealm:realm forPrimaryKey:@(1)];
         XCTAssertNotNil(user0);
         XCTAssertNotNil(user1);
         
@@ -112,7 +131,7 @@
     [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0 urlCount:1]];
     
     [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
-        Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
+        Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
         XCTAssertNotNil(tweet);
         
         Url *url = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];        

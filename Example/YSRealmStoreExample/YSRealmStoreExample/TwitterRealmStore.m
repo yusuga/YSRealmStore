@@ -8,6 +8,7 @@
 
 #import "TwitterRealmStore.h"
 #import "NSData+YSRealmStore.h"
+#import "RLMRealm+YSRealmStore.h"
 
 @implementation TwitterRealmStore
 
@@ -48,27 +49,29 @@
     static id __instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __instance =  [[self alloc] initWithRealm:[RLMRealm defaultRealm]];
+        RLMRealm *realm = [RLMRealm ys_realmWithFileName:@"twitter"];
+        __instance =  [[self alloc] initWithRealm:realm];
     });
     return __instance;
 }
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
 {
-    [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         return [[Tweet alloc] initWithObject:tweetJsonObject];
     }];
     
+    RLMRealm *realm = [self realm];
     NSNumber *twID = tweetJsonObject[@"id"];
     if ([twID isKindOfClass:[NSNumber class]] && twID) {
-        NSAssert2([Tweet objectForPrimaryKey:twID].id == [twID longLongValue], @"%zd - %zd", [Tweet objectForPrimaryKey:twID].id, [twID longLongValue]);
+        NSAssert2([Tweet objectInRealm:realm forPrimaryKey:twID].id == [twID longLongValue], @"%zd - %zd", [Tweet objectInRealm:realm forPrimaryKey:twID].id, [twID longLongValue]);
     }
 }
 
 - (YSRealmWriteTransaction*)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects
                                                completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    return [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    return [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSDictionary *tweetObj in tweetJsonObjects) {
             if (transaction.isInterrupted) return ;
             [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];
@@ -78,7 +81,7 @@
 
 - (void)addTweetsWithCount:(NSUInteger)count
 {
-    [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         NSMutableArray *tweets = [NSMutableArray arrayWithCapacity:count];
         for (NSUInteger twID = 0; twID < count; twID++) {
             [tweets addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:twID]]];
@@ -87,7 +90,7 @@
     }];
     
     for (NSUInteger twID = 0; twID < count; twID++) {
-        NSAssert([Tweet objectForPrimaryKey:@(twID)] != nil, nil);
+        NSAssert([Tweet objectInRealm:self.realm forPrimaryKey:@(twID)] != nil, nil);
     }
 }
 
