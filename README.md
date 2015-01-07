@@ -1,12 +1,79 @@
-# YSRealmStore
+#YSRealmStore
 
-## Memo
+##Usage 
 
-### Realm 0.87.4 での挙動
+##Initialize
+```
+YSRealmStore *store = [[YSRealmStore alloc] initWithRealm:[RLMRealm defaultRealm]];
+```
 
-- Userを削除したらTweetのUserはnilになる。
-- Urlを削除したらEntitiesは空配列になる(オブジェクトは削除されない)。そのEntitiesを削除すればTweetのEntitiesはnilになる。
-- Userを削除すればWatchersにも反映される(RLMArray内のオブジェクトに対しても反映される)。
+##Write transaction
+```
+// Sync
+[store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [realm addOrUpdateObject:[[Tweet alloc] initWithObject:obj]];
+}];
+
+// Async
+[store writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [realm addOrUpdateObject:[[Tweet alloc] initWithObject:obj]];
+} completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction) {
+        
+}];
+```
+
+##Operation
+###Add
+```
+// Sync
+[store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    return [[Tweet alloc] initWithObject:tweetJsonObj];
+}];
+
+// Async
+[store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    return [[Tweet alloc] initWithObject:tweetJsonObj];
+} completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+
+}];
+```
+
+###Delete
+```
+// Sync
+[store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    return [Tweet allObjects];
+}];
+
+// Async
+[store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    return [Tweet allObjects];
+} completion:^(YSRealmStore *store, YSRealmOperation *operation) {
+
+}];
+```
+
+###Fetch
+*Fetched object is require primary key.
+
+```
+// Async
+[store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation) {
+    // Background thread
+    RLMResults *tweets = [Tweet allObjects];
+    return [tweets sortedResultsUsingProperty:@"id" ascending:YES];
+} completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results) {
+
+}];
+```
+
+###Cancel operation
+```
+YSRealmOperation *operation = [store writeObjectsWithObjectsBlock:objectsBlock
+                                                       completion:completion];
+
+[operation cancel];
+```
 
 ## License
 
