@@ -33,6 +33,14 @@
  
  ---
  
+ deleteObjects:時の挙動メモ
+ 
+ - Userを削除したらTweetのUserはnilになる。
+ - Urlを削除したらEntitiesは空配列になる(オブジェクトは削除されない)。そのEntitiesを削除すればTweetのEntitiesはnilになる。
+ - Userを削除すればWatchersにも反映される(RLMArray内のオブジェクトに対しても反映される)。
+ 
+ ---
+ 
  */
 
 - (instancetype)initWithObject:(id)object
