@@ -7,16 +7,22 @@
 //
 
 #import "User.h"
-#import "RLMObject+YSRealmStore.h"
+#import "NSDictionary+YSRealmStore.h"
+#import "NSString+YSRealmStore.h"
+#import "NSData+YSRealmStore.h"
 
 @implementation User
 
 - (instancetype)initWithObject:(id)object
 {
+    if (![object isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    
     if (self = [super init]) {
-        self.id = [[self ys_objectOrNilWithDictionary:object forKey:@"id"] longLongValue];
-        self.name = [self ys_stringWithDictionary:object forKey:@"name"];
-        self.screen_name = [self ys_stringWithDictionary:object forKey:@"screen_name"];
+        self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
+        self.name = [object ys_stringOrDefaultStringForKey:@"name"];
+        self.screen_name = [object ys_stringOrDefaultStringForKey:@"screen_name"];        
     }
     return self;
 }
@@ -24,6 +30,11 @@
 + (NSString *)primaryKey
 {
     return @"id";
+}
+
++ (NSDictionary *)defaultPropertyValues
+{
+    return @{@"color" : [NSData ys_realmDefaultData]};
 }
 
 @end

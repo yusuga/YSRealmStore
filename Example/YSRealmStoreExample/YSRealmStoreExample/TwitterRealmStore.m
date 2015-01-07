@@ -7,13 +7,14 @@
 //
 
 #import "TwitterRealmStore.h"
+#import "NSData+YSRealmStore.h"
 
 @implementation TwitterRealmStore
 
 + (void)initialize
 {
     if (self == [TwitterRealmStore class]) {
-        [RLMRealm setSchemaVersion:7 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+        [RLMRealm setSchemaVersion:8 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
                 /**
@@ -27,6 +28,15 @@
                         NSLog(@"user %@", newObject);
                         ((User*)newObject).id = userID++;
                     }
+                }];
+            }
+            if (oldSchemaVersion < 8) {
+                /**
+                 *  NSData *color を追加
+                 */
+                [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
+                    User *user = (id)newObject;
+                    user.color = [NSData ys_realmDefaultData];
                 }];
             }
         }];

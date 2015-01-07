@@ -13,6 +13,7 @@
 @property int64_t id;
 @property NSString *name;
 @property NSString *screen_name;
+@property NSData *color;
 
 @end
 

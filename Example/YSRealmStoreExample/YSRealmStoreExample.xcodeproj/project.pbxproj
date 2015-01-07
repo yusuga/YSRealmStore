@@ -18,9 +18,12 @@
 		B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */; };
 		B88DA11D1A5A166000DF36D3 /* TweetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA11C1A5A166000DF36D3 /* TweetCell.m */; };
 		B88DA1201A5A173D00DF36D3 /* TweetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA11F1A5A173D00DF36D3 /* TweetViewController.m */; };
-		B88DA1211A5A1DDA00DF36D3 /* RLMObject+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */; };
 		B88DA1231A5A1F5700DF36D3 /* TweetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B88DA1221A5A1F5700DF36D3 /* TweetCell.xib */; };
-		B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */; };
+		B8AE95BD1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95BC1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m */; };
+		B8AE95C01A5C3E7E0053B140 /* NSString+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95BF1A5C3E7E0053B140 /* NSString+YSRealmStore.m */; };
+		B8AE95C31A5C3EAA0053B140 /* NSDate+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95C21A5C3EAA0053B140 /* NSDate+YSRealmStore.m */; };
+		B8AE95C61A5C3EBD0053B140 /* NSData+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95C51A5C3EBD0053B140 /* NSData+YSRealmStore.m */; };
+		B8AE95CB1A5C3EE70053B140 /* RLMArray+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */; };
 		B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FE1A3C94E200130815 /* CategoryTests.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
 		B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460119FD00F5008FA04F /* AppDelegate.m */; };
@@ -71,8 +74,16 @@
 		B88DA11E1A5A173D00DF36D3 /* TweetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetViewController.h; sourceTree = "<group>"; };
 		B88DA11F1A5A173D00DF36D3 /* TweetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetViewController.m; sourceTree = "<group>"; };
 		B88DA1221A5A1F5700DF36D3 /* TweetCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TweetCell.xib; sourceTree = "<group>"; };
-		B8C003FB1A3C94B700130815 /* RLMArray+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealmStore.h"; sourceTree = "<group>"; };
-		B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealmStore.m"; sourceTree = "<group>"; };
+		B8AE95BB1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+YSRealmStore.h"; sourceTree = "<group>"; };
+		B8AE95BC1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+YSRealmStore.m"; sourceTree = "<group>"; };
+		B8AE95BE1A5C3E7E0053B140 /* NSString+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+YSRealmStore.h"; sourceTree = "<group>"; };
+		B8AE95BF1A5C3E7E0053B140 /* NSString+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+YSRealmStore.m"; sourceTree = "<group>"; };
+		B8AE95C11A5C3EAA0053B140 /* NSDate+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+YSRealmStore.h"; sourceTree = "<group>"; };
+		B8AE95C21A5C3EAA0053B140 /* NSDate+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+YSRealmStore.m"; sourceTree = "<group>"; };
+		B8AE95C41A5C3EBD0053B140 /* NSData+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+YSRealmStore.h"; sourceTree = "<group>"; };
+		B8AE95C51A5C3EBD0053B140 /* NSData+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+YSRealmStore.m"; sourceTree = "<group>"; };
+		B8AE95C71A5C3EE70053B140 /* RLMArray+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealmStore.h"; sourceTree = "<group>"; };
+		B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8C003FE1A3C94E200130815 /* CategoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTests.m; sourceTree = "<group>"; };
 		B8D545F919FD00F5008FA04F /* YSRealmStoreExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSRealmStoreExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D545FD19FD00F5008FA04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -88,8 +99,6 @@
 		B8D5462419FD0291008FA04F /* YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmStore.m; sourceTree = "<group>"; };
 		B8D5462619FD029B008FA04F /* YSRealmOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmOperation.h; sourceTree = "<group>"; };
 		B8D5462719FD029B008FA04F /* YSRealmOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmOperation.m; sourceTree = "<group>"; };
-		B8D5463F19FDCAE6008FA04F /* RLMObject+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMObject+YSRealmStore.h"; sourceTree = "<group>"; };
-		B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMObject+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreRealmTests.m; sourceTree = "<group>"; };
 		B8D5464C19FDCEC9008FA04F /* OperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OperationTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -156,6 +165,23 @@
 				B88DA1191A5A10FF00DF36D3 /* TwitterRequest.m */,
 			);
 			name = Utility;
+			sourceTree = "<group>";
+		};
+		B8AE95BA1A5C3D6F0053B140 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				B8AE95C71A5C3EE70053B140 /* RLMArray+YSRealmStore.h */,
+				B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */,
+				B8AE95BB1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.h */,
+				B8AE95BC1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m */,
+				B8AE95BE1A5C3E7E0053B140 /* NSString+YSRealmStore.h */,
+				B8AE95BF1A5C3E7E0053B140 /* NSString+YSRealmStore.m */,
+				B8AE95C11A5C3EAA0053B140 /* NSDate+YSRealmStore.h */,
+				B8AE95C21A5C3EAA0053B140 /* NSDate+YSRealmStore.m */,
+				B8AE95C41A5C3EBD0053B140 /* NSData+YSRealmStore.h */,
+				B8AE95C51A5C3EBD0053B140 /* NSData+YSRealmStore.m */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 		B8D545F019FD00F5008FA04F = {
@@ -237,10 +263,7 @@
 				B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */,
 				B8D5462619FD029B008FA04F /* YSRealmOperation.h */,
 				B8D5462719FD029B008FA04F /* YSRealmOperation.m */,
-				B8D5463F19FDCAE6008FA04F /* RLMObject+YSRealmStore.h */,
-				B8D5464019FDCAE6008FA04F /* RLMObject+YSRealmStore.m */,
-				B8C003FB1A3C94B700130815 /* RLMArray+YSRealmStore.h */,
-				B8C003FC1A3C94B700130815 /* RLMArray+YSRealmStore.m */,
+				B8AE95BA1A5C3D6F0053B140 /* Category */,
 			);
 			name = YSRealmStore;
 			path = ../../Classes/YSRealmStore;
@@ -393,17 +416,20 @@
 			files = (
 				B88DA10C1A5A103F00DF36D3 /* Tweet.m in Sources */,
 				B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */,
+				B8AE95BD1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m in Sources */,
+				B8AE95C01A5C3E7E0053B140 /* NSString+YSRealmStore.m in Sources */,
 				B88DA1151A5A107000DF36D3 /* TwitterRealmStore.m in Sources */,
 				B88DA11D1A5A166000DF36D3 /* TweetCell.m in Sources */,
+				B8AE95C31A5C3EAA0053B140 /* NSDate+YSRealmStore.m in Sources */,
 				B8D5462519FD0291008FA04F /* YSRealmStore.m in Sources */,
 				B88DA10B1A5A103F00DF36D3 /* Entities.m in Sources */,
+				B8AE95CB1A5C3EE70053B140 /* RLMArray+YSRealmStore.m in Sources */,
 				B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */,
 				B88DA1201A5A173D00DF36D3 /* TweetViewController.m in Sources */,
 				B88DA10D1A5A103F00DF36D3 /* Url.m in Sources */,
+				B8AE95C61A5C3EBD0053B140 /* NSData+YSRealmStore.m in Sources */,
 				B88DA10E1A5A103F00DF36D3 /* User.m in Sources */,
-				B88DA1211A5A1DDA00DF36D3 /* RLMObject+YSRealmStore.m in Sources */,
 				B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */,
-				B8C003FD1A3C94B700130815 /* RLMArray+YSRealmStore.m in Sources */,
 				B8D545FF19FD00F5008FA04F /* main.m in Sources */,
 				B8D5462819FD029B008FA04F /* YSRealmOperation.m in Sources */,
 				B88DA1121A5A105D00DF36D3 /* JsonGenerator.m in Sources */,

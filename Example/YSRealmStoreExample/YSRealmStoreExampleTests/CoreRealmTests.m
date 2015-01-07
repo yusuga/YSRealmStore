@@ -100,7 +100,7 @@
     XCTAssertEqual(addedTweet.text.length, 0);
     
     User *user = addedTweet.user;
-    XCTAssertNotNil(user);
+    XCTAssertNil(user);
     XCTAssertEqual(user.id, 0);
     XCTAssertEqual(user.name.length, 0);
     
@@ -119,7 +119,7 @@
     XCTAssertEqual(addedTweet.text.length, 0);
     
     User *user = addedTweet.user;
-    XCTAssertNotNil(user);
+    XCTAssertNil(user);
     XCTAssertEqual(user.id, 0);
     XCTAssertEqual(user.name.length, 0);
     

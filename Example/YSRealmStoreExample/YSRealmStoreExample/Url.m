@@ -7,15 +7,20 @@
 //
 
 #import "Url.h"
-#import "RLMObject+YSRealmStore.h"
+#import "NSDictionary+YSRealmStore.h"
 
 @implementation Url
 
 - (instancetype)initWithObject:(id)object
 {
-    if (self = [super init]) {
-        self.url = [self ys_stringWithDictionary:object forKey:@"url"];
+    if (![object isKindOfClass:[NSDictionary class]]) {
+        return nil;
     }
+    
+    if (self = [super init]) {
+        self.url = [object ys_stringOrDefaultStringForKey:@"url"];
+    }
+    
     return self;
 }
 

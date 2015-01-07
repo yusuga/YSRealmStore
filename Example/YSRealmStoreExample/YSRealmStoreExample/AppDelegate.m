@@ -16,10 +16,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    DDTTYLogger *logger = [DDTTYLogger sharedInstance];
-    [DDLog addLogger:logger];
-    [logger setColorsEnabled:YES];
+{    
+    if (NSClassFromString(@"XCTest")) {
+        self.window.rootViewController = nil;
+    }
     
     return YES;
 }

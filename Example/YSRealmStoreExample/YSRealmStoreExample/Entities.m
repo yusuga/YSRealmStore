@@ -7,15 +7,22 @@
 //
 
 #import "Entities.h"
-#import "RLMObject+YSRealmStore.h"
+#import "NSDictionary+YSRealmStore.h"
 
 @implementation Entities
 
 - (instancetype)initWithObject:(id)object
 {
+    if (![object isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    
     if (self = [super init]) {
-        for (NSDictionary *urlJson in [self ys_objectOrNilWithDictionary:object forKey:@"urls"]) {
-            [self.urls addObject:[[Url alloc] initWithObject:urlJson]];
+        for (NSDictionary *urlJson in [object ys_objectOrNilForKey:@"urls"]) {
+            Url *url = [[Url alloc] initWithObject:urlJson];
+            if (url) {
+                [self.urls addObject:url];
+            }
         }
         
         // Propertyの値が全て空の場合はnilを返して空オブジェクトをInsertさせない

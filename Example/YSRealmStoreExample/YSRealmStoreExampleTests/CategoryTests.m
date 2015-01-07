@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "RLMObject+YSRealmStore.h"
-#import "RLMArray+YSRealmStore.h"
 #import "TwitterRealmStore.h"
+#import "RLMArray+YSRealmStore.h"
+#import "NSDictionary+YSRealmStore.h"
+#import "NSString+YSRealmStore.h"
+#import "NSDate+YSRealmStore.h"
+#import "NSData+YSRealmStore.h"
 
 @interface CategoryTests : XCTestCase
 
@@ -27,26 +30,6 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-}
-
-#pragma mark - RLMObject
-
-- (void)testObjectOrNilWithDictionary
-{
-    NSString *key = @"key";
-    NSString *value = @"value";
-    
-    XCTAssertNotNil([RLMObject ys_objectOrNilWithDictionary:@{key : value} forKey:key]);
-    XCTAssertNil([RLMObject ys_objectOrNilWithDictionary:@{key : [NSNull null]} forKey:key]);
-}
-
-- (void)testStringWithDictionary
-{
-    NSString *key = @"key";
-    NSString *value = @"value";
-    
-    XCTAssertNotNil([RLMObject ys_stringWithDictionary:@{key : value} forKey:key]);
-    XCTAssertEqualObjects([RLMObject ys_stringWithDictionary:@{key : [NSNull null]} forKey:key], @"");
 }
 
 #pragma mark - RLMArray
@@ -142,4 +125,40 @@
     }];
 }
 */
+
+#pragma mark - Dictionary
+
+- (void)testObjectOrNil
+{
+    NSString *key = @"key";
+    NSString *value = @"value";
+    
+    XCTAssertNotNil([@{key : value} ys_objectOrNilForKey:key]);
+    XCTAssertNil([@{key : [NSNull null]} ys_objectOrNilForKey:key]);
+}
+
+#pragma mark - NString
+
+- (void)testDefaultString
+{
+    XCTAssertTrue([[NSString ys_realmDefaultString] ys_isRealmDefaultString]);
+    XCTAssertFalse([@"test" ys_isRealmDefaultString]);
+}
+
+#pragma mark - NSDate
+
+- (void)testDefaultDate
+{
+    XCTAssertTrue([[NSDate ys_realmDefaultDate] ys_isRealmDefaultDate]);
+    XCTAssertFalse([[NSDate dateWithTimeIntervalSinceNow:0.] ys_isRealmDefaultDate]);
+}
+
+#pragma mark - NSData
+
+- (void)testDefaultData
+{
+    XCTAssertTrue([[NSData ys_realmDefaultData] ys_isRealmDefaultData]);
+    XCTAssertFalse([[@"test" dataUsingEncoding:NSUTF8StringEncoding] ys_isRealmDefaultData]);
+}
+
 @end
