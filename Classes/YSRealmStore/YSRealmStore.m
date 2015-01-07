@@ -10,21 +10,12 @@
 
 @interface YSRealmStore ()
 
-@property (nonatomic, readwrite) RLMRealm *realm;
+@property (nonatomic) NSString *realmPath;
 @property (nonatomic) NSMutableArray *operations;
 
 @end
 
 @implementation YSRealmStore
-
-- (instancetype)initWithRealm:(RLMRealm *)realm
-{
-    if (self = [self init]) {
-        self.realm = realm;
-        DDLogDebug(@"class = %@; self.realm.path = %@", NSStringFromClass([self class]), self.realm.path);
-    }
-    return self;
-}
 
 - (instancetype)init
 {
@@ -34,11 +25,32 @@
     return self;
 }
 
+- (instancetype)initWithRealmName:(NSString *)realmName
+{
+    if (self = [self init]) {
+        if (realmName) {
+            self.realmPath = [[self class] realmPathWithFileName:realmName];
+        }
+    }
+    return self;
+}
+
+#pragma mark -
+
+- (RLMRealm *)realm
+{
+    if (self.realmPath) {
+        return [RLMRealm realmWithPath:self.realmPath];
+    } else {
+        return [RLMRealm defaultRealm];
+    }
+}
+
 #pragma mark - Transaction
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
                                                 writeBlock:writeBlock];
 }
 
@@ -46,7 +58,7 @@
                                                  completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;    
-    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
+    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
         [wself.operations removeObject:transaction];
         if (completion) completion(wself, transaction, wself.realm);
     }];
@@ -59,7 +71,7 @@
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation writeOperationWithRealmPath:self.realm.path
+    [YSRealmOperation writeOperationWithRealmPath:self.realmPath
                                      objectsBlock:objectsBlock];
 }
 
@@ -67,7 +79,7 @@
                                        completion:(YSRealmStoreOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:self.realm.path objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:self.realmPath objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
         if (completion) completion(wself, operation, wself.realm);
     }];
@@ -79,7 +91,7 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation deleteOperationWithRealmPath:self.realm.path
+    [YSRealmOperation deleteOperationWithRealmPath:self.realmPath
                                       objectsBlock:objectsBlock];
 }
 
@@ -87,7 +99,7 @@
                                         completion:(YSRealmStoreOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:self.realm.path objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:self.realmPath objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
         if (completion) completion(wself, operation, wself.realm);
     }];
@@ -97,7 +109,7 @@
 
 - (void)deleteAllObjects
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [realm deleteAllObjects];
     }];
 }
@@ -105,7 +117,7 @@
 - (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [realm deleteAllObjects];
     } completion:^(YSRealmWriteTransaction *transaction) {
         [wself.operations removeObject:transaction];
@@ -118,7 +130,7 @@
 
 - (RLMResults *)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    return [YSRealmOperation fetchOperationWithRealmPath:self.realm.path
+    return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath
                                             objectsBlock:objectsBlock];
 }
 
@@ -126,12 +138,29 @@
                                        completion:(YSRealmStoreFetchOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:self.realm.path objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
+    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:self.realmPath objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
         [wself.operations removeObject:operation];
         if (completion) completion(wself, operation, wself.realm, results);
     }];
     [self.operations addObject:ope];
     return ope;
+}
+
+#pragma mark - Private
+
++ (NSString*)realmPathWithFileName:(NSString*)fileName
+{
+    NSParameterAssert(fileName);
+    
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask,
+                                                         YES)[0];
+    path = [path stringByAppendingPathComponent:fileName];
+    
+    if ([path pathExtension].length == 0) {
+        path = [path stringByAppendingPathExtension:@"realm"];
+    }
+    return path;
 }
 
 @end
