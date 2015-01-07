@@ -3,8 +3,16 @@
 ##Usage 
 
 ##Initialize
+
+###Use the default Realm
 ```
-YSRealmStore *store = [[YSRealmStore alloc] initWithRealm:[RLMRealm defaultRealm]];
+YSRealmStore *store = [[YSRealmStore alloc] init];
+```
+
+###Use the other Realm
+```
+NSString *custumDatabaseName = @"database";
+YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName];
 ```
 
 ##Write transaction
