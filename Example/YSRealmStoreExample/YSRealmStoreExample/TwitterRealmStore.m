@@ -8,7 +8,6 @@
 
 #import "TwitterRealmStore.h"
 #import "NSData+YSRealmStore.h"
-#import "RLMRealm+YSRealmStore.h"
 
 @implementation TwitterRealmStore
 
@@ -49,8 +48,7 @@
     static id __instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        RLMRealm *realm = [RLMRealm ys_realmWithFileName:@"twitter"];
-        __instance =  [[self alloc] initWithRealm:realm];
+        __instance =  [[self alloc] initWithRealmName:@"twitter"];
     });
     return __instance;
 }

@@ -110,15 +110,15 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     NSNumber *tweetID = tweetJsonObj[@"id"];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
     
     [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 1);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
     
-    Tweet *tweet = [Tweet objectInRealm:store.realm forPrimaryKey:tweetID];
+    Tweet *tweet = [Tweet objectInRealm:[store realm] forPrimaryKey:tweetID];
     XCTAssertNotNil(tweet);
 }
 
@@ -128,7 +128,7 @@
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     NSNumber *tweetID = tweetJsonObj[@"id"];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -142,9 +142,9 @@
         XCTAssertNil(error, @"error: %@", error);
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 1);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
     
-    Tweet *tweet = [Tweet objectInRealm:store.realm forPrimaryKey:tweetID];
+    Tweet *tweet = [Tweet objectInRealm:[store realm] forPrimaryKey:tweetID];
     XCTAssertNotNil(tweet);
 }
 
@@ -155,7 +155,7 @@
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
@@ -181,7 +181,7 @@
         XCTAssertNil(error, @"error: %@", error);
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
 }
 
 #pragma mark - Delete
@@ -192,11 +192,11 @@
     NSUInteger count = 10;
     
     [store addTweetsWithCount:count];
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], count);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], count);
     
     [store deleteAllObjects];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
 }
 
 - (void)testAsyncDeleteAllObjects
@@ -205,7 +205,7 @@
     NSUInteger count = 10;
     
     [store addTweetsWithCount:count];
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], count);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], count);
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
@@ -215,7 +215,7 @@
         XCTAssertNil(error, @"error: %@", error);
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
 }
 
 @end

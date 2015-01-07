@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "TwitterRealmStore.h"
-#import "RLMRealm+YSRealmStore.h"
 #import "RLMArray+YSRealmStore.h"
 #import "NSDictionary+YSRealmStore.h"
 #import "NSString+YSRealmStore.h"
@@ -31,23 +30,6 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-}
-
-#pragma mark - RLMRealm
-
-- (void)testRealmWithFileName
-{
-    NSString *fileName = @"database";
-    RLMRealm *realm = [RLMRealm ys_realmWithFileName:fileName];
-    NSString *path = realm.path;
-    DDLogDebug(@"%s; path = %@;", __func__, path);
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    XCTAssertTrue([fileManager fileExistsAtPath:path]);
-    
-    NSError *error = nil;
-    XCTAssertTrue([fileManager removeItemAtPath:path error:&error]);
-    XCTAssertNil(error);
 }
 
 #pragma mark - RLMArray

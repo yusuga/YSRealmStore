@@ -205,7 +205,7 @@
     }];
     
     Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
-    Tweet *addedTweet = [[Tweet allObjectsInRealm:store.realm] firstObject];
+    Tweet *addedTweet = [[Tweet allObjectsInRealm:[store realm]] firstObject];
     
     XCTAssertEqual(addedTweet.id, tweet.id);
     XCTAssertEqualObjects(addedTweet.text, @"");
@@ -255,7 +255,7 @@
     NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:tweetID userID:userID].mutableCopy;
     
     [store addTweetWithTweetJsonObject:tweetObj];
-    XCTAssertNotNil([User objectInRealm:store.realm forPrimaryKey:@(userID)]);
+    XCTAssertNotNil([User objectInRealm:[store realm] forPrimaryKey:@(userID)]);
     
     NSMutableDictionary *userObj = ((NSDictionary*)tweetObj[@"user"]).mutableCopy;
     NSString *updatedName = @"UPDATED_NAME";
@@ -265,8 +265,8 @@
 
     [store addTweetWithTweetJsonObject:tweetObj];
     
-    XCTAssertEqual([[User allObjectsInRealm:store.realm] count], 1);
-    User *user = [User objectInRealm:store.realm forPrimaryKey:@(userID)];
+    XCTAssertEqual([[User allObjectsInRealm:[store realm]] count], 1);
+    User *user = [User objectInRealm:[store realm] forPrimaryKey:@(userID)];
     XCTAssertEqualObjects(user.name, updatedName);
 }
 
@@ -282,7 +282,7 @@
         return [[Tweet allObjectsInRealm:realm] firstObject];
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
 }
 
 - (void)testDeleteObjects
@@ -296,7 +296,7 @@
         return [[Tweet allObjectsInRealm:realm] objectsWithPredicate:[NSPredicate predicateWithFormat:@"id < %d", count/2]];
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], count/2);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], count/2);
 }
 
 - (void)testAsyncDeleteObject
@@ -341,9 +341,9 @@
         return objs;
     }];
     
-    XCTAssertEqual([[Tweet allObjectsInRealm:store.realm] count], 0);
-    XCTAssertEqual([[Entities allObjectsInRealm:store.realm] count], 0);
-    XCTAssertEqual([[Url allObjectsInRealm:store.realm] count], 0);
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+    XCTAssertEqual([[Entities allObjectsInRealm:[store realm]] count], 0);
+    XCTAssertEqual([[Url allObjectsInRealm:[store realm]] count], 0);
 }
 
 #pragma mark Fetch
@@ -403,7 +403,7 @@
             [realm addObject:[[Url alloc] initWithObject:@{@"url" : [NSString stringWithFormat:@"http://%zd.com", i]}]];
         }
     }];
-    XCTAssertEqual([[Url allObjectsInRealm:store.realm] count], count);
+    XCTAssertEqual([[Url allObjectsInRealm:[store realm]] count], count);
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     
