@@ -19,8 +19,9 @@
 
 - (instancetype)initWithRealm:(RLMRealm *)realm
 {
-    if (self = [super init]) {
+    if (self = [self init]) {
         self.realm = realm;
+        DDLogDebug(@"class = %@; self.realm.path = %@;", NSStringFromClass([self class]), self.realm.path);
     }
     return self;
 }
@@ -29,7 +30,6 @@
 {
     if (self = [super init]) {
         self.operations = [NSMutableArray array];
-        DDLogDebug(@"class = %@; self.realm.path = %@;", NSStringFromClass([self class]), self.realm.path);
     }
     return self;
 }
