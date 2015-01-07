@@ -70,6 +70,15 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 #pragma mark Fetch
 
++ (RLMResults*)fetchOperationWithRealmPath:(NSString*)realmPath
+                              objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+{
+    NSParameterAssert(objectsBlock != NULL);
+    
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    return [ope fetchOperationWithObjectsBlock:objectsBlock];
+}
+
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationFetchCompletion)completion
@@ -154,6 +163,11 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 #pragma mark Fetch
 
+- (RLMResults*)fetchOperationWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+{
+    return objectsBlock ? objectsBlock(self, [self realm]) : nil;
+}
+
 - (void)fetchOperationWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                             completion:(YSRealmOperationFetchCompletion)completion
 {
@@ -163,7 +177,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
         Class resultClass;
         NSString *primaryKey;
         
-        id results = objectsBlock ? objectsBlock(wself) : nil;
+        id results = objectsBlock ? objectsBlock(wself, [wself realm]) : nil;
         
         if (!wself.isCancelled && results) {
             if (![results conformsToProtocol:@protocol(NSFastEnumeration)]) {
@@ -193,7 +207,8 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
         dispatch_async(dispatch_get_main_queue(), ^{
             RLMResults *results;
             if (!wself.isCancelled && [values count] > 0 && resultClass && primaryKey) {
-                results = [resultClass objectsWhere:@"%K IN %@", primaryKey, values];
+                results = [resultClass objectsInRealm:[wself realm]
+                                                where:@"%K IN %@", primaryKey, values];
             }            
             
             if (completion) completion(wself, results);
@@ -207,9 +222,10 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                                 type:(YSRealmOperationType)type
 {
     RLMRealm *realm = [self realm];
+    
     [realm beginWriteTransaction];
     
-    id object = objectsBlock ? objectsBlock(self) : nil;
+    id object = objectsBlock ? objectsBlock(self, realm) : nil;
     
     if (object) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {

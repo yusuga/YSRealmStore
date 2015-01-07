@@ -21,7 +21,7 @@
 {
     if (self = [self init]) {
         self.realm = realm;
-        DDLogDebug(@"class = %@; self.realm.path = %@;", NSStringFromClass([self class]), self.realm.path);
+        DDLogDebug(@"class = %@; self.realm.path = %@", NSStringFromClass([self class]), self.realm.path);
     }
     return self;
 }
@@ -38,7 +38,7 @@
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path]
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path
                                                 writeBlock:writeBlock];
 }
 
@@ -46,9 +46,9 @@
                                                  completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;    
-    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
+    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
         [wself.operations removeObject:transaction];
-        if (completion) completion(wself, transaction);
+        if (completion) completion(wself, transaction, wself.realm);
     }];
     [self.operations addObject:trans];
     return trans;
@@ -59,7 +59,7 @@
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation writeOperationWithRealmPath:[[self realm] path]
+    [YSRealmOperation writeOperationWithRealmPath:self.realm.path
                                      objectsBlock:objectsBlock];
 }
 
@@ -67,9 +67,9 @@
                                        completion:(YSRealmStoreOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [YSRealmOperation writeOperationWithRealmPath:self.realm.path objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
-        if (completion) completion(wself, operation);
+        if (completion) completion(wself, operation, wself.realm);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -79,7 +79,7 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path]
+    [YSRealmOperation deleteOperationWithRealmPath:self.realm.path
                                       objectsBlock:objectsBlock];
 }
 
@@ -87,9 +87,9 @@
                                         completion:(YSRealmStoreOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
+    YSRealmOperation *ope = [YSRealmOperation deleteOperationWithRealmPath:self.realm.path objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
         [wself.operations removeObject:operation];
-        if (completion) completion(wself, operation);
+        if (completion) completion(wself, operation, wself.realm);
     }];
     [self.operations addObject:ope];
     return ope;
@@ -97,7 +97,7 @@
 
 - (void)deleteAllObjects
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [realm deleteAllObjects];
     }];
 }
@@ -105,24 +105,30 @@
 - (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:[[self realm] path] writeBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
+    YSRealmWriteTransaction *trans = [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [realm deleteAllObjects];
     } completion:^(YSRealmWriteTransaction *transaction) {
         [wself.operations removeObject:transaction];
-        if (completion) completion(wself, transaction);
+        if (completion) completion(wself, transaction, wself.realm);
     }];
     [self.operations addObject:trans];
 }
 
 #pragma mark Fetch
 
+- (RLMResults *)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+{
+    return [YSRealmOperation fetchOperationWithRealmPath:self.realm.path
+                                            objectsBlock:objectsBlock];
+}
+
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
-    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:[[self realm] path] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
+    YSRealmOperation *ope = [YSRealmOperation fetchOperationWithRealmPath:self.realm.path objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
         [wself.operations removeObject:operation];
-        if (completion) completion(wself, operation, results);
+        if (completion) completion(wself, operation, wself.realm, results);
     }];
     [self.operations addObject:ope];
     return ope;

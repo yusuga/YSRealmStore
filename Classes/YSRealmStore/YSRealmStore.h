@@ -11,9 +11,9 @@
 #import "YSRealmWriteTransaction.h"
 @class YSRealmStore;
 
-typedef void(^YSRealmStoreOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation);
-typedef void(^YSRealmStoreFetchOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation, RLMResults *results);
-typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRealmWriteTransaction *transaction);
+typedef void(^YSRealmStoreOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm);
+typedef void(^YSRealmStoreFetchOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results);
+typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm);
 
 @interface YSRealmStore : NSObject
 
@@ -45,6 +45,7 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 // Fetch
 
+- (RLMResults*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion;
 

@@ -57,7 +57,7 @@
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     
-    if (writeBlock) writeBlock(realm, self);
+    if (writeBlock) writeBlock(self, realm);
     
     [realm commitWriteTransaction];
 }

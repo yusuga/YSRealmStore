@@ -10,7 +10,7 @@
 #import <Realm/Realm.h>
 @class YSRealmWriteTransaction;
 
-typedef void(^YSRealmWriteTransactionWriteBlock)(RLMRealm *realm, YSRealmWriteTransaction *transaction);
+typedef void(^YSRealmWriteTransactionWriteBlock)(YSRealmWriteTransaction *transaction, RLMRealm *realm);
 typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transaction);
 
 @interface YSRealmWriteTransaction : NSObject

@@ -10,7 +10,7 @@
 #import <Realm/Realm.h>
 @class YSRealmOperation;
 
-typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation);
+typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation, RLMRealm *realm);
 
 typedef void(^YSRealmOperationCompletion)(YSRealmOperation *operation);
 typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMResults *results);
@@ -36,6 +36,9 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                                   completion:(YSRealmOperationCompletion)completion;
 
 /* Fetch */
+
++ (RLMResults*)fetchOperationWithRealmPath:(NSString*)realmPath
+                              objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
