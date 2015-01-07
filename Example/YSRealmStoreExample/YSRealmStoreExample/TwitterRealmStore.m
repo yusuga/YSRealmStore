@@ -96,11 +96,4 @@
     return [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:NO];
 }
 
-#pragma mark - YSRealmStoreProtocol
-
-+ (RLMRealm *)realm
-{
-    return [RLMRealm defaultRealm];
-}
-
 @end
