@@ -1030,6 +1030,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        XCTAssertNil(tweet.realm);
         tweet.text = text;
         dispatch_async(dispatch_get_main_queue(), ^{
             [expectation fulfill];
@@ -1056,6 +1057,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         @try {
+            XCTAssertNotNil(tweet.realm);
             tweet.text = text;
         }
         @catch (NSException *exception) {
