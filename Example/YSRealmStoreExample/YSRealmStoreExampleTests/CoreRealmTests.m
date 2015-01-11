@@ -1019,6 +1019,57 @@
     XCTAssertEqual([results count], 0);
 }
 
+#pragma mark - Thread
+
+- (void)testRLMObjectCanBeAccessedFromTheOtherThread
+{
+    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    XCTAssertNotNil(tweet);
+    
+    NSString *text = @"UPDATE TEXT";
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        tweet.text = text;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [expectation fulfill];
+        });
+    });
+    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+    
+    XCTAssertEqualObjects(tweet.text, text);
+}
+
+- (void)testRLMObjectCanNotBeAccessedFromTheOtherThread
+{
+    int64_t tweetID = 0;
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithID:tweetID]];
+    
+    Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
+    XCTAssertNotNil(tweet);
+    
+    NSString *text = @"UPDATE TEXT";
+
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @try {
+            tweet.text = text;
+        }
+        @catch (NSException *exception) {
+            DDLogInfo(@"%s; exception = %@;", __func__, exception);
+            [expectation fulfill];
+        }
+        @finally {
+        }
+    });
+    [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+}
+
 #pragma mark - Test JsonGenerator
 
 - (void)testURLCount
