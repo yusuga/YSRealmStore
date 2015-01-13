@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "TwitterRealmStore.h"
+#import "RLMObject+YSRealmStore.h"
 #import "RLMArray+YSRealmStore.h"
 #import "NSDictionary+YSRealmStore.h"
 #import "NSString+YSRealmStore.h"
@@ -27,9 +28,17 @@
     [[TwitterRealmStore sharedStore] deleteAllObjects];
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+#pragma mark - RLMObject
+
+- (void)testAllPropertiesAndValues
+{
+    NSDictionary *tweetObj = [JsonGenerator tweet];
+    
+    Tweet *tweet = [[Tweet alloc] initWithObject:tweetObj];
+    
+    NSLog(@"%@", tweetObj);
+    NSLog(@"%@", [tweet ys_allPropertiesAndValues]);
+    XCTAssertTrue([tweetObj isEqualToDictionary:[tweet ys_allPropertiesAndValues]]);
 }
 
 #pragma mark - RLMArray

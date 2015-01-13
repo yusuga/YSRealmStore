@@ -45,10 +45,11 @@
 
 + (instancetype)sharedStore
 {
-    static id __instance;
+    static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         __instance =  [[self alloc] initWithRealmName:@"twitter"];
+        DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
 }

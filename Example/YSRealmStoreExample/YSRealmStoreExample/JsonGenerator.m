@@ -7,6 +7,7 @@
 //
 
 #import "JsonGenerator.h"
+#import "NSData+YSRealmStore.h"
 
 @implementation JsonGenerator
 
@@ -15,19 +16,18 @@
     return [self tweetWithID:INT64_MAX];
 }
 
-+ (NSDictionary*)tweetWithID:(int64_t)id
++ (NSDictionary*)tweetWithID:(int64_t)objID
 {
-    return [self tweetWithTweetID:id userID:id];
+    return [self tweetWithTweetID:objID userID:objID];
 }
 
 + (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
                            userID:(int64_t)userID
 {
-    return @{@"id" : @(tweetID),
-             @"text" : @"sample text. サンプルテキストです。",
-             @"user" : [self userWithID:userID],
-             @"entities" : [self entities],
-             @"source" : @"via Twitter"};
+    return [self tweetWithTweetID:tweetID
+                             text:@"sample text. サンプルテキストです。"
+                             user:[self userWithID:userID]
+                         entities:[self entities]];
 }
 
 + (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
@@ -50,11 +50,23 @@
                          urlCount:(NSUInteger)urlCount
 {
     // 超簡易なTwitterのJSON (本来のJSON https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid )
+    return [self tweetWithTweetID:tweetID
+                             text:text
+                             user:[self userWithID:userID name:name screenName:screenName]
+                         entities:[self entitiesWithURLCount:urlCount]];
+}
+
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
+                             text:(NSString*)text
+                             user:(NSDictionary*)user
+                         entities:(NSDictionary*)entities
+{
+    // 超簡易なTwitterのJSON (本来のJSON https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid )
     return @{@"id" : @(tweetID),
              @"text" : text,
-             @"user" : [self userWithID:userID name:name screenName:screenName],
-             @"entities" : [self entitiesWithURLCount:urlCount],
-             @"source" : @"via Twitter"};
+             @"retweeted" : @NO,
+             @"user" : user,
+             @"entities" : entities};
 }
 
 + (NSDictionary*)user
@@ -75,7 +87,8 @@
 {
     return @{@"id" : @(userID),
              @"name" : name ? name : [NSString stringWithFormat:@"name%lld", userID],
-             @"screen_name" : screenName ? screenName : [NSString stringWithFormat:@"screen_name%lld", userID]};
+             @"screen_name" : screenName ? screenName : [NSString stringWithFormat:@"screen_name%lld", userID],
+             @"color" : [NSData ys_realmDefaultData]};
 }
 
 + (NSDictionary*)entities

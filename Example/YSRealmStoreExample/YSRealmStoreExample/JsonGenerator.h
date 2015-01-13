@@ -11,7 +11,7 @@
 @interface JsonGenerator : NSObject
 
 + (NSDictionary*)tweet;
-+ (NSDictionary*)tweetWithID:(int64_t)id;
++ (NSDictionary*)tweetWithID:(int64_t)objID;
 + (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
                            userID:(int64_t)userID;
 + (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
@@ -28,6 +28,6 @@
 + (NSDictionary*)tweetOfKeyIsNotEnough;
 
 + (NSDictionary*)user;
-+ (NSDictionary*)userWithID:(int64_t)id;
++ (NSDictionary*)userWithID:(int64_t)userID;
 
 @end

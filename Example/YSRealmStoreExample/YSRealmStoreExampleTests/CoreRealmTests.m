@@ -1030,6 +1030,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        XCTAssertNotNil(tweet);
         XCTAssertNil(tweet.realm);
         tweet.text = text;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1045,15 +1046,18 @@
 
 - (void)testRLMObjectCanNotBeAccessedFromTheOtherThread
 {
-    int64_t tweetID = 0;
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithID:tweetID]];
+    int64_t tweetID = 1;
+    NSDictionary *tweetObj = [JsonGenerator tweetWithID:tweetID];
     
-    Tweet *tweet = [Tweet objectForPrimaryKey:@(tweetID)];
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    [store addTweetWithTweetJsonObject:tweetObj];
+    
+    Tweet *tweet = [Tweet objectInRealm:[store realm]
+                          forPrimaryKey:@(tweetID)];
     XCTAssertNotNil(tweet);
     
     NSString *text = @"UPDATE TEXT";
-
+    
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         @try {
@@ -1070,6 +1074,8 @@
     [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
+    
+    XCTAssertNotEqualObjects(tweet.text, text);
 }
 
 #pragma mark - Test JsonGenerator
