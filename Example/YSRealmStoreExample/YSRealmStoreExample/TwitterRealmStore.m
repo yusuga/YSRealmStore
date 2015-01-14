@@ -95,7 +95,7 @@
 
 - (RLMResults *)fetchAllTweets
 {
-    return [[Tweet allObjects] sortedResultsUsingProperty:@"id" ascending:NO];
+    return [[Tweet allObjectsInRealm:[self realm]] sortedResultsUsingProperty:@"id" ascending:NO];
 }
 
 @end
