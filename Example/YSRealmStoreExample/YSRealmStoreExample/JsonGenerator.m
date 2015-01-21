@@ -49,11 +49,26 @@
                        screenName:(NSString*)screenName
                          urlCount:(NSUInteger)urlCount
 {
-    // 超簡易なTwitterのJSON (本来のJSON https://dev.twitter.com/docs/api/1.1/get/statuses/show/%3Aid )
     return [self tweetWithTweetID:tweetID
                              text:text
                              user:[self userWithID:userID name:name screenName:screenName]
                          entities:[self entitiesWithURLCount:urlCount]];
+}
+
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
+                           userID:(int64_t)userID
+                             name:(NSString*)name
+                       screenName:(NSString*)screenName
+                  mentionsUserIDs:(NSArray*)mentionsUserIDs
+                    mentionsNames:(NSArray*)mentionsNames
+{
+    return [self tweetWithTweetID:tweetID
+                             text:@"sample text. サンプルテキストです。"
+                             user:[self userWithID:userID
+                                              name:name
+                                        screenName:screenName]
+                         entities:[self entitiesWithMentionsUserIDs:mentionsUserIDs
+                                                              names:mentionsNames]];
 }
 
 + (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
@@ -114,6 +129,26 @@
     }
     
     return @{@"urls" : urls};
+}
+
++ (NSDictionary*)entitiesWithMentionsUserIDs:(NSArray*)userIDs
+                                       names:(NSArray*)names
+{
+    return @{@"mentions" : [self mentionsWithUserIDs:userIDs
+                                               names:names]};
+}
+
++ (NSArray*)mentionsWithUserIDs:(NSArray*)userIDs
+                          names:(NSArray*)names
+{
+    NSParameterAssert([userIDs count] > 0);
+    NSParameterAssert([userIDs count] == [names count]);
+    NSMutableArray *mentions = [NSMutableArray arrayWithCapacity:[userIDs count]];
+    for (NSUInteger i = 0; i < [userIDs count]; i++) {
+        [mentions addObject:@{@"id" : userIDs[i],
+                              @"name" : names[i]}];
+    }
+    return [NSArray arrayWithArray:mentions];
 }
 
 #pragma mark -

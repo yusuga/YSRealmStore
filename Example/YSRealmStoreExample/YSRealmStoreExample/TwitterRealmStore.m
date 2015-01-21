@@ -14,7 +14,7 @@
 + (void)initialize
 {
     if (self == [TwitterRealmStore class]) {
-        [RLMRealm setSchemaVersion:8 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+        [RLMRealm setSchemaVersion:10 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
             DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
             if (oldSchemaVersion < 2) {
                 /**
@@ -65,6 +65,16 @@
     if ([twID isKindOfClass:[NSNumber class]] && twID) {
         NSAssert2([Tweet objectInRealm:realm forPrimaryKey:twID].id == [twID longLongValue], @"%zd - %zd", [Tweet objectInRealm:realm forPrimaryKey:twID].id, [twID longLongValue]);
     }
+}
+
+- (void)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects
+{
+    [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        for (NSDictionary *tweetObj in tweetJsonObjects) {
+            if (transaction.isInterrupted) return ;
+            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];
+        }
+    }];
 }
 
 - (YSRealmWriteTransaction*)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects

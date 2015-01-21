@@ -18,6 +18,12 @@
                            userID:(int64_t)userID
                          urlCount:(NSUInteger)urlCount;
 + (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
+                           userID:(int64_t)userID
+                             name:(NSString*)name
+                       screenName:(NSString*)screenName
+                  mentionsUserIDs:(NSArray*)mentionsUserIDs
+                    mentionsNames:(NSArray*)mentionsNames;
++ (NSDictionary*)tweetWithTweetID:(int64_t)tweetID
                              text:(NSString*)text
                            userID:(int64_t)userID
                              name:(NSString*)name

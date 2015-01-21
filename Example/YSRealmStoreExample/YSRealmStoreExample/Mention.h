@@ -1,19 +1,17 @@
 //
-//  Entities.h
-//  YSRealmExample
+//  Mention.h
+//  YSRealmStoreExample
 //
-//  Created by Yu Sugawara on 2014/10/27.
-//  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
+//  Created by Yu Sugawara on 2015/01/21.
+//  Copyright (c) 2015年 Yu Sugawara. All rights reserved.
 //
 
 #import <Realm/Realm.h>
-#import "Url.h"
-#import "Mention.h"
 
-@interface Entities : RLMObject
+@interface Mention : RLMObject
 
-@property RLMArray<Url> *urls;
-@property RLMArray<Mention> *mentions;
+@property int64_t id;
+@property NSString *name;
 
 /* Unavailable Methods */
 
@@ -25,5 +23,5 @@
 @end
 
 // This protocol enables typed collections. i.e.:
-// RLMArray<Entities>
-RLM_ARRAY_TYPE(Entities)
+// RLMArray<Mention>
+RLM_ARRAY_TYPE(Mention)

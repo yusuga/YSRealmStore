@@ -18,15 +18,21 @@
     }
     
     if (self = [super init]) {
-        for (NSDictionary *urlJson in [object ys_objectOrNilForKey:@"urls"]) {
-            Url *url = [[Url alloc] initWithObject:urlJson];
+        for (NSDictionary *urlObj in [object ys_objectOrNilForKey:@"urls"]) {
+            Url *url = [[Url alloc] initWithObject:urlObj];
             if (url) {
                 [self.urls addObject:url];
             }
         }
+        for (NSDictionary *mentionObj in [object ys_objectOrNilForKey:@"mentions"]) {
+            Mention *mention = [[Mention alloc] initWithObject:mentionObj];
+            if (mention) {
+                [self.mentions addObject:mention];
+            }
+        }
         
         // Propertyの値が全て空の場合はnilを返して空オブジェクトをInsertさせない
-        if ([self.urls count] == 0) {
+        if ([self.urls count] == 0 && [self.mentions count] == 0) {
             return nil;
         }
     }
