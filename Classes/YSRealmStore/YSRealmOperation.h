@@ -23,6 +23,7 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                        objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 + (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
+                                      queue:(dispatch_queue_t)queue
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationCompletion)completion;
 
@@ -32,6 +33,7 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                         objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
+                                       queue:(dispatch_queue_t)queue
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmOperationCompletion)completion;
 
@@ -41,6 +43,7 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
+                                      queue:(dispatch_queue_t)queue
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationFetchCompletion)completion;
 
@@ -48,9 +51,5 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
 
 - (void)cancel;
 @property (readonly, getter=isCancelled) BOOL cancelled;
-
-/* Queue */
-
-+ (dispatch_queue_t)operationQueue;
 
 @end

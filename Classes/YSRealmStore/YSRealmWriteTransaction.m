@@ -52,11 +52,12 @@
 }
 
 + (instancetype)writeTransactionWithRealmPath:(NSString*)realmPath
+                                        queue:(dispatch_queue_t)queue
                                    writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                    completion:(YSRealmWriteTransactionCompletion)completion
 {
     YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath];
-    [trans writeTransactionWithWriteBlock:writeBlock completion:completion];
+    [trans writeTransactionWithQueue:queue writeBlock:writeBlock completion:completion];
     return trans;
 }
 
@@ -72,8 +73,9 @@
     [realm commitWriteTransaction];
 }
 
-- (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-                            completion:(YSRealmWriteTransactionCompletion)completion
+- (void)writeTransactionWithQueue:(dispatch_queue_t)queue
+                       writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
+                       completion:(YSRealmWriteTransactionCompletion)completion
 {
     __weak typeof(self) wself = self;
     
@@ -82,7 +84,7 @@
         if (completion) completion(wself);
     }];
     
-    dispatch_async([[self class] transactionQueue], ^{
+    dispatch_async(queue, ^{
         [wself writeTransactionWithWriteBlock:writeBlock];
     });
 }
@@ -92,18 +94,6 @@
 - (void)interrupt
 {
     self.interrupted = YES;
-}
-
-#pragma mark - Queue
-         
-+ (dispatch_queue_t)transactionQueue
-{
-    static dispatch_queue_t __queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __queue = dispatch_queue_create("jp.co.picos.realm.transaction.queue", NULL);
-    });
-    return __queue;
 }
 
 @end

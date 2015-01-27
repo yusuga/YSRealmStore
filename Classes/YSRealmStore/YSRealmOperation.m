@@ -60,13 +60,14 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 }
 
 + (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
+                                      queue:(dispatch_queue_t)queue
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope writeObjectsWithObjectsBlock:objectsBlock completion:completion];
+    [ope writeObjectsWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
@@ -82,13 +83,14 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 }
 
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
+                                       queue:(dispatch_queue_t)queue
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope deleteObjectsWithObjectsBlock:objectsBlock completion:completion];
+    [ope deleteObjectsWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
@@ -104,13 +106,14 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 }
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
+                                      queue:(dispatch_queue_t)queue
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationFetchCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
     YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
-    [ope fetchOperationWithObjectsBlock:objectsBlock completion:completion];
+    [ope fetchOperationWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
@@ -123,7 +126,8 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                                          type:YSRealmOperationTypeAddOrUpdate];
 }
 
-- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (void)writeObjectsWithQueue:(dispatch_queue_t)queue
+                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                           completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
@@ -133,7 +137,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
         if (completion) completion(wself);
     }];
     
-    dispatch_async([[self class] operationQueue], ^{
+    dispatch_async(queue, ^{
         if (![wself writeObjectsWithObjectsBlock:objectsBlock]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (completion) completion(wself);
@@ -150,8 +154,9 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                                          type:YSRealmOperationTypeDelete];
 }
 
-- (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                           completion:(YSRealmOperationCompletion)completion
+- (void)deleteObjectsWithQueue:(dispatch_queue_t)queue
+                  objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                    completion:(YSRealmOperationCompletion)completion
 {
     __weak typeof(self) wself = self;
     
@@ -160,7 +165,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
         if (completion) completion(wself);
     }];
     
-    dispatch_async([[self class] operationQueue], ^{
+    dispatch_async(queue, ^{
         if (![wself deleteObjectsWithObjectsBlock:objectsBlock]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (completion) completion(wself);
@@ -176,11 +181,12 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
     return objectsBlock ? objectsBlock(self, [self realm]) : nil;
 }
 
-- (void)fetchOperationWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                            completion:(YSRealmOperationFetchCompletion)completion
+- (void)fetchOperationWithQueue:(dispatch_queue_t)queue
+                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                     completion:(YSRealmOperationFetchCompletion)completion
 {
     __weak typeof(self) wself = self;
-    dispatch_async([[self class] operationQueue], ^{
+    dispatch_async(queue, ^{
         NSMutableArray *values;
         Class resultClass;
         NSString *primaryKey;
@@ -266,18 +272,6 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 - (void)cancel
 {
     self.cancelled = YES;
-}
-
-#pragma mark - Queue
-
-+ (dispatch_queue_t)operationQueue
-{
-    static dispatch_queue_t __queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __queue = dispatch_queue_create("jp.co.picos.realm.operation.queue", NULL);
-    });
-    return __queue;
 }
 
 @end

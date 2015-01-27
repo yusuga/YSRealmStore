@@ -21,6 +21,7 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (instancetype)initWithRealmName:(NSString*)realmName;
 
 - (RLMRealm*)realm;
++ (dispatch_queue_t)queue;
 
 /* Transaction */
 
