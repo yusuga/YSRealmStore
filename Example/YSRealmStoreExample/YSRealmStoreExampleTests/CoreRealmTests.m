@@ -235,6 +235,27 @@
 
 #pragma mark - Delete
 
+- (void)testDeleteObject
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    
+    RLMResults *tweets = [Tweet allObjectsInRealm:[store realm]];
+    XCTAssertEqual([tweets count], 1);
+    Tweet *tweet = [tweets firstObject];
+    XCTAssertNotNil(tweet);
+    XCTAssertFalse(tweet.isInvalidated);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm deleteObjects:[Tweet allObjectsInRealm:realm]];
+    }];
+    
+    XCTAssertEqual([tweets count], 0);
+    XCTAssertNotNil(tweet);
+    XCTAssertTrue(tweet.isInvalidated);
+}
+
 - (void)testDeleteRelationObject
 {
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
