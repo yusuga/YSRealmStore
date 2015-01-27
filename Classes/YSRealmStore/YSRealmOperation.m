@@ -16,7 +16,6 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 @interface YSRealmOperation ()
 
 @property (copy, nonatomic) NSString *realmPath;
-@property (nonatomic) RLMNotificationToken *notificationToken;
 
 @property (readwrite, getter=isCancelled) BOOL cancelled;
 
@@ -130,17 +129,16 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                  objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                           completion:(YSRealmOperationCompletion)completion
 {
-    __weak typeof(self) wself = self;
-    
-    self.notificationToken = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        [realm removeNotification:wself.notificationToken];
-        if (completion) completion(wself);
+    __block RLMNotificationToken *token = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+        [realm removeNotification:token];
+        if (completion) completion(self);
     }];
     
     dispatch_async(queue, ^{
-        if (![wself writeObjectsWithObjectsBlock:objectsBlock]) {
+        if (![self writeObjectsWithObjectsBlock:objectsBlock]) {
+            [[self realm] removeNotification:token];
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(wself);
+                if (completion) completion(self);
             });
         }
     });
@@ -158,17 +156,16 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                     completion:(YSRealmOperationCompletion)completion
 {
-    __weak typeof(self) wself = self;
-    
-    self.notificationToken = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        [realm removeNotification:wself.notificationToken];
-        if (completion) completion(wself);
+    __block RLMNotificationToken *token = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+        [realm removeNotification:token];
+        if (completion) completion(self);
     }];
     
     dispatch_async(queue, ^{
-        if (![wself deleteObjectsWithObjectsBlock:objectsBlock]) {
+        if (![self deleteObjectsWithObjectsBlock:objectsBlock]) {
+            [[self realm] removeNotification:token];
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(wself);
+                if (completion) completion(self);
             });
         };
     });
@@ -185,15 +182,14 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                    objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                      completion:(YSRealmOperationFetchCompletion)completion
 {
-    __weak typeof(self) wself = self;
     dispatch_async(queue, ^{
         NSMutableArray *values;
         Class resultClass;
         NSString *primaryKey;
         
-        id results = objectsBlock ? objectsBlock(wself, [wself realm]) : nil;
+        id results = objectsBlock ? objectsBlock(self, [self realm]) : nil;
         
-        if (!wself.isCancelled && results) {
+        if (!self.isCancelled && results) {
             if (![results conformsToProtocol:@protocol(NSFastEnumeration)]) {
                 results = @[results];
             }
@@ -220,12 +216,12 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             RLMResults *results;
-            if (!wself.isCancelled && [values count] > 0 && resultClass && primaryKey) {
-                results = [resultClass objectsInRealm:[wself realm]
+            if (!self.isCancelled && [values count] > 0 && resultClass && primaryKey) {
+                results = [resultClass objectsInRealm:[self realm]
                                                 where:@"%K IN %@", primaryKey, values];
             }            
             
-            if (completion) completion(wself, results);
+            if (completion) completion(self, results);
         });
     });
 }

@@ -11,7 +11,6 @@
 @interface YSRealmWriteTransaction ()
 
 @property (copy, nonatomic) NSString *realmPath;
-@property (nonatomic) RLMNotificationToken *notificationToken;
 
 @property (readwrite, getter=isInterrupted) BOOL interrupted;
 
@@ -77,15 +76,13 @@
                        writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                        completion:(YSRealmWriteTransactionCompletion)completion
 {
-    __weak typeof(self) wself = self;
-    
-    self.notificationToken = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        [realm removeNotification:wself.notificationToken];
-        if (completion) completion(wself);
+    __block RLMNotificationToken *token = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
+        [realm removeNotification:token];
+        if (completion) completion(self);
     }];
     
     dispatch_async(queue, ^{
-        [wself writeTransactionWithWriteBlock:writeBlock];
+        [self writeTransactionWithWriteBlock:writeBlock];
     });
 }
 
