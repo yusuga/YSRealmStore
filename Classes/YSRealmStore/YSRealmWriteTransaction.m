@@ -13,10 +13,11 @@
 @property (copy, nonatomic) NSString *realmPath;
 @property (nonatomic) RLMNotificationToken *notificationToken;
 
+@property (readwrite, getter=isInterrupted) BOOL interrupted;
+
 @end
 
 @implementation YSRealmWriteTransaction
-@synthesize interrupted = _interrupted;
 
 + (void)writeTransactionWithRealmPath:(NSString*)realmPath
                            writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
@@ -81,21 +82,7 @@
 
 - (void)interrupt
 {
-    [self setInterrupted:YES];
-}
-
-- (void)setInterrupted:(BOOL)interrupted
-{
-    @synchronized(self) {
-        _interrupted = interrupted;
-    }
-}
-
-- (BOOL)isInterrupted
-{
-    @synchronized(self) {
-        return _interrupted;
-    }
+    self.interrupted = YES;
 }
 
 #pragma mark - Queue

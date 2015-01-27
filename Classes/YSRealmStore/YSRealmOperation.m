@@ -18,10 +18,11 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 @property (copy, nonatomic) NSString *realmPath;
 @property (nonatomic) RLMNotificationToken *notificationToken;
 
+@property (readwrite, getter=isCancelled) BOOL cancelled;
+
 @end
 
 @implementation YSRealmOperation
-@synthesize cancelled = _cancelled;
 
 #pragma mark - Public
 #pragma mark Write
@@ -257,21 +258,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 - (void)cancel
 {
-    [self setCancelled:YES];
-}
-
-- (void)setCancelled:(BOOL)cancelled
-{
-    @synchronized(self) {
-        _cancelled = cancelled;
-    }
-}
-
-- (BOOL)isCancelled
-{
-    @synchronized(self) {
-        return _cancelled;
-    }
+    self.cancelled = YES;
 }
 
 #pragma mark - Queue
