@@ -19,6 +19,31 @@
 
 @implementation YSRealmWriteTransaction
 
+#pragma mark - Life cycle
+
+- (instancetype)initWithRealmPath:(NSString*)realmPath
+{
+    if (self = [super init]) {
+        NSParameterAssert(realmPath != nil);
+        self.realmPath = realmPath;
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    DDLogInfo(@"%s", __func__);
+}
+
+#pragma mark - Utility
+
+- (RLMRealm*)realm
+{
+    return [RLMRealm realmWithPath:self.realmPath];
+}
+
+#pragma mark - Transaction
+
 + (void)writeTransactionWithRealmPath:(NSString*)realmPath
                            writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
@@ -35,23 +60,7 @@
     return trans;
 }
 
-#pragma mark - Init
-
-- (instancetype)initWithRealmPath:(NSString*)realmPath
-{
-    if (self = [super init]) {
-        NSParameterAssert(realmPath != nil);
-        self.realmPath = realmPath;
-    }
-    return self;
-}
-
-- (RLMRealm*)realm
-{
-    return [RLMRealm realmWithPath:self.realmPath];
-}
-
-#pragma mark - Transaction
+#pragma mark - Transaction Private
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {    

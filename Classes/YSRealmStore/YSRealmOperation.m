@@ -24,7 +24,30 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 @implementation YSRealmOperation
 
-#pragma mark - Public
+#pragma mark - Life cycle
+
+- (instancetype)initWithRealmPath:(NSString*)realmPath
+{
+    if (self = [super init]) {
+        NSParameterAssert(realmPath != nil);
+        self.realmPath = realmPath;
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    DDLogInfo(@"%s", __func__);
+}
+
+#pragma mark - Utility
+
+- (RLMRealm*)realm
+{
+    return [RLMRealm realmWithPath:self.realmPath];
+}
+
+#pragma mark - Operation
 #pragma mark Write
 
 + (void)writeOperationWithRealmPath:(NSString*)realmPath
@@ -91,23 +114,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
     return ope;
 }
 
-#pragma mark - Init
-
-- (instancetype)initWithRealmPath:(NSString*)realmPath
-{
-    if (self = [super init]) {
-        NSParameterAssert(realmPath != nil);
-        self.realmPath = realmPath;
-    }
-    return self;
-}
-
-- (RLMRealm*)realm
-{
-    return [RLMRealm realmWithPath:self.realmPath];
-}
-
-#pragma mark - Operation
+#pragma mark - Operation Private
 #pragma mark Write
 
 - (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
