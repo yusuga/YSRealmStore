@@ -95,8 +95,8 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 #pragma mark Fetch
 
-+ (RLMResults*)fetchOperationWithRealmPath:(NSString*)realmPath
-                              objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
++ (id)fetchOperationWithRealmPath:(NSString*)realmPath
+                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     NSParameterAssert(objectsBlock != NULL);
     
@@ -173,7 +173,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 #pragma mark Fetch
 
-- (RLMResults*)fetchOperationWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (id)fetchOperationWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     return objectsBlock ? objectsBlock(self, [self realm]) : nil;
 }

@@ -39,8 +39,8 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
 
 /* Fetch */
 
-+ (RLMResults*)fetchOperationWithRealmPath:(NSString*)realmPath
-                              objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
++ (id)fetchOperationWithRealmPath:(NSString*)realmPath
+                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
                                       queue:(dispatch_queue_t)queue

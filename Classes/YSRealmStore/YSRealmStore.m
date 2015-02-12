@@ -116,7 +116,7 @@
 
 #pragma mark Fetch
 
-- (RLMResults *)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath
                                             objectsBlock:objectsBlock];

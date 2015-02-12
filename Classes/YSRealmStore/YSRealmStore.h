@@ -47,7 +47,7 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 // Fetch
 
-- (RLMResults*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
+- (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion;
 
