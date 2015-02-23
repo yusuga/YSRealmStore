@@ -18,6 +18,9 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 @interface YSRealmStore : NSObject
 
 - (instancetype)initWithRealmName:(NSString*)realmName;
+- (instancetype)initWithRealmName:(NSString *)realmName
+                         inMemory:(BOOL)inMemory;
+@property (nonatomic, readonly) BOOL inMemory;
 
 - (RLMRealm*)realm;
 + (dispatch_queue_t)queue;

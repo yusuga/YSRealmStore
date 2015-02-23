@@ -48,10 +48,22 @@
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+#if 1
         __instance =  [[self alloc] initWithRealmName:@"twitter"];
+#else
+        __instance =  [self createStoreInMemory];
+#endif
         DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
+}
+
++ (instancetype)createStoreInMemory
+{
+    TwitterRealmStore *store = [[self alloc] initWithRealmName:@"twitter-in-memory"
+                                                      inMemory:YES];
+    DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [store realm].path);
+    return store;
 }
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject

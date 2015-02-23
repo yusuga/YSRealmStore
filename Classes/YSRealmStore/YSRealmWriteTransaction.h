@@ -18,10 +18,12 @@ typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transa
 /* Transaction */
 
 + (void)writeTransactionWithRealmPath:(NSString*)realmPath
+                             inMemory:(BOOL)inMemory
                            writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock;
 
 + (instancetype)writeTransactionWithRealmPath:(NSString*)realmPath
                                         queue:(dispatch_queue_t)queue
+                                     inMemory:(BOOL)inMemory
                                    writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                    completion:(YSRealmWriteTransactionCompletion)completion;
 

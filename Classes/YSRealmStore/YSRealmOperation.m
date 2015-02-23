@@ -16,6 +16,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 @interface YSRealmOperation ()
 
 @property (copy, nonatomic) NSString *realmPath;
+@property (nonatomic) BOOL inMemory;
 
 @property (readwrite, getter=isCancelled) BOOL cancelled;
 
@@ -26,10 +27,12 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 #pragma mark - Life cycle
 
 - (instancetype)initWithRealmPath:(NSString*)realmPath
+                         inMemory:(BOOL)inMemory
 {
     if (self = [super init]) {
         NSParameterAssert(realmPath != nil);
         self.realmPath = realmPath;
+        self.inMemory = inMemory;
     }
     return self;
 }
@@ -39,33 +42,45 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
     DDLogInfo(@"%s", __func__);
 }
 
-#pragma mark - Utility
+#pragma mark - Realm
 
-- (RLMRealm*)realm
+- (RLMRealm *)realm
 {
-    return [RLMRealm realmWithPath:self.realmPath];
+    if (self.inMemory) {
+        return [RLMRealm inMemoryRealmWithIdentifier:[self.realmPath lastPathComponent]];
+    } else {
+        if (self.realmPath) {
+            return [RLMRealm realmWithPath:self.realmPath];
+        } else {
+            return [RLMRealm defaultRealm];
+        }
+    }
 }
 
 #pragma mark - Operation
 #pragma mark Write
 
 + (void)writeOperationWithRealmPath:(NSString*)realmPath
+                           inMemory:(BOOL)inMemory
                        objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     NSParameterAssert(objectsBlock != NULL);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
+                                                   inMemory:inMemory];
     [ope writeObjectsWithObjectsBlock:objectsBlock];
 }
 
 + (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
                                       queue:(dispatch_queue_t)queue
+                                   inMemory:(BOOL)inMemory
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
+                                                   inMemory:inMemory];
     [ope writeObjectsWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
@@ -73,22 +88,26 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 #pragma mark Delete
 
 + (void)deleteOperationWithRealmPath:(NSString*)realmPath
+                            inMemory:(BOOL)inMemory
                         objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     NSParameterAssert(objectsBlock != NULL);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
+                                                   inMemory:inMemory];
     [ope deleteObjectsWithObjectsBlock:objectsBlock];
 }
 
 + (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
                                        queue:(dispatch_queue_t)queue
+                                    inMemory:(BOOL)inMemory
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmOperationCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
+                                                   inMemory:inMemory];
     [ope deleteObjectsWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
@@ -96,22 +115,26 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 #pragma mark Fetch
 
 + (id)fetchOperationWithRealmPath:(NSString*)realmPath
+                         inMemory:(BOOL)inMemory
                      objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     NSParameterAssert(objectsBlock != NULL);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
+                                                   inMemory:inMemory];
     return [ope fetchOperationWithObjectsBlock:objectsBlock];
 }
 
 + (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
                                       queue:(dispatch_queue_t)queue
+                                   inMemory:(BOOL)inMemory
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationFetchCompletion)completion
 {
     NSParameterAssert(objectsBlock != NULL);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
+                                                   inMemory:inMemory];
     [ope fetchOperationWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }

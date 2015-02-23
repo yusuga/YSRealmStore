@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "TwitterRealmStore.h"
+#import "Utility.h"
 
 @interface WriteTransactionTests : XCTestCase
 
@@ -27,78 +27,83 @@
 
 - (void)testStateInWriteTransaction
 {
-    [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(transaction);
-        XCTAssertFalse(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        if (sync) {
+            [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                XCTAssertTrue([NSThread isMainThread]);
+                XCTAssertNotNil(transaction);
+                XCTAssertFalse(transaction.isInterrupted);
+                XCTAssertNotNil(realm);
+            }];
+        } else {
+            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                XCTAssertFalse([NSThread isMainThread]);
+                XCTAssertNotNil(transaction);
+                XCTAssertFalse(transaction.isInterrupted);
+                XCTAssertNotNil(realm);
+            } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                XCTAssertTrue([NSThread isMainThread]);
+                XCTAssertNotNil(store);
+                XCTAssertNotNil(transaction);
+                XCTAssertFalse(transaction.isInterrupted);
+                XCTAssertNotNil(realm);
+                [expectation fulfill];
+            }];
+            [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+                XCTAssertNil(error, @"error: %@", error);
+            }];
+        }
     }];
 }
 
-- (void)testStateInAsyncWriteTransaction
+- (void)testStateInInterruptWriteTransaction
 {
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    
-    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertFalse([NSThread isMainThread]);
-        XCTAssertNotNil(transaction);
-        XCTAssertFalse(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
-    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(store);
-        XCTAssertNotNil(transaction);
-        XCTAssertFalse(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-}
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        if (sync) return ;
 
-- (void)testStateInInterruptAsyncWriteTransaction
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    YSRealmWriteTransaction *trans = [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertFalse([NSThread isMainThread]);
-        XCTAssertNotNil(transaction);
-        XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
-    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(transaction);
-        XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
-        [expectation fulfill];
-    }];
-    XCTAssertNotNil(trans);
-    [trans interrupt];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
+        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        
+        YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            XCTAssertFalse([NSThread isMainThread]);
+            XCTAssertNotNil(transaction);
+            XCTAssertTrue(transaction.isInterrupted);
+            XCTAssertNotNil(realm);
+        } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            XCTAssertTrue([NSThread isMainThread]);
+            XCTAssertNotNil(transaction);
+            XCTAssertTrue(transaction.isInterrupted);
+            XCTAssertNotNil(realm);
+            [expectation fulfill];
+        }];
+        XCTAssertNotNil(trans);
+        [trans interrupt];
+        
+        [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+            XCTAssertNil(error, @"error: %@", error);
+        }];
     }];
 }
 
 - (void)testStateInAsyncDeleteAllObjects
 {
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    [[TwitterRealmStore sharedStore] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(store);
-        XCTAssertNotNil(transaction);
-        XCTAssertFalse(transaction.interrupted);
-        XCTAssertNotNil(realm);
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        if (sync) return ;
+        
+        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        
+        [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            XCTAssertTrue([NSThread isMainThread]);
+            XCTAssertNotNil(store);
+            XCTAssertNotNil(transaction);
+            XCTAssertFalse(transaction.interrupted);
+            XCTAssertNotNil(realm);
+            [expectation fulfill];
+        }];
+        
+        [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+            XCTAssertNil(error, @"error: %@", error);
+        }];
     }];
 }
 
@@ -106,116 +111,101 @@
 
 - (void)testWriteTransaction
 {
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    NSNumber *tweetID = tweetJsonObj[@"id"];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
-    
-    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
-    }];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
-    
-    Tweet *tweet = [Tweet objectInRealm:[store realm] forPrimaryKey:tweetID];
-    XCTAssertNotNil(tweet);
-}
-
-- (void)testAsyncWriteTransaction
-{
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    NSNumber *tweetID = tweetJsonObj[@"id"];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
-    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
-    
-    Tweet *tweet = [Tweet objectInRealm:[store realm] forPrimaryKey:tweetID];
-    XCTAssertNotNil(tweet);
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        NSDictionary *tweetJsonObj = [JsonGenerator tweet];
+        NSNumber *tweetID = tweetJsonObj[@"id"];
+        
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+        
+        if (sync) {
+            [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+            }];            
+        } else {
+            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            
+            [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+            } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                [expectation fulfill];
+            }];
+            
+            [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+                XCTAssertNil(error, @"error: %@", error);
+            }];
+        }
+        
+        NSLog(@"> %zd", [[Tweet allObjectsInRealm:[store realm]] count]);
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
+        
+        Tweet *tweet = [Tweet objectInRealm:[store realm] forPrimaryKey:tweetID];
+        XCTAssertNotNil(tweet);
+    }];    
 }
 
 #pragma mark - Interrupt
 
 - (void)testInterruptAsyncWriteTransaction
 {
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    
-    YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertFalse([NSThread isMainThread]);
-        XCTAssertNotNil(transaction);
-        XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        if (sync) return ;
         
-        if (!transaction.isInterrupted) {
-            [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
-        }
-    } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        XCTAssertTrue([NSThread isMainThread]);
-        XCTAssertNotNil(transaction);
-        XCTAssertTrue(transaction.isInterrupted);
-        XCTAssertNotNil(realm);
-        [expectation fulfill];
+        NSDictionary *tweetJsonObj = [JsonGenerator tweet];
+        
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+        
+        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        
+        YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            XCTAssertFalse([NSThread isMainThread]);
+            XCTAssertNotNil(transaction);
+            XCTAssertTrue(transaction.isInterrupted);
+            XCTAssertNotNil(realm);
+            
+            if (!transaction.isInterrupted) {
+                [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+            }
+        } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            XCTAssertTrue([NSThread isMainThread]);
+            XCTAssertNotNil(transaction);
+            XCTAssertTrue(transaction.isInterrupted);
+            XCTAssertNotNil(realm);
+            [expectation fulfill];
+        }];
+        [trans interrupt];
+        
+        [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+            XCTAssertNil(error, @"error: %@", error);
+        }];
+        
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
     }];
-    [trans interrupt];
-    
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
 }
 
 #pragma mark - Delete
 
 - (void)testDeleteAllObjects
 {
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    NSUInteger count = 10;
-    
-    [store addTweetsWithCount:count];
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], count);
-    
-    [store deleteAllObjects];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
-}
-
-- (void)testAsyncDeleteAllObjects
-{
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    NSUInteger count = 10;
-    
-    [store addTweetsWithCount:count];
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], count);
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
-    [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [expectation fulfill];
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        NSUInteger count = 10;
+        
+        [store addTweetsWithCount:count];
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], count);
+        
+        if (sync) {
+            [store deleteAllObjects];
+        } else {
+            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+                [expectation fulfill];
+            }];
+            [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
+                XCTAssertNil(error, @"error: %@", error);
+            }];
+        }
+        
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
     }];
-    [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
-        XCTAssertNil(error, @"error: %@", error);
-    }];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
 }
 
 @end

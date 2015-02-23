@@ -11,6 +11,8 @@
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
 		B84FB8FF1A6F367C0014536E /* Mention.m in Sources */ = {isa = PBXBuildFile; fileRef = B84FB8FE1A6F367C0014536E /* Mention.m */; };
+		B853DFDE1A9AC365005C17F1 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = B853DFDD1A9AC365005C17F1 /* Utility.m */; };
+		B853DFE01A9AD2BF005C17F1 /* UtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B853DFDF1A9AD2BF005C17F1 /* UtilityTests.m */; };
 		B88DA10B1A5A103F00DF36D3 /* Entities.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1041A5A103F00DF36D3 /* Entities.m */; };
 		B88DA10C1A5A103F00DF36D3 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1061A5A103F00DF36D3 /* Tweet.m */; };
 		B88DA10D1A5A103F00DF36D3 /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = B88DA1081A5A103F00DF36D3 /* Url.m */; };
@@ -61,6 +63,9 @@
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
 		B84FB8FD1A6F367C0014536E /* Mention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mention.h; path = YSRealmStoreExample/Mention.h; sourceTree = "<group>"; };
 		B84FB8FE1A6F367C0014536E /* Mention.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mention.m; path = YSRealmStoreExample/Mention.m; sourceTree = "<group>"; };
+		B853DFDC1A9AC365005C17F1 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		B853DFDD1A9AC365005C17F1 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
+		B853DFDF1A9AD2BF005C17F1 /* UtilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityTests.m; sourceTree = "<group>"; };
 		B88DA1031A5A103F00DF36D3 /* Entities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entities.h; path = YSRealmStoreExample/Entities.h; sourceTree = "<group>"; };
 		B88DA1041A5A103F00DF36D3 /* Entities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Entities.m; path = YSRealmStoreExample/Entities.m; sourceTree = "<group>"; };
 		B88DA1051A5A103F00DF36D3 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tweet.h; path = YSRealmStoreExample/Tweet.h; sourceTree = "<group>"; };
@@ -134,6 +139,16 @@
 				0AAE81F79A0CF1ECCDF8F05D /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B853DFDB1A9AC1E1005C17F1 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				B853DFDC1A9AC365005C17F1 /* Utility.h */,
+				B853DFDD1A9AC365005C17F1 /* Utility.m */,
+				B853DFDF1A9AD2BF005C17F1 /* UtilityTests.m */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 		B88DA1011A5A102000DF36D3 /* TwitterStore */ = {
@@ -251,6 +266,7 @@
 				B8191B201A352E500063FE1F /* WriteTransactionTests.m */,
 				B8D5464C19FDCEC9008FA04F /* OperationTests.m */,
 				B8C003FE1A3C94E200130815 /* CategoryTests.m */,
+				B853DFDB1A9AC1E1005C17F1 /* Utility */,
 				B8D5461619FD00F6008FA04F /* Supporting Files */,
 			);
 			path = YSRealmStoreExampleTests;
@@ -452,8 +468,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B853DFE01A9AD2BF005C17F1 /* UtilityTests.m in Sources */,
 				B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */,
 				B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */,
+				B853DFDE1A9AC365005C17F1 /* Utility.m in Sources */,
 				B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */,
 				B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */,
 			);

@@ -11,6 +11,7 @@
 @interface YSRealmWriteTransaction ()
 
 @property (copy, nonatomic) NSString *realmPath;
+@property (nonatomic) BOOL inMemory;
 
 @property (readwrite, getter=isInterrupted) BOOL interrupted;
 
@@ -21,10 +22,12 @@
 #pragma mark - Life cycle
 
 - (instancetype)initWithRealmPath:(NSString*)realmPath
+                         inMemory:(BOOL)inMemory
 {
     if (self = [super init]) {
         NSParameterAssert(realmPath != nil);
         self.realmPath = realmPath;
+        self.inMemory = inMemory;
     }
     return self;
 }
@@ -34,28 +37,40 @@
     DDLogInfo(@"%s", __func__);
 }
 
-#pragma mark - Utility
+#pragma mark - Realm
 
-- (RLMRealm*)realm
+- (RLMRealm *)realm
 {
-    return [RLMRealm realmWithPath:self.realmPath];
+    if (self.inMemory) {
+        return [RLMRealm inMemoryRealmWithIdentifier:[self.realmPath lastPathComponent]];
+    } else {
+        if (self.realmPath) {
+            return [RLMRealm realmWithPath:self.realmPath];
+        } else {
+            return [RLMRealm defaultRealm];
+        }
+    }
 }
 
 #pragma mark - Transaction
 
 + (void)writeTransactionWithRealmPath:(NSString*)realmPath
+                             inMemory:(BOOL)inMemory
                            writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
-    YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath
+                                                            inMemory:inMemory];
     [trans writeTransactionWithWriteBlock:writeBlock];
 }
 
 + (instancetype)writeTransactionWithRealmPath:(NSString*)realmPath
                                         queue:(dispatch_queue_t)queue
+                                     inMemory:(BOOL)inMemory
                                    writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                    completion:(YSRealmWriteTransactionCompletion)completion
 {
-    YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath];
+    YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath
+                                                            inMemory:inMemory];
     [trans writeTransactionWithQueue:queue writeBlock:writeBlock completion:completion];
     return trans;
 }

@@ -78,7 +78,6 @@ static NSString * const kCellIdentifier = @"Cell";
         for (NSUInteger i = 0; i < [tweetObjects count]; i++) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
-        
         [wself.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
 }

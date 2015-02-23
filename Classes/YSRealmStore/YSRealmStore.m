@@ -10,7 +10,9 @@
 
 @interface YSRealmStore ()
 
-@property (nonatomic) NSString *realmPath;
+@property (copy, nonatomic) NSString *realmPath;
+@property (nonatomic, readwrite) BOOL inMemory;
+@property (nonatomic) RLMRealm *realmInMemory;
 
 @end
 
@@ -20,9 +22,19 @@
 
 - (instancetype)initWithRealmName:(NSString *)realmName
 {
+    return [self initWithRealmName:realmName inMemory:NO];
+}
+
+- (instancetype)initWithRealmName:(NSString *)realmName
+                         inMemory:(BOOL)inMemory
+{
     if (self = [super init]) {
         if (realmName) {
             self.realmPath = [[self class] realmPathWithFileName:realmName];
+        }
+        self.inMemory = inMemory;
+        if (inMemory) {
+            [self realm]; // Init realm in memory
         }
     }
     return self;
@@ -32,10 +44,18 @@
 
 - (RLMRealm *)realm
 {
-    if (self.realmPath) {
-        return [RLMRealm realmWithPath:self.realmPath];
+    if (self.inMemory) {
+        if (!self.realmInMemory) {
+            // Hold onto a strong reference
+            self.realmInMemory = [RLMRealm inMemoryRealmWithIdentifier:[self.realmPath lastPathComponent]];
+        }
+        return self.realmInMemory;
     } else {
-        return [RLMRealm defaultRealm];
+        if (self.realmPath) {
+            return [RLMRealm realmWithPath:self.realmPath];
+        } else {
+            return [RLMRealm defaultRealm];
+        }
     }
 }
 
@@ -44,7 +64,7 @@
     static dispatch_queue_t __queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __queue = dispatch_queue_create("jp.YuSugawara.YSRealmStore..queue", NULL);
+        __queue = dispatch_queue_create("jp.YuSugawara.YSRealmStore.queue", NULL);
     });
     return __queue;
 }
@@ -54,15 +74,21 @@
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
     [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
+                                                  inMemory:self.inMemory
                                                 writeBlock:writeBlock];
 }
 
 - (YSRealmWriteTransaction *)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                                  completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    return [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath queue:[YSRealmStore queue] writeBlock:writeBlock completion:^(YSRealmWriteTransaction *transaction) {
-        if (completion) completion(self, transaction, self.realm);
-    }];
+    return [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
+                                                            queue:[YSRealmStore queue]
+                                                         inMemory:self.inMemory
+                                                       writeBlock:writeBlock
+                                                       completion:^(YSRealmWriteTransaction *transaction)
+            {
+                if (completion) completion(self, transaction, self.realm);
+            }];
 }
 
 #pragma mark - Operation
@@ -71,15 +97,21 @@
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     [YSRealmOperation writeOperationWithRealmPath:self.realmPath
+                                         inMemory:self.inMemory
                                      objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreOperationCompletion)completion
 {
-    return [YSRealmOperation writeOperationWithRealmPath:self.realmPath queue:[YSRealmStore queue] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
-        if (completion) completion(self, operation, self.realm);
-    }];
+    return [YSRealmOperation writeOperationWithRealmPath:self.realmPath
+                                                   queue:[YSRealmStore queue]
+                                                inMemory:self.inMemory
+                                            objectsBlock:objectsBlock
+                                              completion:^(YSRealmOperation *operation)
+            {
+                if (completion) completion(self, operation, self.realm);
+            }];
 }
 
 #pragma mark Delete
@@ -87,31 +119,44 @@
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     [YSRealmOperation deleteOperationWithRealmPath:self.realmPath
+                                          inMemory:self.inMemory
                                       objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmStoreOperationCompletion)completion
 {
-    return [YSRealmOperation deleteOperationWithRealmPath:self.realmPath queue:[YSRealmStore queue] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation) {
-        if (completion) completion(self, operation, self.realm);
-    }];
+    return [YSRealmOperation deleteOperationWithRealmPath:self.realmPath
+                                                    queue:[YSRealmStore queue]
+                                                 inMemory:self.inMemory
+                                             objectsBlock:objectsBlock
+                                               completion:^(YSRealmOperation *operation)
+            {
+                if (completion) completion(self, operation, self.realm);
+            }];
 }
 
 - (void)deleteAllObjects
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [realm deleteAllObjects];
-    }];
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
+                                                  inMemory:self.inMemory
+                                                writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm)
+     {
+         [realm deleteAllObjects];
+     }];
 }
 
 - (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath queue:[YSRealmStore queue] writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [realm deleteAllObjects];
-    } completion:^(YSRealmWriteTransaction *transaction) {
-        if (completion) completion(self, transaction, self.realm);
-    }];
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
+                                                     queue:[YSRealmStore queue]
+                                                  inMemory:self.inMemory
+                                                writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm)
+     {
+         [realm deleteAllObjects];
+     } completion:^(YSRealmWriteTransaction *transaction) {
+         if (completion) completion(self, transaction, self.realm);
+     }];
 }
 
 #pragma mark Fetch
@@ -119,15 +164,21 @@
 - (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
     return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath
+                                                inMemory:self.inMemory
                                             objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion
 {
-    return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath  queue:[YSRealmStore queue] objectsBlock:objectsBlock completion:^(YSRealmOperation *operation, RLMResults *results) {
-        if (completion) completion(self, operation, self.realm, results);
-    }];
+    return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath
+                                                   queue:[YSRealmStore queue]
+                                                inMemory:self.inMemory
+                                            objectsBlock:objectsBlock
+                                              completion:^(YSRealmOperation *operation, RLMResults *results)
+            {
+                if (completion) completion(self, operation, self.realm, results);
+            }];
 }
 
 #pragma mark - Utility
