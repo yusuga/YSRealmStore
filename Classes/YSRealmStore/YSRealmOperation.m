@@ -248,6 +248,11 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
     
     id object = objectsBlock ? objectsBlock(self, realm) : nil;
     
+    if (self.isCancelled) {
+        [realm cancelWriteTransaction];
+        return;
+    }
+    
     if (object) {
         if (![object conformsToProtocol:@protocol(NSFastEnumeration)]) {
             object = @[object];
