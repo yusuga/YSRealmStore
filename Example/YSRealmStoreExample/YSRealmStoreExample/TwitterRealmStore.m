@@ -81,7 +81,7 @@
 
 - (void)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects
 {
-    [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+    [self writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSDictionary *tweetObj in tweetJsonObjects) {
             if (transaction.isInterrupted) return ;
             [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];
@@ -92,7 +92,7 @@
 - (YSRealmWriteTransaction*)addTweetsWithTweetJsonObjects:(NSArray *)tweetJsonObjects
                                                completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    return [[TwitterRealmStore sharedStore] writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+    return [self writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSDictionary *tweetObj in tweetJsonObjects) {
             if (transaction.isInterrupted) return ;
             [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];

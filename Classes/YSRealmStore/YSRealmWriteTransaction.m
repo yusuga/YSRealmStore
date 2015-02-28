@@ -14,6 +14,7 @@
 @property (nonatomic) BOOL inMemory;
 
 @property (readwrite, getter=isInterrupted) BOOL interrupted;
+@property (readwrite, getter=isCancelled) BOOL cancelled;
 
 @end
 
@@ -84,7 +85,11 @@
     
     if (writeBlock) writeBlock(self, realm);
     
-    [realm commitWriteTransaction];
+    if (self.isCancelled) {
+        [realm cancelWriteTransaction];
+    } else {
+        [realm commitWriteTransaction];
+    }
 }
 
 - (void)writeTransactionWithQueue:(dispatch_queue_t)queue
@@ -95,13 +100,15 @@
         [self writeTransactionWithWriteBlock:writeBlock];
         dispatch_async(dispatch_get_main_queue(), ^{
             /**
+             *  Realm (0.88.0)
+             *
              *  autorefresh == YES の場合は、BackgroundThreadのRealmのcommit時に
              *  関連するRealms(この場合MainThreadのRealmとか)にも内部的に通知されて最新のデータを指すように更新される。
-             *  ただし、MainThreadのQueuing順により内部での更新より先にここが呼ばれる場合が稀に発生するので、
+             *  ただし、MainThreadのQueuing順によっては、内部での更新通知より先にここが呼ばれる可能性もあるので
              *  明示的にrefreshを行うことで確実に最新データを参照するように更新させる。
              *
-             *  refreshはhas_changedでチェックされてるので、autorefreshと明示的なrefreshが2重で実行されることはなかったので
-             *  コストもほぼかからないと思われる。
+             *  refreshは内部でhas_changedがチェックされ、autorefreshと明示的なrefreshが2重で実行されることはなかったので
+             *  コスト面でも問題ないと思われる。
              */
             [[self realm] refresh]; // Ensure update
             if (completion) completion(self);
@@ -114,6 +121,11 @@
 - (void)interrupt
 {
     self.interrupted = YES;
+}
+
+- (void)cancel
+{
+    self.cancelled = YES;
 }
 
 @end
