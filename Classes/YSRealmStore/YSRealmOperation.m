@@ -142,55 +142,43 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 #pragma mark - Operation Private
 #pragma mark Write
 
-- (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    return [self writeObjectsWithObjectsBlock:objectsBlock
-                                         type:YSRealmOperationTypeAddOrUpdate];
+    [self writeObjectsWithObjectsBlock:objectsBlock
+                                  type:YSRealmOperationTypeAddOrUpdate];
 }
 
 - (void)writeObjectsWithQueue:(dispatch_queue_t)queue
                  objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                          completion:(YSRealmOperationCompletion)completion
+                   completion:(YSRealmOperationCompletion)completion
 {
-    __block RLMNotificationToken *token = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        [realm removeNotification:token];
-        if (completion) completion(self);
-    }];
-    
     dispatch_async(queue, ^{
-        if (![self writeObjectsWithObjectsBlock:objectsBlock]) {
-            [[self realm] removeNotification:token];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(self);
-            });
-        }
+        [self writeObjectsWithObjectsBlock:objectsBlock];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[self realm] refresh];
+            if (completion) completion(self);
+        });
     });
 }
 
 #pragma mark Delete
 
-- (BOOL)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    return [self writeObjectsWithObjectsBlock:objectsBlock
-                                         type:YSRealmOperationTypeDelete];
+    [self writeObjectsWithObjectsBlock:objectsBlock
+                                  type:YSRealmOperationTypeDelete];
 }
 
 - (void)deleteObjectsWithQueue:(dispatch_queue_t)queue
                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                     completion:(YSRealmOperationCompletion)completion
 {
-    __block RLMNotificationToken *token = [[self realm] addNotificationBlock:^(NSString *notification, RLMRealm *realm) {
-        [realm removeNotification:token];
-        if (completion) completion(self);
-    }];
-    
     dispatch_async(queue, ^{
-        if (![self deleteObjectsWithObjectsBlock:objectsBlock]) {
-            [[self realm] removeNotification:token];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) completion(self);
-            });
-        };
+        [self deleteObjectsWithObjectsBlock:objectsBlock];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[self realm] refresh];
+            if (completion) completion(self);
+        });
     });
 }
 
@@ -242,7 +230,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
             if (!self.isCancelled && [values count] > 0 && resultClass && primaryKey) {
                 results = [resultClass objectsInRealm:[self realm]
                                                 where:@"%K IN %@", primaryKey, values];
-            }            
+            }
             
             if (completion) completion(self, results);
         });
@@ -251,7 +239,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 #pragma mark Private
 
-- (BOOL)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+- (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                 type:(YSRealmOperationType)type
 {
     RLMRealm *realm = [self realm];
@@ -279,10 +267,8 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
     
     if (self.isCancelled) {
         [realm cancelWriteTransaction];
-        return NO;
     } else {
         [realm commitWriteTransaction];
-        return YES;
     }
 }
 

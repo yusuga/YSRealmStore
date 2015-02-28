@@ -440,6 +440,13 @@
     XCTAssertGreaterThan([[Url allObjectsInRealm:realm] count], 0);
 }
 
+- (void)testCancelWithNotChangedRealm
+{
+    RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
+    [realm beginWriteTransaction];
+    [realm cancelWriteTransaction];
+}
+
 #pragma mark - Query
 
 - (void)testPredicateWithInt64Max
@@ -1262,6 +1269,82 @@
     }];
     
     XCTAssertNotEqualObjects(tweet.text, text);
+}
+
+#pragma mark - Refresh
+
+- (void)testRefreshWithAdd
+{
+    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    [store realm].autorefresh = NO;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RLMRealm *realm = [store realm];
+        [realm beginWriteTransaction];
+        [realm addOrUpdateObject:tweet];
+        [realm commitWriteTransaction];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            RLMRealm *realm = [store realm];
+            XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+            [realm refresh];
+            XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
+            [expectation fulfill];
+        });
+    });
+    [self waitForExpectationsWithTimeout:1000 handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+    
+    [store realm].autorefresh = YES;
+}
+
+- (void)testRefreshWithUpdate
+{
+    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    int64_t tweetID = tweet.id;
+    
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    [store realm].autorefresh = NO;
+    RLMRealm *realm = [store realm];
+    [realm beginWriteTransaction];
+    [realm addOrUpdateObject:tweet];
+    [realm commitWriteTransaction];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RLMRealm *realm = [store realm];
+        Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
+        XCTAssertNotNil(tweet);
+        
+        [realm beginWriteTransaction];
+        tweet.text = @"";
+        tweet.user = nil;
+        tweet.entities = nil;
+        [realm commitWriteTransaction];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            RLMRealm *realm = [store realm];
+            Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
+            XCTAssertNotNil(tweet);
+            XCTAssertNotEqualObjects(tweet.text, @"");
+            XCTAssertNotNil(tweet.user);
+            XCTAssertNotNil(tweet.entities);
+            
+            [realm refresh];
+            XCTAssertEqualObjects(tweet.text, @"");
+            XCTAssertNil(tweet.user);
+            XCTAssertNil(tweet.entities);
+
+            [expectation fulfill];
+        });
+    });
+    [self waitForExpectationsWithTimeout:1000 handler:^(NSError *error) {
+        XCTAssertNil(error, @"error: %@", error);
+    }];
+    
+    [store realm].autorefresh = YES;
 }
 
 #pragma mark - Test JsonGenerator
