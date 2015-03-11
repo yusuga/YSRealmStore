@@ -29,6 +29,7 @@
 		B8AE95C61A5C3EBD0053B140 /* NSData+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95C51A5C3EBD0053B140 /* NSData+YSRealmStore.m */; };
 		B8AE95CB1A5C3EE70053B140 /* RLMArray+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */; };
 		B8C003FF1A3C94E200130815 /* CategoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C003FE1A3C94E200130815 /* CategoryTests.m */; };
+		B8C35DED1AB01D0F00C08D6F /* RLMResults+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C35DEC1AB01D0F00C08D6F /* RLMResults+YSRealmStore.m */; };
 		B8D545FF19FD00F5008FA04F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D545FE19FD00F5008FA04F /* main.m */; };
 		B8D5460219FD00F5008FA04F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5460119FD00F5008FA04F /* AppDelegate.m */; };
 		B8D5460819FD00F5008FA04F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8D5460619FD00F5008FA04F /* Main.storyboard */; };
@@ -96,6 +97,8 @@
 		B8AE95C71A5C3EE70053B140 /* RLMArray+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMArray+YSRealmStore.h"; sourceTree = "<group>"; };
 		B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMArray+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8C003FE1A3C94E200130815 /* CategoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTests.m; sourceTree = "<group>"; };
+		B8C35DEB1AB01D0F00C08D6F /* RLMResults+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMResults+YSRealmStore.h"; sourceTree = "<group>"; };
+		B8C35DEC1AB01D0F00C08D6F /* RLMResults+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMResults+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8D545F919FD00F5008FA04F /* YSRealmStoreExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSRealmStoreExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D545FD19FD00F5008FA04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B8D545FE19FD00F5008FA04F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -197,6 +200,8 @@
 				B81062081A65086F00392DC6 /* RLMObject+YSRealmStore.m */,
 				B8AE95C71A5C3EE70053B140 /* RLMArray+YSRealmStore.h */,
 				B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */,
+				B8C35DEB1AB01D0F00C08D6F /* RLMResults+YSRealmStore.h */,
+				B8C35DEC1AB01D0F00C08D6F /* RLMResults+YSRealmStore.m */,
 				B8AE95BB1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.h */,
 				B8AE95BC1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m */,
 				B8AE95BE1A5C3E7E0053B140 /* NSString+YSRealmStore.h */,
@@ -448,6 +453,7 @@
 				B8AE95C01A5C3E7E0053B140 /* NSString+YSRealmStore.m in Sources */,
 				B88DA1151A5A107000DF36D3 /* TwitterRealmStore.m in Sources */,
 				B88DA11D1A5A166000DF36D3 /* TweetCell.m in Sources */,
+				B8C35DED1AB01D0F00C08D6F /* RLMResults+YSRealmStore.m in Sources */,
 				B8AE95C31A5C3EAA0053B140 /* NSDate+YSRealmStore.m in Sources */,
 				B8D5462519FD0291008FA04F /* YSRealmStore.m in Sources */,
 				B88DA10B1A5A103F00DF36D3 /* Entities.m in Sources */,

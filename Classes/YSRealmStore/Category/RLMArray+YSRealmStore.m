@@ -14,12 +14,12 @@
 - (BOOL)ys_containsObject:(RLMObject*)object
 {
 #if 1
-    if (object == nil) return NO;
+    if (!object) return NO;
     NSAssert([[object class] primaryKey], @"Primary key is required.");
     return [self indexOfObject:object] != NSNotFound;
 #else
     // test
-    if (object == nil) return NO;
+    if (!object) return NO;
     for (RLMObject *obj in self) {
         if ([obj isEqualToObject:object]) {
             return YES;
@@ -31,7 +31,7 @@
 
 - (void)ys_addUniqueObject:(RLMObject*)object
 {
-    if (object == nil) return;
+    if (!object) return;
     NSAssert([[object class] primaryKey], @"Primary key is required.");
     if (![self ys_containsObject:object]) {
         [self addObject:object];
@@ -40,7 +40,7 @@
 
 - (void)ys_removeObject:(RLMObject*)object
 {
-    if (object == nil) return;
+    if (!object) return;
     NSAssert([[object class] primaryKey], @"Primary key is required.");
     if ([self ys_containsObject:object]) {
         [self removeObjectAtIndex:[self indexOfObject:object]];
