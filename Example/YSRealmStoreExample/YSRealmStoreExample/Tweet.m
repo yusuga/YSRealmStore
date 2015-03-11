@@ -15,7 +15,7 @@
 /**
  initWithObjects:をOverrideする理由 (Realm 0.88.0)
  
- - NSNullが例外になるケースがある。
+ - NSNullは例外
  - RLMObject, RLMArrayが空オブジェクトの表現がオブジェクト。(nilを使いたい気もする)
  
  APIやDBを自分で制御できる場合ならデフォルトの initWithObject: をそのまま使用した方が楽。
