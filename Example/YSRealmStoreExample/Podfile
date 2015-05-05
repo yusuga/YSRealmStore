@@ -1,3 +1,4 @@
 platform :ios, '7.0'
 pod 'Realm', '0.91.5'
-pod 'CocoaLumberjack', '~> 2.0.0'
+
+pod 'CocoaLumberjackLauncher'

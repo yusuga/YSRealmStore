@@ -11,9 +11,12 @@
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        DDTTYLogger *logger = [DDTTYLogger sharedInstance];
-        [DDLog addLogger:logger];
-        [logger setColorsEnabled:YES];
+        [CocoaLumberjackLauncher launchStandardLoggers];
+        [CocoaLumberjackLauncher setXcodeConsoleLogColorsWithErrorColor:[UIColor redColor]
+                                                           warningColor:[UIColor yellowColor]
+                                                              infoColor:[UIColor darkGrayColor]
+                                                             debugColor:[UIColor greenColor]
+                                                           verboseColor:nil];
         
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

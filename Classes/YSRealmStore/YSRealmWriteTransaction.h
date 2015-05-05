@@ -15,7 +15,9 @@ typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transa
 
 @interface YSRealmWriteTransaction : NSObject
 
-/* Transaction */
+///------------
+/// Transaction
+///------------
 
 + (void)writeTransactionWithRealmPath:(NSString*)realmPath
                              inMemory:(BOOL)inMemory
@@ -27,7 +29,9 @@ typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transa
                                    writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                    completion:(YSRealmWriteTransactionCompletion)completion;
 
-/* State */
+///------
+/// State
+///------
 
 - (void)interrupt;
 @property (readonly, getter=isInterrupted) BOOL interrupted;

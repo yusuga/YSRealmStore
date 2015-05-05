@@ -17,7 +17,9 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
 
 @interface YSRealmOperation : NSObject
 
-/* Write */
+///------
+/// Write
+///------
 
 + (void)writeOperationWithRealmPath:(NSString*)realmPath
                            inMemory:(BOOL)inMemory
@@ -29,7 +31,9 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationCompletion)completion;
 
-/* Delete */
+///-------
+/// Delete
+///-------
 
 + (void)deleteOperationWithRealmPath:(NSString*)realmPath
                             inMemory:(BOOL)inMemory
@@ -41,7 +45,9 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                                 objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                   completion:(YSRealmOperationCompletion)completion;
 
-/* Fetch */
+///------
+/// Fetch
+///------
 
 + (id)fetchOperationWithRealmPath:(NSString*)realmPath
                          inMemory:(BOOL)inMemory
@@ -53,9 +59,11 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                  completion:(YSRealmOperationFetchCompletion)completion;
 
-/* State */
+///------
+/// State
+///------
 
 - (void)cancel;
-@property (readonly, getter=isCancelled) BOOL cancelled;
+@property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
 
 @end

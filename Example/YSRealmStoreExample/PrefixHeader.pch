@@ -6,14 +6,4 @@
 //  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
 //
 
-#ifndef YSRealmExample_PrefixHeader_pch
-#define YSRealmExample_PrefixHeader_pch
-
-#import <CocoaLumberjack/CocoaLumberjack.h>
-#ifdef DEBUG
-    static const DDLogLevel ddLogLevel = DDLogLevelAll;
-#else
-    static const DDLogLevel ddLogLevel = DDLogLevelError;
-#endif
-
-#endif
+#import <CocoaLumberjackLauncher/CocoaLumberjackLauncher.h>

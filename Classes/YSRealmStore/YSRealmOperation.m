@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 @property (copy, nonatomic) NSString *realmPath;
 @property (nonatomic) BOOL inMemory;
 
-@property (readwrite, getter=isCancelled) BOOL cancelled;
+@property (nonatomic, readwrite, getter=isCancelled) BOOL cancelled;
 
 @end
 
@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 - (void)dealloc
 {
-    DDLogInfo(@"%s", __func__);
+    NSLog(@"%s", __func__);
 }
 
 #pragma mark - Realm
@@ -220,7 +220,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                         [values addObject:[obj valueForKey:primaryKey]];
                     }
                 } else {
-                    DDLogWarn(@"%s; Primary key is required; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
+                    NSLog(@"%s; Primary key is required; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
                 }
             }
         }
