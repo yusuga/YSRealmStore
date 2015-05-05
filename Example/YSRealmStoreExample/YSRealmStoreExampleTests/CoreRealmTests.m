@@ -945,6 +945,27 @@
 #endif
 }
 
+#pragma mark - Others
+
+- (void)testInvaidated
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    
+    RLMResults *results = [Tweet allObjectsInRealm:[store realm]];
+    Tweet *tweet = [results firstObject];
+    XCTAssertEqual([results count], 1);
+    XCTAssertEqual(tweet.id, INT64_MAX);
+    
+    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        [realm deleteAllObjects];
+    }];
+    
+    XCTAssertEqual([results count], 0);
+    XCTAssertTrue(tweet.invalidated);
+}
+
 #pragma mark - RLMResults
 
 - (void)testRLMResultsWithEqualBool
