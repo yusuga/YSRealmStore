@@ -10,6 +10,4 @@
 
 @interface RLMObject (YSRealmStore)
 
-- (NSDictionary*)ys_allPropertiesAndValues;
-
 @end

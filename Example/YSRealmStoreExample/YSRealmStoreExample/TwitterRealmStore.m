@@ -11,48 +11,12 @@
 
 @implementation TwitterRealmStore
 
-+ (void)initialize
-{
-    if (self == [TwitterRealmStore class]) {
-        [RLMRealm setSchemaVersion:10 withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
-            DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
-            if (oldSchemaVersion < 2) {
-                /**
-                 *  あとからUserのIDをPrimaryKeyに変更した。マイグレーションのメモ。 (Realm 0.87.4)
-                 *  IDがない場合そのままだと例外が発生するが、すでにIDがある場合にPrimaryKeyなので変更不可で変更しようとすると例外が発生する。
-                 *  IDがない物に対してIDを設定する。(以下は本来であればIDが重複しないようにする必要があるので重複IDのUserは削除するようにしなければいけない。)
-                 */
-                [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
-                    static int64_t userID = 0;
-                    if (((User*)newObject).id == 0) {
-                        NSLog(@"user %@", newObject);
-                        ((User*)newObject).id = userID++;
-                    }
-                }];
-            }
-            if (oldSchemaVersion < 8) {
-                /**
-                 *  NSData *color を追加
-                 */
-                [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
-                    User *user = (id)newObject;
-                    user.color = [NSData ys_realmDefaultData];
-                }];
-            }
-        }];
-    }
-}
-
 + (instancetype)sharedStore
 {
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-#if 1
         __instance =  [[self alloc] initWithRealmName:@"twitter"];
-#else
-        __instance =  [self createStoreInMemory];
-#endif
         DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
@@ -64,6 +28,48 @@
                                                       inMemory:YES];
     DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [store realm].path);
     return store;
+}
+
++ (instancetype)createEncryptionStore
+{
+    TwitterRealmStore *store = [[self alloc] initEncryptionWithRealmName:@"twitter-encrypted"];
+    DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [store realm].path);
+    return store;
+}
+
+- (instancetype)initWithRealmName:(NSString *)realmName inMemory:(BOOL)inMemory
+{
+    if (self = [super initWithRealmName:realmName inMemory:inMemory]) {
+        if (!inMemory) {
+            [RLMRealm setSchemaVersion:11 forRealmAtPath:self.realmPath withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion) {
+                DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
+                if (oldSchemaVersion < 2) {
+                    /**
+                     *  あとからUserのIDをPrimaryKeyに変更した。マイグレーションのメモ。 (Realm 0.87.4)
+                     *  IDがない場合そのままだと例外が発生するが、すでにIDがある場合にPrimaryKeyなので変更不可で変更しようとすると例外が発生する。
+                     *  IDがない物に対してIDを設定する。(以下は本来であればIDが重複しないようにする必要があるので重複IDのUserは削除するようにしなければいけない。)
+                     */
+                    [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
+                        static int64_t userID = 0;
+                        if (((User*)newObject).id == 0) {
+                            NSLog(@"user %@", newObject);
+                            ((User*)newObject).id = userID++;
+                        }
+                    }];
+                }
+                if (oldSchemaVersion < 8) {
+                    /**
+                     *  NSData *color を追加
+                     */
+                    [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
+                        User *user = (id)newObject;
+                        user.color = [NSData ys_realmDefaultData];
+                    }];
+                }
+            }];
+        }
+    }
+    return self;
 }
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject

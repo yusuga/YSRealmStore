@@ -293,24 +293,27 @@
 - (void)testDeleteToManyRelationObjects
 {
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    NSUInteger urlCount = 5;
     
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:5]];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:0 userID:0 urlCount:urlCount]];
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         [realm deleteObjects:[Url allObjectsInRealm:realm]];
     }];
     
-    /* RLMArray は空配列になるだけでオブジェクトは削除されない */
+    /* RLMArray は空配列になるだけでオブジェクトは削除されない (0.91.5) */
     XCTAssertEqual([[Entities allObjectsInRealm:[store realm]] count], 1);
     Entities *entities = [[Entities allObjectsInRealm:[store realm]] firstObject];
     XCTAssertEqual([entities.urls count], 0);
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
+        NSMutableArray *deletionEntities = [NSMutableArray array];
         for (Entities *entities in [Entities allObjectsInRealm:realm]) {
             if ([entities.urls count] == 0) {
-                [realm deleteObject:entities];
+                [deletionEntities addObject:entities];
             }
         }
+        [realm deleteObjects:deletionEntities];
     }];
     
     XCTAssertEqual([[Entities allObjectsInRealm:[store realm]] count], 0);
@@ -326,9 +329,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         Tweet *tweet = [[Tweet allObjectsInRealm:realm] firstObject];
-        for (Url *url in tweet.entities.urls) {
-            [realm deleteObject:url];
-        }
+        [realm deleteObjects:tweet.entities.urls];
         [realm deleteObject:tweet.entities];
         [realm deleteObject:tweet];
     }];
@@ -943,6 +944,19 @@
         XCTAssertEqual([tweet.entities.urls count], urlCount);
     }
 #endif
+}
+
+#pragma mark - Encryption
+
+- (void)testEncryption
+{
+    TwitterRealmStore *store = [[TwitterRealmStore alloc] initEncryptionWithRealmName:@"encrypted-realm"];
+    NSLog(@"%s, realmPath = %@", __func__, store.realmPath);
+    
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
+    
+    RLMResults *results = [Tweet allObjectsInRealm:[store realm]];
+    XCTAssertEqual([results count], 1);
 }
 
 #pragma mark - Others

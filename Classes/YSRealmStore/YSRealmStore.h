@@ -20,7 +20,14 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (instancetype)initWithRealmName:(NSString*)realmName;
 - (instancetype)initWithRealmName:(NSString *)realmName
                          inMemory:(BOOL)inMemory;
+
+- (instancetype)initEncryptionWithRealmName:(NSString *)realmName;
+- (instancetype)initEncryptionWithRealmName:(NSString *)realmName
+                         keychainIdentifier:(NSString *)keychainIdentifier;
+
+@property (copy, nonatomic, readonly) NSString *realmPath;
 @property (nonatomic, readonly) BOOL inMemory;
+@property (nonatomic, readonly) BOOL encrypted;
 
 - (RLMRealm*)realm;
 + (dispatch_queue_t)queue;

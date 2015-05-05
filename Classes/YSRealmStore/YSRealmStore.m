@@ -10,9 +10,10 @@
 
 @interface YSRealmStore ()
 
-@property (copy, nonatomic) NSString *realmPath;
+@property (copy, nonatomic, readwrite) NSString *realmPath;
 @property (nonatomic, readwrite) BOOL inMemory;
 @property (nonatomic) RLMRealm *realmInMemory;
+@property (nonatomic, readwrite) BOOL encrypted;
 
 @end
 
@@ -35,7 +36,27 @@
         self.inMemory = inMemory;
         if (inMemory) {
             [self realm]; // Init realm in memory
+        } else {
+            
         }
+    }
+    return self;
+}
+
+- (instancetype)initEncryptionWithRealmName:(NSString *)realmName
+{
+    return [self initEncryptionWithRealmName:realmName
+                          keychainIdentifier:[NSBundle mainBundle].bundleIdentifier];
+}
+
+- (instancetype)initEncryptionWithRealmName:(NSString *)realmName
+                         keychainIdentifier:(NSString *)keychainIdentifier
+{
+    NSParameterAssert(keychainIdentifier);
+    if (self = [self initWithRealmName:realmName]) {
+        [RLMRealm setEncryptionKey:[[self class] encryptionKeyForKeychainIdentifier:keychainIdentifier]
+                   forRealmsAtPath:self.realmPath];
+        self.encrypted = YES;
     }
     return self;
 }
@@ -196,6 +217,46 @@
         path = [path stringByAppendingPathExtension:@"realm"];
     }
     return path;
+}
+
+/**
+ *  realm-cocoa - examples - Encryption - getKey
+ *  https://github.com/realm/realm-cocoa/blob/master/examples/ios/objc/Encryption/LabelViewController.m
+ */
++ (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier
+{
+    // Identifier for our keychain entry - should be unique for your application
+    NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)identifier.UTF8String
+                                               length:strlen(identifier.UTF8String) + 1
+                                         freeWhenDone:NO];
+    
+    // First check in the keychain for an existing key
+    NSDictionary *query = @{(__bridge id)kSecClass: (__bridge id)kSecClassKey,
+                            (__bridge id)kSecAttrApplicationTag: tag,
+                            (__bridge id)kSecAttrKeySizeInBits: @512,
+                            (__bridge id)kSecReturnData: @YES};
+    
+    CFTypeRef dataRef = NULL;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataRef);
+    if (status == errSecSuccess) {
+        return (__bridge NSData *)dataRef;
+    }
+    
+    // No pre-existing key from this application, so generate a new one
+    uint8_t buffer[64];
+    SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
+    NSData *keyData = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
+    
+    // Store the key in the keychain
+    query = @{(__bridge id)kSecClass: (__bridge id)kSecClassKey,
+              (__bridge id)kSecAttrApplicationTag: tag,
+              (__bridge id)kSecAttrKeySizeInBits: @512,
+              (__bridge id)kSecValueData: keyData};
+    
+    status = SecItemAdd((__bridge CFDictionaryRef)query, NULL);
+    NSAssert(status == errSecSuccess, @"Failed to insert new key in the keychain");
+    
+    return keyData;
 }
 
 @end
