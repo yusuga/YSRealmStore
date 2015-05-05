@@ -1,10 +1,11 @@
 Pod::Spec.new do |s|
   s.name = 'YSRealmStore'
-  s.version = '0.5.8'
-  s.summary = 'Realm helper.'
+  s.version = '0.6.0'
+  s.summary = 'Simple wrapper for Realm Cocoa.'
   s.homepage = 'https://github.com/yusuga/YSRealmStore'
   s.license = 'MIT'
   s.author = 'Yu Sugawara'
+  s.social_media_url = 'https://twitter.com/yusuga_'
   s.source = { :git => 'https://github.com/yusuga/YSRealmStore.git', :tag => s.version.to_s }
   s.platform = :ios, '7.0'
   s.ios.deployment_target = '7.0'
@@ -12,16 +13,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.compiler_flags = '-fmodules'
   
-  s.dependency 'Realm', '0.88.0'
-  s.dependency 'CocoaLumberjack', '~> 2.0.0-rc'
+  s.dependency 'Realm', '0.91.5'
   
-  s.prefix_header_contents = "#import <CocoaLumberjack/CocoaLumberjack.h>
-#ifdef DEBUG
-    static const DDLogLevel ddLogLevel = DDLogLevelAll;
-#else
-    static const DDLogLevel ddLogLevel = DDLogLevelError;
-#endif"
-
   s.subspec 'Category' do |ss|
     ss.source_files = 'Classes/YSRealmStore/Category/*.{h,m}'
   end
