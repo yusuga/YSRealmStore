@@ -1,21 +1,34 @@
-#YSRealmStore
+# YSRealmStore
+Simple wrapper for [Realm Cocoa](https://github.com/realm/realm-cocoa).
 
-##Usage 
+## Features
+- Support Realm Cocoa (0.91.5)
+- Simple Initialize.
+- Async operation.
+- Cancel operation.
 
-##Initialize
-
-###Use the default Realm
+## Installation
 ```
+pod 'YSRealmStore'
+```
+
+## Usage
+
+### Initialize
+```
+// Default Realm
 YSRealmStore *store = [[YSRealmStore alloc] init];
-```
 
-###Use the other Realm
-```
+// Other Realm
 NSString *custumDatabaseName = @"database";
 YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName];
+
+// Encryption Realm
+YSRealmStore *store = [[YSRealmStore alloc] initEncryptionWithRealmName:@"encryption-database"];
 ```
 
-##Write transaction
+### Write transaction
+#### Transaction
 ```
 /* Sync */
 [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
@@ -32,8 +45,15 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName
 }];
 ```
 
-##Operation
-###Add
+#### Cancel
+```
+YSRealmWriteTransaction *transaction = [store writeTransactionWithWriteBlock:writeBlock
+                                                                  completion:completion];
+[transaction cancel];
+```
+
+### Operation
+#### Add
 ```
 /* Sync */
 [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
@@ -50,7 +70,7 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName
 }];
 ```
 
-###Delete
+#### Delete
 ```
 /* Sync */
 [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
@@ -67,7 +87,7 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName
 }];
 ```
 
-###Fetch
+#### Fetch
 *Fetched object is require primary key.
 
 ```
@@ -81,33 +101,10 @@ YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName
 }];
 ```
 
-###Cancel operation
+#### Cancel
 ```
 YSRealmOperation *operation = [store writeObjectsWithObjectsBlock:objectsBlock
                                                        completion:completion];
 
 [operation cancel];
 ```
-
-## License
-
-    Copyright (c) 2014 Yu Sugawara (https://github.com/yusuga)
-    Licensed under the MIT License.
-
-    Permission is hereby granted, free of charge, to any person obtaining a
-    copy of this software and associated documentation files (the "Software"),
-    to deal in the Software without restriction, including without limitation
-    the rights to use, copy, modify, merge, publish, distribute, sublicense,
-    and/or sell copies of the Software, and to permit persons to whom the
-    Software is furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-    DEALINGS IN THE SOFTWARE.
