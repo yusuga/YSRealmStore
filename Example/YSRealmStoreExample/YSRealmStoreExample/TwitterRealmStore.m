@@ -44,7 +44,7 @@
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
 {
     [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
-        return [[Tweet alloc] initWithObject:tweetJsonObject];
+        return [[Tweet alloc] initWithValue:tweetJsonObject];
     }];
     
     RLMRealm *realm = [self realm];
@@ -59,7 +59,7 @@
     [self writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSDictionary *tweetObj in tweetJsonObjects) {
             if (transaction.isInterrupted) return ;
-            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];
+            [realm addOrUpdateObject:[[Tweet alloc] initWithValue:tweetObj]];
         }
     }];
 }
@@ -70,7 +70,7 @@
     return [self writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSDictionary *tweetObj in tweetJsonObjects) {
             if (transaction.isInterrupted) return ;
-            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:tweetObj]];
+            [realm addOrUpdateObject:[[Tweet alloc] initWithValue:tweetObj]];
         }
     } completion:completion];
 }
@@ -80,7 +80,7 @@
     [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
         NSMutableArray *tweets = [NSMutableArray arrayWithCapacity:count];
         for (NSUInteger twID = 0; twID < count; twID++) {
-            [tweets addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:twID]]];
+            [tweets addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithID:twID]]];
         }
         return tweets;
     }];

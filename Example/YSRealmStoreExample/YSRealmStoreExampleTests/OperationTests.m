@@ -176,7 +176,7 @@
         NSNumber *tweetID = tweetJsonObj[@"id"];
         
         YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
-            return [[Tweet alloc] initWithObject:tweetJsonObj];
+            return [[Tweet alloc] initWithValue:tweetJsonObj];
         } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
             Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:tweetID];
             XCTAssertNotNil(tweet);
@@ -378,7 +378,7 @@
         
         [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             for (NSUInteger i = 0; i < count; i++) {
-                [realm addObject:[[Url alloc] initWithObject:@{@"url" : [NSString stringWithFormat:@"http://%zd.com", i]}]];
+                [realm addObject:[[Url alloc] initWithValue:@{@"url" : [NSString stringWithFormat:@"http://%zd.com", i]}]];
             }
         }];
         XCTAssertEqual([[Url allObjectsInRealm:[store realm]] count], count);
@@ -411,7 +411,7 @@
             XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
             
-            return @[[[Tweet alloc] initWithObject:[JsonGenerator tweet]]];
+            return @[[[Tweet alloc] initWithValue:[JsonGenerator tweet]]];
         } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertTrue([NSThread isMainThread]);
             XCTAssertTrue(operation.isCancelled);
@@ -488,7 +488,7 @@
             XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
             
-            Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
+            Tweet *tweet = [[Tweet alloc] initWithValue:tweetJsonObj];
             Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
             
             XCTAssertEqual(addedTweet.id, tweet.id);
@@ -532,7 +532,7 @@
             XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
             
-            Tweet *tweet = [[Tweet alloc] initWithObject:tweetJsonObj];
+            Tweet *tweet = [[Tweet alloc] initWithValue:tweetJsonObj];
             Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
             
             XCTAssertEqual(addedTweet.id, tweet.id);

@@ -13,16 +13,16 @@
 
 @implementation User
 
-- (instancetype)initWithObject:(id)object
+- (instancetype)initWithValue:(id)value
 {
-    if (![object isKindOfClass:[NSDictionary class]]) {
+    if (![value isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     
     if (self = [super init]) {
-        self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
-        self.name = [object ys_stringOrDefaultStringForKey:@"name"];
-        self.screen_name = [object ys_stringOrDefaultStringForKey:@"screen_name"];        
+        self.id = [[value ys_objectOrNilForKey:@"id"] longLongValue];
+        self.name = [value ys_stringOrDefaultStringForKey:@"name"];
+        self.screen_name = [value ys_stringOrDefaultStringForKey:@"screen_name"];        
     }
     return self;
 }

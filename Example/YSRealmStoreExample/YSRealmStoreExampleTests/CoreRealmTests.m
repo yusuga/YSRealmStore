@@ -160,7 +160,7 @@
     Tweet *addedTweet = [[Tweet allObjectsInRealm:[store realm]] firstObject];
     XCTAssertNotNil(addedTweet);
     
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
     tweet.text = @"";
     tweet.user = nil;
     tweet.entities = nil;
@@ -202,7 +202,7 @@
 
 - (void)testEqual
 {
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
     [self addOrUpdateTweet:tweet];
     
     Tweet *addedTweet = [[Tweet allObjectsInRealm:[[TwitterRealmStore sharedStore] realm]]  firstObject];
@@ -214,7 +214,7 @@
 
 - (void)testUpdate
 {
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
     [self addOrUpdateTweet:tweet];
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
@@ -352,7 +352,7 @@
             for (NSUInteger userID = 0; userID < watchersCount; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [tweet.watchers addObject:user];
             }
@@ -376,7 +376,7 @@
 
 - (void)testCancelAddObject
 {
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
     
     RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
     [realm beginWriteTransaction];
@@ -391,7 +391,7 @@
     RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
     
     NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-    [self addOrUpdateTweet:[[Tweet alloc] initWithObject:tweetJsonObj]];
+    [self addOrUpdateTweet:[[Tweet alloc] initWithValue:tweetJsonObj]];
     
     Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
     
@@ -417,7 +417,7 @@
 {
     RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
     
-    [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweet]]];
+    [self addOrUpdateTweet:[[Tweet alloc] initWithValue:[JsonGenerator tweet]]];
     
     XCTAssertGreaterThan([[Tweet allObjectsInRealm:realm] count], 0);
     XCTAssertGreaterThan([[User allObjectsInRealm:realm] count], 0);
@@ -455,7 +455,7 @@
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
     [store addTweetsWithCount:10];
-    [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:INT64_MAX]]];
+    [self addOrUpdateTweet:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithID:INT64_MAX]]];
     
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"id = %lld", INT64_MAX]];
     XCTAssertEqual([results count], 1);
@@ -468,7 +468,7 @@
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
     [store addTweetsWithCount:10];
-    [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithID:UINT64_MAX]]];
+    [self addOrUpdateTweet:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithID:UINT64_MAX]]];
     
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"id = %llu", UINT64_MAX]];
     XCTAssertEqual([results count], 1);
@@ -544,7 +544,7 @@
             for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [tweet.watchers addObject:user];
             }
@@ -573,7 +573,7 @@
             for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [tweet.watchers addObject:user];
             }
@@ -769,7 +769,7 @@
             for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [tweet.watchers addObject:user];
             }
@@ -797,7 +797,7 @@
             for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [tweet.watchers addObject:user];
             }
@@ -832,7 +832,7 @@
                 for (NSUInteger userID = 0; userID < watchersCount; userID++) {
                     User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                     if (user == nil) {
-                        user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                        user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                     }
                     [tweet.watchers addObject:user];
                 }
@@ -870,7 +870,7 @@
         for (NSUInteger userID = 0; userID < watchersCount; userID++) {
             User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
             if (user == nil) {
-                user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
             }
             [tweet.watchers addObject:user];
         }
@@ -996,7 +996,7 @@
     NSLog(@"%@", results);
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
-        [realm addObject:[[Tweet alloc] initWithObject:tweetObj]];
+        [realm addObject:[[Tweet alloc] initWithValue:tweetObj]];
     }];
     
     XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 1);
@@ -1013,7 +1013,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1034,7 +1034,7 @@
         for (int64_t i = 0; i < count; i++) {
             NSMutableDictionary *tweetObj = [JsonGenerator tweetWithTweetID:i userID:i].mutableCopy;
             [tweetObj setObject:@YES forKey:@"retweeted"];
-            [realm addObject:[[Tweet alloc] initWithObject:tweetObj]];
+            [realm addObject:[[Tweet alloc] initWithValue:tweetObj]];
         }
     }];
     
@@ -1053,7 +1053,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1072,7 +1072,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1091,7 +1091,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1106,7 +1106,7 @@
     int64_t userID = 5;
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
-        [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:userID]]];
+        [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:userID]]];
     }];
     
     User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
@@ -1118,7 +1118,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addOrUpdateObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1134,7 +1134,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < userCount; i++) {
-            [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:i]]];
+            [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:i]]];
         }
     }];
     XCTAssertEqual([[User allObjectsInRealm:realm] count], userCount);
@@ -1147,7 +1147,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addOrUpdateObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addOrUpdateObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1162,7 +1162,7 @@
     int64_t userID = 5;
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
-        [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:userID]]];
+        [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:userID]]];
     }];
     
     User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
@@ -1174,7 +1174,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]];
+            Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]];
             if (i == userID) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 XCTAssertNotNil(user);
@@ -1196,7 +1196,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < userCount; i++) {
-            [realm addObject:[[User alloc] initWithObject:[JsonGenerator userWithID:i]]];
+            [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:i]]];
         }
     }];
     XCTAssertEqual([[User allObjectsInRealm:realm] count], userCount);
@@ -1209,7 +1209,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]];
+            Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]];
             
             for (int64_t userID = 0; userID < arc4random_uniform(userCount) + 1; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
@@ -1233,7 +1233,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (int64_t i = 0; i < count; i++) {
-            [realm addObject:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:i userID:i]]];
+            [realm addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]]];
         }
     }];
     
@@ -1251,7 +1251,7 @@
 
 - (void)testRLMObjectCanBeAccessedFromTheOtherThread
 {
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
     XCTAssertNotNil(tweet);
     
     NSString *text = @"UPDATE TEXT";
@@ -1310,26 +1310,25 @@
 
 - (void)testRefreshWithAdd
 {
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
-    
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     [store realm].autorefresh = NO;
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
         RLMRealm *realm = [store realm];
         [realm beginWriteTransaction];
         [realm addOrUpdateObject:tweet];
         [realm commitWriteTransaction];
         dispatch_async(dispatch_get_main_queue(), ^{
             RLMRealm *realm = [store realm];
-            XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+            XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 0);
             [realm refresh];
-            XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 1);
+            XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 1);
             [expectation fulfill];
         });
     });
-    [self waitForExpectationsWithTimeout:1000 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:10 handler:^(NSError *error) {
         XCTAssertNil(error, @"error: %@", error);
     }];
     
@@ -1338,7 +1337,7 @@
 
 - (void)testRefreshWithUpdate
 {
-    Tweet *tweet = [[Tweet alloc] initWithObject:[JsonGenerator tweet]];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
     int64_t tweetID = tweet.id;
     
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
@@ -1389,7 +1388,7 @@
     RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
     
     NSUInteger count = 5;
-    [self addOrUpdateTweet:[[Tweet alloc] initWithObject:[JsonGenerator tweetWithTweetID:INT64_MAX
+    [self addOrUpdateTweet:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:INT64_MAX
                                                                                   userID:INT64_MAX
                                                                                 urlCount:count]]];
     RLMResults *result = [Tweet allObjectsInRealm:realm];

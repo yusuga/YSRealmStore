@@ -147,13 +147,13 @@
         
         if (sync) {
             [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-                [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+                [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
             }];            
         } else {
             XCTestExpectation *expectation = [self expectationWithDescription:nil];
             
             [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-                [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+                [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
             } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
                 [expectation fulfill];
             }];
@@ -212,7 +212,7 @@
         
         YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             if (!transaction.isInterrupted) {
-                [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+                [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
             }
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [expectation fulfill];
@@ -264,7 +264,7 @@
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
         YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-            [realm addObject:[[Tweet alloc] initWithObject:tweetJsonObj]];
+            [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [expectation fulfill];
         }];

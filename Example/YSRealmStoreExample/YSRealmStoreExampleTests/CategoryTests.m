@@ -48,7 +48,7 @@
             for (NSUInteger userID = 0; userID < userCount; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [realm addObject:user];
             }
@@ -144,7 +144,7 @@
             for (NSUInteger userID = 0; userID < userCount; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
-                    user = [[User alloc] initWithObject:[JsonGenerator userWithID:userID]];
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
                 }
                 [realm addObject:user];
             }

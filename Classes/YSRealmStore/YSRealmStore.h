@@ -17,6 +17,10 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 @protocol YSRealmStoreProtocol <NSObject>
 
+///----------
+/// Migration
+///----------
+
 @optional
 - (void)migrationWithMigration:(RLMMigration *)migration
               oldSchemaVersion:(NSUInteger) oldSchemaVersion;

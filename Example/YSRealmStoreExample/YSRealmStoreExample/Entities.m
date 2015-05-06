@@ -11,21 +11,21 @@
 
 @implementation Entities
 
-- (instancetype)initWithObject:(id)object
+- (instancetype)initWithValue:(id)value
 {
-    if (![object isKindOfClass:[NSDictionary class]]) {
+    if (![value isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     
     if (self = [super init]) {
-        for (NSDictionary *urlObj in [object ys_objectOrNilForKey:@"urls"]) {
-            Url *url = [[Url alloc] initWithObject:urlObj];
+        for (NSDictionary *urlObj in [value ys_objectOrNilForKey:@"urls"]) {
+            Url *url = [[Url alloc] initWithValue:urlObj];
             if (url) {
                 [self.urls addObject:url];
             }
         }
-        for (NSDictionary *mentionObj in [object ys_objectOrNilForKey:@"mentions"]) {
-            Mention *mention = [[Mention alloc] initWithObject:mentionObj];
+        for (NSDictionary *mentionObj in [value ys_objectOrNilForKey:@"mentions"]) {
+            Mention *mention = [[Mention alloc] initWithValue:mentionObj];
             if (mention) {
                 [self.mentions addObject:mention];
             }

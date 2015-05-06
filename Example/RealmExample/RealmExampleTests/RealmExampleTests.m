@@ -51,13 +51,13 @@
     NSData *data = [NSData data];
     
     [realm transactionWithBlock:^{
-        [realm addObject:[[Model alloc] initWithObject:[self dictionaryWithBooleanNum:@(boolean)
-                                                                           integerNum:@(integer)
-                                                                             int64Num:@(int64)
-                                                                           decimalNum:@(decimal)
-                                                                               string:string
-                                                                                 date:date
-                                                                                 data:data]]];
+        [realm addObject:[[Model alloc] initWithValue:[self dictionaryWithBooleanNum:@(boolean)
+                                                                          integerNum:@(integer)
+                                                                            int64Num:@(int64)
+                                                                          decimalNum:@(decimal)
+                                                                              string:string
+                                                                                date:date
+                                                                                data:data]]];
     }];
     
     Model *model = [[Model allObjects] firstObject];
@@ -128,13 +128,13 @@
     [realm transactionWithBlock:^{
         id exc;
         @try {
-            [realm addObject:[[Model alloc] initWithObject:[self dictionaryWithBooleanNum:[NSNull null]
-                                                                               integerNum:[NSNull null]
-                                                                                 int64Num:[NSNull null]
-                                                                               decimalNum:[NSNull null]
-                                                                                   string:[NSNull null]
-                                                                                     date:[NSNull null]
-                                                                                     data:[NSNull null]]]];
+            [realm addObject:[[Model alloc] initWithValue:[self dictionaryWithBooleanNum:[NSNull null]
+                                                                              integerNum:[NSNull null]
+                                                                                int64Num:[NSNull null]
+                                                                              decimalNum:[NSNull null]
+                                                                                  string:[NSNull null]
+                                                                                    date:[NSNull null]
+                                                                                    data:[NSNull null]]]];
         }
         @catch (NSException *exception) {
             exc = exception;
@@ -144,20 +144,20 @@
             NSLog(@"%s; exception = %@;", __func__, exc);
         }
     }];
-/*
-    Model *model = [[Model allObjects] firstObject];
-    XCTAssertNotNil(model);
-    
-    XCTAssertEqual(model.boolean, NO);
-    XCTAssertEqual(model.integer, 0);
-    XCTAssertEqual(model.decimal, 0.f);
-    XCTAssertEqualObjects(model.string, [Model defaultString]);
-    XCTAssertEqualObjects(model.date, [Model defaultDate]);
-    XCTAssertEqualObjects(model.data, [Model defaultData]);
-    XCTAssertNil(model.subModel);
-    XCTAssertNotNil(model.arrayModel);
-    XCTAssertEqual([model.arrayModel count], 0);
- */
+    /*
+     Model *model = [[Model allObjects] firstObject];
+     XCTAssertNotNil(model);
+     
+     XCTAssertEqual(model.boolean, NO);
+     XCTAssertEqual(model.integer, 0);
+     XCTAssertEqual(model.decimal, 0.f);
+     XCTAssertEqualObjects(model.string, [Model defaultString]);
+     XCTAssertEqualObjects(model.date, [Model defaultDate]);
+     XCTAssertEqualObjects(model.data, [Model defaultData]);
+     XCTAssertNil(model.subModel);
+     XCTAssertNotNil(model.arrayModel);
+     XCTAssertEqual([model.arrayModel count], 0);
+     */
 }
 
 #pragma mark - Utility

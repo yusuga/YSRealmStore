@@ -43,18 +43,18 @@
  
  */
 
-- (instancetype)initWithObject:(id)object
+- (instancetype)initWithValue:(id)value
 {
-    if (![object isKindOfClass:[NSDictionary class]]) {
+    if (![value isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     
     if (self = [super init]) {
-        self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
-        self.text = [object ys_stringOrDefaultStringForKey:@"text"];
-        self.user = [[User alloc] initWithObject:[object ys_objectOrNilForKey:@"user"]];
-        self.entities = [[Entities alloc] initWithObject:[object ys_objectOrNilForKey:@"entities"]];
-        self.retweeted = [[object ys_objectOrNilForKey:@"retweeted"] boolValue];
+        self.id = [[value ys_objectOrNilForKey:@"id"] longLongValue];
+        self.text = [value ys_stringOrDefaultStringForKey:@"text"];
+        self.user = [[User alloc] initWithValue:[value ys_objectOrNilForKey:@"user"]];
+        self.entities = [[Entities alloc] initWithValue:[value ys_objectOrNilForKey:@"entities"]];
+        self.retweeted = [[value ys_objectOrNilForKey:@"retweeted"] boolValue];
     }
     return self;
 }

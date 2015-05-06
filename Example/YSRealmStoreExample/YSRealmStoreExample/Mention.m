@@ -11,15 +11,15 @@
 
 @implementation Mention
 
-- (instancetype)initWithObject:(id)object
+- (instancetype)initWithValue:(id)value
 {
-    if (![object isKindOfClass:[NSDictionary class]]) {
+    if (![value isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     
     if (self = [super init]) {
-        self.id = [[object ys_objectOrNilForKey:@"id"] longLongValue];
-        self.name = [object ys_stringOrDefaultStringForKey:@"name"];
+        self.id = [[value ys_objectOrNilForKey:@"id"] longLongValue];
+        self.name = [value ys_stringOrDefaultStringForKey:@"name"];
     }
     return self;
 }
