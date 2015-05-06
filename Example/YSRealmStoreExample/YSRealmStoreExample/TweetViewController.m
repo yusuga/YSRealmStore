@@ -63,6 +63,7 @@ static NSString * const kCellIdentifier = @"Cell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSLog(@"%@", self.tweets[indexPath.row]);
 }
 
 #pragma mark - Button action

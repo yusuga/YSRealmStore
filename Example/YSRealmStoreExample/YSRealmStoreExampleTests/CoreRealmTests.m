@@ -973,7 +973,7 @@
     XCTAssertEqual(tweet.id, INT64_MAX);
     
     [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        [realm deleteAllObjects];
+        [realm deleteObjects:[Tweet allObjectsInRealm:realm]];
     }];
     
     XCTAssertEqual([results count], 0);

@@ -15,7 +15,16 @@ typedef void(^YSRealmStoreOperationCompletion)(YSRealmStore *store, YSRealmOpera
 typedef void(^YSRealmStoreFetchOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results);
 typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm);
 
-@interface YSRealmStore : NSObject
+@protocol YSRealmStoreProtocol <NSObject>
+
+@optional
+- (void)migrationWithMigration:(RLMMigration *)migration
+              oldSchemaVersion:(NSUInteger) oldSchemaVersion;
+- (NSUInteger)schemaVersion;
+
+@end
+
+@interface YSRealmStore : NSObject <YSRealmStoreProtocol>
 
 ///-----------
 /// Initialize
