@@ -35,7 +35,9 @@
 
 - (void)dealloc
 {
-    NSLog(@"%s", __func__);
+#ifdef DDLogInfo
+    DDLogInfo(@"%s", __func__);
+#endif
 }
 
 #pragma mark - Realm

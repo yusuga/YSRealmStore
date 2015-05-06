@@ -39,7 +39,9 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 - (void)dealloc
 {
-    NSLog(@"%s", __func__);
+#ifdef DDLogInfo
+    DDLogInfo(@"%s", __func__);
+#endif
 }
 
 #pragma mark - Realm
@@ -220,7 +222,9 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
                         [values addObject:[obj valueForKey:primaryKey]];
                     }
                 } else {
-                    NSLog(@"%s; Primary key is required; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
+#ifdef DDLogWarn
+                    DDLogWarn(@"%s; Primary key is required; class = %@, primaryKey = %@", __func__, NSStringFromClass(resultClass), primaryKey);
+#endif
                 }
             }
         }
