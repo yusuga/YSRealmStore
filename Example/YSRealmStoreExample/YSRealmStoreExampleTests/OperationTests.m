@@ -406,10 +406,13 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
-            XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
+            
+            XCTAssertFalse(operation.isCancelled);
+            [operation cancel];
+            XCTAssertTrue(operation.isCancelled);
             
             return @[[[Tweet alloc] initWithValue:[JsonGenerator tweet]]];
         } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
@@ -421,7 +424,6 @@
             
             [expectation fulfill];
         }];
-        [ope cancel];
         
         [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -436,10 +438,14 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
-            XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
+            
+            XCTAssertFalse(operation.isCancelled);
+            [operation cancel];
+            XCTAssertTrue(operation.isCancelled);
+            
             return nil;
         } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertTrue([NSThread isMainThread]);
@@ -450,7 +456,6 @@
             
             [expectation fulfill];
         }];
-        [ope cancel];
         
         [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -470,10 +475,13 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
-            XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
+            
+            XCTAssertFalse(operation.isCancelled);
+            [operation cancel];
+            XCTAssertTrue(operation.isCancelled);
             
             RLMResults *results = [Tweet allObjectsInRealm:realm];
             XCTAssertEqual([results count], 1);
@@ -498,7 +506,6 @@
             
             [expectation fulfill];
         }];
-        [ope cancel];
         
         [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -514,10 +521,13 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmOperation *ope = [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        [store writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
-            XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
+            
+            XCTAssertFalse(operation.isCancelled);
+            [operation cancel];
+            XCTAssertTrue(operation.isCancelled);
             
             RLMResults *results = [Tweet allObjectsInRealm:realm];
             XCTAssertEqual([results count], 1);
@@ -542,7 +552,6 @@
             
             [expectation fulfill];
         }];
-        [ope cancel];
         
         [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -559,10 +568,13 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmOperation *ope = [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
+        [store deleteObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
-            XCTAssertTrue(operation.isCancelled);
             XCTAssertNotNil(realm);
+            
+            XCTAssertFalse(operation.isCancelled);
+            [operation cancel];
+            XCTAssertTrue(operation.isCancelled);
             
             return [Tweet allObjectsInRealm:realm];
         } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm) {
@@ -574,7 +586,6 @@
             
             [expectation fulfill];
         }];
-        [ope cancel];
         
         [self waitForExpectationsWithTimeout:5. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);

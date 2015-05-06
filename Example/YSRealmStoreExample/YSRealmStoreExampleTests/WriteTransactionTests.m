@@ -64,11 +64,14 @@
 
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
             XCTAssertNotNil(transaction);
-            XCTAssertTrue(transaction.isInterrupted);
             XCTAssertNotNil(realm);
+            
+            XCTAssertFalse(transaction.isInterrupted);
+            [transaction interrupt];
+            XCTAssertTrue(transaction.isInterrupted);
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             XCTAssertTrue([NSThread isMainThread]);
             XCTAssertNotNil(transaction);
@@ -76,8 +79,6 @@
             XCTAssertNotNil(realm);
             [expectation fulfill];
         }];
-        XCTAssertNotNil(trans);
-        [trans interrupt];
         
         [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -204,15 +205,15 @@
     [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
         if (sync) return ;
         
-        NSDictionary *tweetJsonObj = [JsonGenerator tweet];
-        
         XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+        __block int64_t tweetCount = 0;
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
         YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-            if (!transaction.isInterrupted) {
-                [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
+            while (!transaction.isInterrupted) {
+                tweetCount++;
+                [realm addObject:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithID:tweetCount]]];
             }
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [expectation fulfill];
@@ -223,7 +224,7 @@
             XCTAssertNil(error, @"error: %@", error);
         }];
         
-        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
+        XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], tweetCount);
     }];
 }
 
@@ -263,12 +264,13 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
+            
+            [transaction cancel];
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [expectation fulfill];
         }];
-        [trans cancel];
         
         [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -291,16 +293,17 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:tweetID];
             XCTAssertNotNil(tweet);
             tweet.text = @"";
             tweet.user = nil;
             tweet.entities = nil;
+            
+            [transaction cancel];
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [expectation fulfill];
         }];
-        [trans cancel];
         
         [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);
@@ -323,11 +326,11 @@
         
         XCTestExpectation *expectation = [self expectationWithDescription:nil];
         
-        YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            [transaction cancel];
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [expectation fulfill];
         }];
-        [trans cancel];
         
         [self waitForExpectationsWithTimeout:10. handler:^(NSError *error) {
             XCTAssertNil(error, @"error: %@", error);

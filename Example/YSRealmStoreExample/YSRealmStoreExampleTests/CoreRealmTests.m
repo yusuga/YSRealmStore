@@ -621,11 +621,11 @@
     [store addTweetsWithTweetJsonObjects:@[[JsonGenerator tweetWithTweetID:tweetID1
                                                                     userID:userID1],
                                            [JsonGenerator tweetWithTweetID:tweetID2
-                                                                  userID:userID1
-                                                                    name:name1
-                                                              screenName:screenName1
-                                                         mentionsUserIDs:@[@(userID1)]
-                                                           mentionsNames:@[name1]],
+                                                                    userID:userID1
+                                                                      name:name1
+                                                                screenName:screenName1
+                                                           mentionsUserIDs:@[@(userID1)]
+                                                             mentionsNames:@[name1]],
                                            [JsonGenerator tweetWithTweetID:tweetID3
                                                                     userID:userID1
                                                                       name:name1
@@ -1189,6 +1189,7 @@
     XCTAssertEqual([results count], 1);
 }
 
+#if 0
 - (void)testRLMResultsWithANYObjects
 {
     RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
@@ -1225,6 +1226,44 @@
     XCTAssertEqual([[User allObjectsInRealm:realm] count], count);
     XCTAssertEqual([results count], count);
 }
+#else
+- (void)testRLMResultsWithANYObjects
+{    
+    RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
+    NSUInteger userCount = 5;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < userCount; i++) {
+            [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:i]]];
+        }
+    }];
+    XCTAssertEqual([[User allObjectsInRealm:realm] count], userCount);
+    
+    RLMResults *users = [User allObjectsInRealm:realm];
+    
+    NSUInteger count = 100;
+    RLMResults *results = [Tweet objectsInRealm:realm where:@"ANY watchers IN %@", users];
+    XCTAssertEqual([results count], 0);
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]];
+            
+            for (int64_t userID = 0; userID < arc4random_uniform(userCount) + 1; userID++) {
+                User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
+                XCTAssertNotNil(user);
+                [tweet.watchers addObject:user];
+            }
+            
+            [realm addOrUpdateObject:tweet];
+        }
+    }];
+    
+    XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], count);
+    XCTAssertEqual([[User allObjectsInRealm:realm] count], count);
+    XCTAssertEqual([results count], count);
+}
+#endif
 
 - (void)testRLMResultsWithDeleteObject
 {
@@ -1370,7 +1409,7 @@
             XCTAssertEqualObjects(tweet.text, @"");
             XCTAssertNil(tweet.user);
             XCTAssertNil(tweet.entities);
-
+            
             [expectation fulfill];
         });
     });
@@ -1389,8 +1428,8 @@
     
     NSUInteger count = 5;
     [self addOrUpdateTweet:[[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:INT64_MAX
-                                                                                  userID:INT64_MAX
-                                                                                urlCount:count]]];
+                                                                                 userID:INT64_MAX
+                                                                               urlCount:count]]];
     RLMResults *result = [Tweet allObjectsInRealm:realm];
     XCTAssertEqual([result count], 1);
     Tweet *tweet = [result firstObject];
