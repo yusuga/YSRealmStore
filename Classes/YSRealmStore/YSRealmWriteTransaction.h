@@ -34,9 +34,9 @@ typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transa
 ///------
 
 - (void)interrupt;
-@property (readonly, getter=isInterrupted) BOOL interrupted;
+@property (nonatomic, readonly, getter=isInterrupted) BOOL interrupted;
 
 - (void)cancel;
-@property (readonly, getter=isCancelled) BOOL cancelled;
+@property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
 
 @end

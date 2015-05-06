@@ -13,8 +13,8 @@
 @property (copy, nonatomic) NSString *realmPath;
 @property (nonatomic) BOOL inMemory;
 
-@property (readwrite, getter=isInterrupted) BOOL interrupted;
-@property (readwrite, getter=isCancelled) BOOL cancelled;
+@property (nonatomic, readwrite, getter=isInterrupted) BOOL interrupted;
+@property (nonatomic, readwrite, getter=isCancelled) BOOL cancelled;
 
 @end
 
