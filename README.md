@@ -4,8 +4,8 @@ Simple wrapper for [Realm Cocoa](https://github.com/realm/realm-cocoa).
 ## Features
 - Support Realm Cocoa (0.91.5)
 - Simple Initialize.
-- Async operation.
-- Cancel operation.
+- Async/Cancel operation.
+- Simple migration process.
 
 ## Installation
 ```
@@ -107,4 +107,39 @@ YSRealmOperation *operation = [store writeObjectsWithObjectsBlock:objectsBlock
                                                        completion:completion];
 
 [operation cancel];
+```
+
+### Migration
+```
+@protocol YSRealmStoreProtocol <NSObject>
+
+@optional
+- (void)migrationWithMigration:(RLMMigration *)migration
+              oldSchemaVersion:(NSUInteger) oldSchemaVersion;
+- (NSUInteger)schemaVersion;
+
+@end
+
+// Example
+@interface Store : YSRealmStore
+
+@end
+
+@implementation Store
+
+- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(NSUInteger)oldSchemaVersion
+{
+    if (oldSchemaVersion < 2) {
+        [migration enumerateObjects:Tweet.className block:^(RLMObject *oldObject, RLMObject *newObject) {
+            // Migration
+        }];
+    }
+}
+
+- (NSUInteger)schemaVersion
+{
+    return 2; // Current schema version
+}
+
+@end
 ```
