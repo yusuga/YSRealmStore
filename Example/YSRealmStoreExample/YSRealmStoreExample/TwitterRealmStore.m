@@ -16,29 +16,33 @@
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-#if 1
         __instance =  [[self alloc] initWithRealmName:@"twitter"];
-#else
-        __instance =  [[self alloc] initEncryptionWithRealmName:@"twitter-encrypted"];
-#endif
         DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
 }
 
-+ (instancetype)createStoreInMemory
++ (instancetype)sharedStoreInMemory
 {
-    TwitterRealmStore *store = [[self alloc] initWithRealmName:@"twitter-in-memory"
-                                                      inMemory:YES];
-    DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [store realm].path);
-    return store;
+    static TwitterRealmStore *__instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __instance = [[self alloc] initWithRealmName:@"twitter-in-memory"
+                                            inMemory:YES];
+        DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
+    });
+    return __instance;
 }
 
-+ (instancetype)createEncryptionStore
++ (instancetype)sharedEncryptionStore
 {
-    TwitterRealmStore *store = [[self alloc] initEncryptionWithRealmName:@"twitter-encrypted-in-test"];
-    DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [store realm].path);
-    return store;
+    static TwitterRealmStore *__instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __instance = [[self alloc] initEncryptionWithRealmName:@"twitter-encryption"];
+        DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
+    });
+    return __instance;
 }
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject

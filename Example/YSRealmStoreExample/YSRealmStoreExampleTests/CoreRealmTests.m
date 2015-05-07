@@ -595,7 +595,7 @@
 - (void)testANYInChildObject
 {
     /**
-     *  Realm 0.88.0
+     *  Realm 0.92.0
      *
      *  子オブジェクトの配列に対する操作が強制でANYになる
      *  ANYをつけると、
@@ -636,8 +636,8 @@
     XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 3);
     
     // ANY Contains userID1
-#warning Unsupported (Realm 0.88.0)
-    // Error: "Invalid predicate", "ANY modifier can only be used for RLMArray properties"
+#warning Unsupported (Realm 0.92.0)
+    // failed: caught "Invalid predicate", "ANY modifier can only be used for RLMArray properties"
 #if 0
     {
         for (NSUInteger i = 0; i < 2; i++) {
@@ -705,8 +705,8 @@
         }
     }
     
-#warning Unsupported (Realm 0.88.0)
-    // Error: "Invalid predicate", "ALL modifier not supported"
+#warning Unsupported (Realm 0.92.0)
+    // failed: caught "Invalid predicate", "ALL modifier not supported"
 #if 0
     // Contains userID1 AND userID2
     {
@@ -856,7 +856,7 @@
 
 - (void)testCount
 {
-#warning Unsupported (Realm 0.88.0)
+#warning Unsupported (Realm 0.92.0)
 #if 0
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
@@ -877,15 +877,21 @@
     }];
     
     XCTAssertEqual([[User allObjectsInRealm:[store realm]] count], watchersCount);
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"watchers.@count = %d", watchersCount];
-    XCTAssertTrue([[Tweet objectsInRealm:[store realm] withPredicate:predicate] count]);
+#if 1
+    // failed: caught "Invalid predicate", "RLMArray predicates must contain the ANY modifier"
+    RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"watchers.@count = %d", watchersCount];
+#else
+    // failed: caught "Invalid column name", "Column name @count not found in table"
+    RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"ANY watchers.@count = %d", watchersCount];
+#endif
+    XCTAssertEqual([tweets count], 1);
 #endif
 }
 
 - (void)testCount2
 {
-#warning Unsupported (Realm 0.88.0)
+#warning Unsupported (Realm 0.92.0)
+    // failed: caught "Invalid column name", "Column name @count not found in table"
 #if 0
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
@@ -917,8 +923,6 @@
 
 - (void)testToManyWithBEGINSWITH
 {
-#warning Unsupported (Realm 0.87.1)
-#if 0
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
     for (NSUInteger i = 0; i < 10; i++) {
@@ -928,35 +932,32 @@
     int64_t id = INT64_MAX;
     NSUInteger urlCount = 3;
     [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
-    
-#if 1
-    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH %@", @"h"]];
-#else
-    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH %@", @"h"],
-                            [NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH 'h'"]];
-#endif
-    for (NSPredicate *predicate in predicates) {
-        RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
-        XCTAssertEqual([results count], 1);
-        Tweet *tweet = [results firstObject];
-        XCTAssertEqual(tweet.id, id);
-        XCTAssertEqual(tweet.user.id, id);
-        XCTAssertEqual([tweet.entities.urls count], urlCount);
-    }
-#endif
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH 'h'"];
+
+    RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
+    XCTAssertEqual([results count], 1);
+    Tweet *tweet = [results firstObject];
+    XCTAssertEqual(tweet.id, id);
+    XCTAssertEqual(tweet.user.id, id);
+    XCTAssertEqual([tweet.entities.urls count], urlCount);
 }
 
 #pragma mark - Encryption
 
 - (void)testEncryption
 {
-    TwitterRealmStore *store = [[TwitterRealmStore alloc] initEncryptionWithRealmName:@"encrypted-realm"];
+    TwitterRealmStore *store = [TwitterRealmStore sharedEncryptionStore];
+    [store deleteAllObjects];
+    
     NSLog(@"%s, realmPath = %@", __func__, store.realmPath);
     
     [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
     
     RLMResults *results = [Tweet allObjectsInRealm:[store realm]];
     XCTAssertEqual([results count], 1);
+    
+    [store deleteAllObjects];
 }
 
 #pragma mark - Others
@@ -1189,7 +1190,6 @@
     XCTAssertEqual([results count], 1);
 }
 
-#if 0
 - (void)testRLMResultsWithANYObjects
 {
     RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
@@ -1226,44 +1226,6 @@
     XCTAssertEqual([[User allObjectsInRealm:realm] count], count);
     XCTAssertEqual([results count], count);
 }
-#else
-- (void)testRLMResultsWithANYObjects
-{    
-    RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
-    NSUInteger userCount = 5;
-    
-    [self realmWriteTransaction:^(RLMRealm *realm) {
-        for (int64_t i = 0; i < userCount; i++) {
-            [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:i]]];
-        }
-    }];
-    XCTAssertEqual([[User allObjectsInRealm:realm] count], userCount);
-    
-    RLMResults *users = [User allObjectsInRealm:realm];
-    
-    NSUInteger count = 100;
-    RLMResults *results = [Tweet objectsInRealm:realm where:@"ANY watchers IN %@", users];
-    XCTAssertEqual([results count], 0);
-    
-    [self realmWriteTransaction:^(RLMRealm *realm) {
-        for (int64_t i = 0; i < count; i++) {
-            Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]];
-            
-            for (int64_t userID = 0; userID < arc4random_uniform(userCount) + 1; userID++) {
-                User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
-                XCTAssertNotNil(user);
-                [tweet.watchers addObject:user];
-            }
-            
-            [realm addOrUpdateObject:tweet];
-        }
-    }];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], count);
-    XCTAssertEqual([[User allObjectsInRealm:realm] count], count);
-    XCTAssertEqual([results count], count);
-}
-#endif
 
 - (void)testRLMResultsWithDeleteObject
 {
@@ -1322,14 +1284,16 @@
     Tweet *tweet = [Tweet objectInRealm:[store realm]
                           forPrimaryKey:@(tweetID)];
     XCTAssertNotNil(tweet);
+    __weak Tweet *weakTweet = tweet;
     
     NSString *text = @"UPDATE TEXT";
     
     XCTestExpectation *expectation = [self expectationWithDescription:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         @try {
+            XCTAssertNotNil(weakTweet);
             XCTAssertNotNil(tweet.realm);
-            tweet.text = text;
+            weakTweet.text = text;
         }
         @catch (NSException *exception) {
             DDLogInfo(@"%s; exception = %@;", __func__, exception);

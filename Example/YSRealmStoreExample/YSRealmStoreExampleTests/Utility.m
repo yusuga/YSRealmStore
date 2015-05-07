@@ -21,10 +21,10 @@
                         store = [TwitterRealmStore sharedStore];
                         break;
                     case 1:
-                        store = [TwitterRealmStore createStoreInMemory];
+                        store = [TwitterRealmStore sharedStoreInMemory];
                         break;
                     case 2:
-                        store = [TwitterRealmStore createEncryptionStore];
+                        store = [TwitterRealmStore sharedEncryptionStore];
                         break;
                     default:
                         break;

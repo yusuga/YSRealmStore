@@ -13,17 +13,21 @@
 @implementation Tweet
 
 /**
- initWithObjects:をOverrideする理由 (Realm 0.88.0)
+ initWithValue:をOverrideする理由 (Realm 0.92.0)
  
  - NSNullは例外
- - RLMObject, RLMArrayが空オブジェクトの表現がオブジェクト。(nilを使いたい気もする)
+ - RLMObject, RLMArrayの空オブジェクトの表現がオブジェクト。(@countが使用できないのでnilを使いたい)
  
- APIやDBを自分で制御できる場合ならデフォルトの initWithObject: をそのまま使用した方が楽。
+ APIやDBを自分で制御できる場合ならデフォルトの initWithValue: をそのまま使用した方が楽。
  (その場合はJSONにnull(NSNull)を含めない、下位互換を考慮した仕様変更をする)
+ 
+ または、そもそもJSONからNSNullを除外しinitWithValue:を使用するのもありだと思う。
+ (ただネストする子オブジェクトの扱われ方を考慮する必要がある。現状だとPrimaryKeyがない子オブジェクト
+ に対してはUpdateはされず単純にInsertされるのでゴミの子オブジェクトが増え続けてしまう。)
  
  ---
  
- YSRealmStoreでの空オブジェクトのルール (Realm 0.88.0)
+ YSRealmStoreでの空オブジェクトのルール (Realm 0.92.0)
  
  - RLMObject, RLMArray
  nilを許容出来るので、オブジェクトのInsertを防ぐためにnilを使用する。
@@ -33,7 +37,7 @@
  
  ---
  
- deleteObjects:時の挙動メモ
+ deleteObjects:時の挙動メモ (0.92.0)
  
  - Userを削除したらTweetのUserはnilになる。
  - Urlを削除したらEntitiesは空配列になる(オブジェクトは削除されない)。そのEntitiesを削除すればTweetのEntitiesはnilになる。

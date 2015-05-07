@@ -369,7 +369,7 @@
     }];
 }
 
-- (void)testAsyncFetchObjectsWitchDontHavePrimaryKey
+- (void)testAsyncFetchObjectsWithDontHavePrimaryKey
 {
     [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
         if (!sync) return ;
