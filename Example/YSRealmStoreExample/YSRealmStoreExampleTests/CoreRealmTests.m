@@ -600,9 +600,8 @@
      *  子オブジェクトの配列に対する操作が強制でANYになる
      *  ANYをつけると、
      *  "Invalid predicate", "ANY modifier can only be used for RLMArray properties"
-     *  とエラーが投げられ、子オブジェクトに対するANYと解釈されてしまっている。
-     *
-     *  問題はないけどまぎらわしい。
+     *  とエラーが投げられる。
+     *  子オブジェクトに対するANYと解釈される仕様で、結果としては意図したFetchはできるがまぎらわしい。
      */
     
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
@@ -979,6 +978,27 @@
     
     XCTAssertEqual([results count], 0);
     XCTAssertTrue(tweet.invalidated);
+}
+
+- (void)testDuplicateIndexedObject
+{
+    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+    
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithID:1]];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithID:2]];
+    
+    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 2);
+    
+    NSString *idString = @(INT64_MAX).stringValue;
+    
+    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        for (Tweet *tweet in [Tweet allObjectsInRealm:[store realm]]) {
+            tweet.idString = idString;
+        }
+    }];
+    
+    RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"idString = %@", idString];
+    XCTAssertEqual([tweets count], 2);
 }
 
 #pragma mark - RLMResults

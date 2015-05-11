@@ -110,7 +110,7 @@
          *  IDがない場合そのままだと例外が発生するが、すでにIDがある場合にPrimaryKeyなので変更不可で変更しようとすると例外が発生する。
          *  IDがない物に対してIDを設定する。(以下は本来であればIDが重複しないようにする必要があるので重複IDのUserは削除するようにしなければいけない。)
          */
-        [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
+        [migration enumerateObjects:[User className] block:^(RLMObject *oldObject, RLMObject *newObject) {
             static int64_t userID = 0;
             if (((User*)newObject).id == 0) {
                 NSLog(@"user %@", newObject);
@@ -122,16 +122,25 @@
         /**
          *  NSData *color を追加
          */
-        [migration enumerateObjects:@"User" block:^(RLMObject *oldObject, RLMObject *newObject) {
+        [migration enumerateObjects:[User className] block:^(RLMObject *oldObject, RLMObject *newObject) {
             User *user = (id)newObject;
             user.color = [NSData ys_realmDefaultData];
+        }];
+    }
+    
+    if (oldSchemaVersion < 12) {
+        /**
+         *  indexedPropertiesを試すのにidStringを追加
+         */
+        [migration enumerateObjects:[Tweet className] block:^(RLMObject *oldObject, RLMObject *newObject) {
+            newObject[@"idString"] = [newObject[@"id"] stringValue];
         }];
     }
 }
 
 - (NSUInteger)schemaVersion
 {
-    return 11;
+    return 12;
 }
 
 @end

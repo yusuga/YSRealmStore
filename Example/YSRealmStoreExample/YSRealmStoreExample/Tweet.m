@@ -59,6 +59,7 @@
         self.user = [[User alloc] initWithValue:[value ys_objectOrNilForKey:@"user"]];
         self.entities = [[Entities alloc] initWithValue:[value ys_objectOrNilForKey:@"entities"]];
         self.retweeted = [[value ys_objectOrNilForKey:@"retweeted"] boolValue];
+        self.idString = [NSString stringWithFormat:@"%lld", self.id];
     }
     return self;
 }
@@ -66,6 +67,11 @@
 + (NSString *)primaryKey
 {
     return @"id";
+}
+
++ (NSArray *)indexedProperties
+{
+    return @[NSStringFromSelector(@selector(idString))];
 }
 
 @end

@@ -18,6 +18,7 @@
 @property Entities *entities;
 @property RLMArray<User> *watchers;
 @property BOOL retweeted;
+@property NSString *idString;
 
 /**
  *  Unavailable Methods
