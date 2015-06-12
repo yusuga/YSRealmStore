@@ -1001,6 +1001,41 @@
     XCTAssertEqual([tweets count], 2);
 }
 
+- (void)testLinkingObjects
+{
+    RLMRealm *realm = [[TwitterRealmStore sharedStore] realm];
+    int64_t userID = 100;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        [realm addObject:[[User alloc] initWithValue:[JsonGenerator userWithID:userID]]];
+    }];
+    
+    User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
+    XCTAssertNotNil(user);
+    
+    NSUInteger count = 10;
+    
+    [self realmWriteTransaction:^(RLMRealm *realm) {
+        for (int64_t i = 0; i < count; i++) {
+            Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:i userID:i]];
+            User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
+            [tweet.watchers addObject:user];
+            [realm addOrUpdateObject:tweet];
+        }
+    }];
+    
+    NSArray *linkingObjects = [user linkingObjectsOfClass:[Tweet className]
+                                              forProperty:NSStringFromSelector(@selector(watchers))];
+    XCTAssertEqual([linkingObjects count], count);
+    
+    for (Tweet *tweet in linkingObjects) {
+        XCTAssertTrue([tweet isKindOfClass:[Tweet class]]);
+        XCTAssertEqual([tweet.watchers count], 1);
+        User *user = [tweet.watchers firstObject];
+        XCTAssertEqual(user.id, userID);
+    }
+}
+
 #pragma mark - RLMResults
 
 - (void)testRLMResultsWithEqualBool
