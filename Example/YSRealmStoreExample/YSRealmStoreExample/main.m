@@ -11,12 +11,12 @@
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        [CocoaLumberjackLauncher launchStandardLoggers];
-        [CocoaLumberjackLauncher setXcodeConsoleLogColorsWithErrorColor:[UIColor redColor]
-                                                           warningColor:[UIColor yellowColor]
-                                                              infoColor:[UIColor darkGrayColor]
-                                                             debugColor:[UIColor greenColor]
-                                                           verboseColor:nil];
+        [LumberjackLauncher launchStandardLoggers];
+        [LumberjackLauncher setXcodeConsoleLogColorsWithErrorColor:[UIColor redColor]
+                                                      warningColor:[UIColor yellowColor]
+                                                         infoColor:[UIColor darkGrayColor]
+                                                        debugColor:[UIColor greenColor]
+                                                      verboseColor:nil];
         
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
