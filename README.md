@@ -2,7 +2,7 @@
 Simple wrapper for [Realm Cocoa](https://github.com/realm/realm-cocoa).
 
 ## Features
-- Support Realm Cocoa (0.91.5)
+- Support Realm Cocoa (0.92.0)
 - Simple Initialize.
 - Async/Cancel operation.
 - Simple migration process.
