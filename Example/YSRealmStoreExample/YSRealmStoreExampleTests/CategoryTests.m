@@ -58,77 +58,88 @@
         [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
             XCTAssertNotNil(tweet);
-            RLMArray *watchers = tweet.watchers;
-            XCTAssertNotNil(watchers);
-            XCTAssertEqual([watchers count], 0);
             
-            User *user0 = [User objectInRealm:realm forPrimaryKey:@(0)];
-            User *user1 = [User objectInRealm:realm forPrimaryKey:@(1)];
-            XCTAssertNotNil(user0);
-            XCTAssertNotNil(user1);
+            /*
+             *  対象オブジェクト
+             *  - PrimaryKeyを持つ && Realmに関連付けられている
+             *  - PrimaryKeyを持つ && Realmに関連付けられていない
+             *  - PrimaryKeyを持たない && Realmに関連付けられている
+             *  - PrimaryKeyを持たない && Realmに関連付けられていない
+             */
             
-            // ys_containsObject
-            XCTAssertFalse([watchers ys_containsObject:user0]);
+            // RLMObject have a primary key
+            {
+                RLMArray *watchers = tweet.watchers;
+                XCTAssertNotNil(watchers);
+                XCTAssertEqual([watchers count], 0);
+                
+                User *user0 = [User objectInRealm:realm forPrimaryKey:@(0)];
+                User *user1 = [User objectInRealm:realm forPrimaryKey:@(1)];
+                XCTAssertNotNil(user0);
+                XCTAssertNotNil(user0.realm);
+                XCTAssertNotNil(user1);
+                XCTAssertNotNil(user1.realm);
+                
+                /* ys_containsObject */
+                XCTAssertFalse([watchers ys_containsObject:user0]);
+                
+                [watchers addObject:user0];
+                XCTAssertEqual([watchers count], 1);
+                XCTAssertTrue([watchers ys_containsObject:user0]);
+                XCTAssertFalse([watchers ys_containsObject:user1]);
+                
+                /* ys_addUniqueObject: */
+                [watchers ys_addUniqueObject:user0];
+                XCTAssertEqual([watchers count], 1);
+                XCTAssertEqual([watchers count], 1);
+                [watchers ys_addUniqueObject:user1];
+                XCTAssertEqual([watchers count], 2);
+                
+                User *user100 = [[User alloc] initWithValue:[JsonGenerator userWithID:100]];
+                [watchers ys_addUniqueObject:user100];
+                XCTAssertNotNil(user100.realm);
+                XCTAssertEqual([watchers count], 3);
+                [watchers ys_addUniqueObject:user100];
+                XCTAssertEqual([watchers count], 3);
+                
+                /* ys_removeObject */
+                [watchers ys_removeObject:user1];
+                XCTAssertEqual([watchers count], 2);
+            }
             
-            [watchers addObject:user0];
-            XCTAssertEqual([watchers count], 1);
-            XCTAssertTrue([watchers ys_containsObject:user0]);
-            XCTAssertFalse([watchers ys_containsObject:user1]);
-            
-            // ys_addUniqueObject:
-            [watchers ys_addUniqueObject:user0];
-            XCTAssertEqual([watchers count], 1);
-            [watchers ys_addUniqueObject:user1];
-            XCTAssertEqual([watchers count], 2);
-            
-            // ys_removeObject
-            [watchers ys_removeObject:user1];
-            XCTAssertEqual([watchers count], 1);
+            // RLMObject does not have a primary key
+            {
+                Entities *entities = tweet.entities;
+                RLMArray *urls = entities.urls;
+                XCTAssertEqual([urls count], 1);
+                Url *url = [urls firstObject];
+                XCTAssertNotNil(url);
+                XCTAssertNotNil(url.realm);
+                
+                Url *sameURL = [[Url alloc] initWithValue:@{@"url" : url.url}];
+                XCTAssertNil(sameURL.realm);
+                
+                RLMResults *allURLs = [Url allObjectsInRealm:realm];
+                XCTAssertEqual([allURLs count], 1);
+                Url *fetchedURL = [allURLs firstObject];
+                
+                /* ys_containsObject */
+                XCTAssertTrue([urls ys_containsObject:url]); // url is related with the realm.
+                
+                XCTAssertFalse([urls ys_containsObject:sameURL]); // sameURL.url is the same but value(string) does not compare.
+                
+                XCTAssertNotEqual(url, fetchedURL); // Pointer is different.
+                XCTAssertTrue([urls ys_containsObject:fetchedURL]); // The row of the database matches.
+            }
         }];
     }];
 }
-/*
+
 - (void)testRLMArrayOfStandalone
 {
-    RLMArray *urls = [[RLMArray alloc] initWithObjectClassName:@"Url"];
-    Url *url = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];
-    
-    [urls addObject:url];
-    XCTAssertEqual([urls count], 1);
-    
-    XCTAssertTrue([urls ys_containsObject:url]);
-    
-    [urls ys_addUniqueObject:url];
-    XCTAssertEqual([urls count], 1);
-    
-    [urls ys_removeObject:url];
-    XCTAssertEqual([urls count], 0);
-    
-    Url *url2 = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];
-    [url2 isEqual:url];
+    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:10 userID:10]];    
+    XCTAssertThrows([tweet.watchers ys_addUniqueObject:[[User alloc] initWithValue:[JsonGenerator userWithID:1]]]);
 }
- */
-/*
-- (void)testRLMArrayOfNonPrimaryKeyObject
-{
-    YSRealm *ysRealm = [YSRealm sharedInstance];
-    int64_t tweetID = 0;
-    [Utility addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0 urlCount:1]];
-    
-    [ysRealm writeTransactionWithWriteBlock:^(RLMRealm *realm, YSRealmWriteTransaction *transaction) {
-        Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
-        XCTAssertNotNil(tweet);
-        
-        Url *url = [[Url alloc] initWithObject:@{@"url" : @"http://realm.io"}];        
-        [tweet.entities.urls addObject:url];
-        XCTAssertEqual([tweet.entities.urls count], 2);
-        
-        XCTAssertTrue([tweet.entities.urls ys_containsObject:url]);
-        
-        [tweet.entities.urls indexOfObject:url];
-    }];
-}
-*/
 
 #pragma mark - RLMResults
 
