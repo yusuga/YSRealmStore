@@ -93,7 +93,7 @@
     static dispatch_queue_t __queue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __queue = dispatch_queue_create("jp.YuSugawara.YSRealmStore.queue", NULL);
+        __queue = dispatch_queue_create("com.yusuga.YSRealmStore.queue", NULL);
     });
     return __queue;
 }
