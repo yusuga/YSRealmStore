@@ -18,7 +18,7 @@
     return [self indexOfObject:object] != NSNotFound;
 }
 
-- (void)ys_addUniqueObject:(RLMObject*)object
+- (void)ys_uniqueAddObject:(RLMObject*)object
 {
     if (!object) return;
     if (![self ys_containsObject:object]) {

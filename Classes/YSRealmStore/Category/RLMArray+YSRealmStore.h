@@ -11,7 +11,7 @@
 @interface RLMArray (YSRealmStore)
 
 - (BOOL)ys_containsObject:(RLMObject*)object;
-- (void)ys_addUniqueObject:(RLMObject*)object;
+- (void)ys_uniqueAddObject:(RLMObject*)object;
 - (void)ys_removeObject:(RLMObject*)object;
 
 @end

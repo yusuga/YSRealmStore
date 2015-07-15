@@ -89,17 +89,17 @@
                 XCTAssertFalse([watchers ys_containsObject:user1]);
                 
                 /* ys_addUniqueObject: */
-                [watchers ys_addUniqueObject:user0];
+                [watchers ys_uniqueAddObject:user0];
                 XCTAssertEqual([watchers count], 1);
                 XCTAssertEqual([watchers count], 1);
-                [watchers ys_addUniqueObject:user1];
+                [watchers ys_uniqueAddObject:user1];
                 XCTAssertEqual([watchers count], 2);
                 
                 User *user100 = [[User alloc] initWithValue:[JsonGenerator userWithID:100]];
-                [watchers ys_addUniqueObject:user100];
+                [watchers ys_uniqueAddObject:user100];
                 XCTAssertNotNil(user100.realm);
                 XCTAssertEqual([watchers count], 3);
-                [watchers ys_addUniqueObject:user100];
+                [watchers ys_uniqueAddObject:user100];
                 XCTAssertEqual([watchers count], 3);
                 
                 /* ys_removeObject */
@@ -138,7 +138,7 @@
 - (void)testRLMArrayOfStandalone
 {
     Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:10 userID:10]];    
-    XCTAssertThrows([tweet.watchers ys_addUniqueObject:[[User alloc] initWithValue:[JsonGenerator userWithID:1]]]);
+    XCTAssertThrows([tweet.watchers ys_uniqueAddObject:[[User alloc] initWithValue:[JsonGenerator userWithID:1]]]);
 }
 
 #pragma mark - RLMResults
