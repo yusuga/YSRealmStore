@@ -135,12 +135,6 @@
     }];
 }
 
-- (void)testRLMArrayOfStandalone
-{
-    Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweetWithTweetID:10 userID:10]];    
-    XCTAssertThrows([tweet.watchers ys_uniqueAddObject:[[User alloc] initWithValue:[JsonGenerator userWithID:1]]]);
-}
-
 #pragma mark - RLMResults
 
 - (void)testRLMResults

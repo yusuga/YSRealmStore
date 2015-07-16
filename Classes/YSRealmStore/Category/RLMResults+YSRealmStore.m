@@ -14,7 +14,6 @@
 - (BOOL)ys_containsObject:(RLMObject*)object
 {
     if (!object) return NO;
-    NSAssert([[object class] primaryKey], @"Primary key is required.");
     return [self indexOfObject:object] != NSNotFound;
 }
 

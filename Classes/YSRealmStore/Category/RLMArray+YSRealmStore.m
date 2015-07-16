@@ -14,7 +14,6 @@
 - (BOOL)ys_containsObject:(RLMObject*)object
 {
     if (!object) return NO;
-    if (!self.realm) @throw @"It is necessary to be related with realm.";
     return [self indexOfObject:object] != NSNotFound;
 }
 
