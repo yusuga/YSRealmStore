@@ -34,17 +34,6 @@
     return __instance;
 }
 
-+ (instancetype)sharedEncryptionStore
-{
-    static TwitterRealmStore *__instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __instance = [[self alloc] initEncryptionWithRealmName:@"twitter-encryption"];
-        DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
-    });
-    return __instance;
-}
-
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
 {
     [self writeObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
@@ -101,7 +90,7 @@
 
 #pragma mark - YSRealmStoreProtocol
 
-- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(NSUInteger)oldSchemaVersion
+- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(uint64_t)oldSchemaVersion
 {
     DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
     if (oldSchemaVersion < 2) {
@@ -138,7 +127,7 @@
     }
 }
 
-- (NSUInteger)schemaVersion
+- (uint64_t)schemaVersion
 {
     return 12;
 }

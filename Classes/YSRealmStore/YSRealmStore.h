@@ -23,8 +23,8 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 @optional
 - (void)migrationWithMigration:(RLMMigration *)migration
-              oldSchemaVersion:(NSUInteger) oldSchemaVersion;
-- (NSUInteger)schemaVersion;
+              oldSchemaVersion:(uint64_t) oldSchemaVersion;
+- (uint64_t)schemaVersion;
 
 @end
 

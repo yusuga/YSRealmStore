@@ -12,7 +12,7 @@
 
 + (void)enumerateAllCase:(void(^)(TwitterRealmStore *store, BOOL sync))block
 {
-    for (NSInteger i = 0; i < 3; i++) {
+    for (NSInteger i = 0; i < 2; i++) {
         for (NSInteger sync = 1; sync >= 0; sync--) {
             @autoreleasepool {
                 TwitterRealmStore *store;
@@ -22,9 +22,6 @@
                         break;
                     case 1:
                         store = [TwitterRealmStore sharedStoreInMemory];
-                        break;
-                    case 2:
-                        store = [TwitterRealmStore sharedEncryptionStore];
                         break;
                     default:
                         break;

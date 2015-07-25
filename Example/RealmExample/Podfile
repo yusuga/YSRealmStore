@@ -1,4 +1,4 @@
 platform :ios, '7.0'
-pod 'Realm', '0.92.0'
+pod 'Realm', '0.93.2'
 
 pod 'Realm+JSON'

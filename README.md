@@ -2,7 +2,7 @@
 Simple wrapper for [Realm Cocoa](https://github.com/realm/realm-cocoa).
 
 ## Features
-- Support Realm Cocoa (0.92.0)
+- Support Realm Cocoa (0.93.2)
 - Simple Initialize.
 - Async/Cancel operation.
 - Simple migration process.
@@ -127,7 +127,7 @@ YSRealmOperation *operation = [store writeObjectsWithObjectsBlock:objectsBlock
 
 @implementation Store
 
-- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(NSUInteger)oldSchemaVersion
+- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(uint64_t)oldSchemaVersion
 {
     if (oldSchemaVersion < 2) {
         [migration enumerateObjects:Tweet.className block:^(RLMObject *oldObject, RLMObject *newObject) {
@@ -136,7 +136,7 @@ YSRealmOperation *operation = [store writeObjectsWithObjectsBlock:objectsBlock
     }
 }
 
-- (NSUInteger)schemaVersion
+- (uint64_t)schemaVersion
 {
     return 2; // Current schema version
 }

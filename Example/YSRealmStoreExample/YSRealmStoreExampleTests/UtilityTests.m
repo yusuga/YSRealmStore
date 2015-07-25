@@ -42,22 +42,12 @@
                 XCTAssertFalse(store.encrypted);
                 XCTAssertFalse(sync);
                 break;
-            case 4:
-                XCTAssertFalse(store.inMemory);
-                XCTAssertTrue(store.encrypted);
-                XCTAssertTrue(sync);
-                break;
-            case 5:
-                XCTAssertFalse(store.inMemory);
-                XCTAssertTrue(store.encrypted);
-                XCTAssertFalse(sync);
-                break;
             default:
                 XCTFail(@"Unknown case");
                 break;
         }
     }];
-    XCTAssertEqual(count, 6);
+    XCTAssertEqual(count, 4);
 }
 
 @end

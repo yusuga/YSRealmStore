@@ -15,7 +15,6 @@
 
 + (instancetype)sharedStore;
 + (instancetype)sharedStoreInMemory;
-+ (instancetype)sharedEncryptionStore;
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject;
 - (void)addTweetsWithCount:(NSUInteger)count;

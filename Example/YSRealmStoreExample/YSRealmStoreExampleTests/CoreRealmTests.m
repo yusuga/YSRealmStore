@@ -942,23 +942,6 @@
     XCTAssertEqual([tweet.entities.urls count], urlCount);
 }
 
-#pragma mark - Encryption
-
-- (void)testEncryption
-{
-    TwitterRealmStore *store = [TwitterRealmStore sharedEncryptionStore];
-    [store deleteAllObjects];
-    
-    NSLog(@"%s, realmPath = %@", __func__, store.realmPath);
-    
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweet]];
-    
-    RLMResults *results = [Tweet allObjectsInRealm:[store realm]];
-    XCTAssertEqual([results count], 1);
-    
-    [store deleteAllObjects];
-}
-
 #pragma mark - Others
 
 - (void)testInvaidated

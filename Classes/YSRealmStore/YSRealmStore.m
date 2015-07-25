@@ -38,13 +38,13 @@
             [self realm]; // Init realm in memory
         } else {
             if ([self respondsToSelector:@selector(migrationWithMigration:oldSchemaVersion:)] &&
-                [self respondsToSelector:@selector(schemaVersion)]) {
+                [self respondsToSelector:@selector(schemaVersion)])
+            {
                 [RLMRealm setSchemaVersion:self.schemaVersion
                             forRealmAtPath:self.realmPath
-                        withMigrationBlock:^(RLMMigration *migration, NSUInteger oldSchemaVersion)
-                 {
-                     [self migrationWithMigration:migration oldSchemaVersion:oldSchemaVersion];
-                 }];
+                        withMigrationBlock:^(RLMMigration *migration, uint64_t oldSchemaVersion) {
+                            [self migrationWithMigration:migration oldSchemaVersion:oldSchemaVersion];
+                        }];
             }
         }
     }
