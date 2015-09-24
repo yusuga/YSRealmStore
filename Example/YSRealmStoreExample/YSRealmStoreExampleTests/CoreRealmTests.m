@@ -1295,7 +1295,7 @@
     
     NSString *text = @"UPDATE TEXT";
     
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         XCTAssertNotNil(tweet);
         XCTAssertNil(tweet.realm);
@@ -1326,7 +1326,7 @@
     
     NSString *text = @"UPDATE TEXT";
     
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         @try {
             XCTAssertNotNil(weakTweet);
@@ -1354,7 +1354,7 @@
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     [store realm].autorefresh = NO;
     
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
         RLMRealm *realm = [store realm];
@@ -1388,7 +1388,7 @@
     [realm addOrUpdateObject:tweet];
     [realm commitWriteTransaction];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:nil];
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RLMRealm *realm = [store realm];
         Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];

@@ -16,11 +16,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    if (NSClassFromString(@"XCTest")) {
-        self.window.rootViewController = nil;
-    }
-    
+{    
     return YES;
 }
 

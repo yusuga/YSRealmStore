@@ -175,7 +175,7 @@
                 return fetchUsers(realm);
             }];
         } else {
-            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
             [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
                 return fetchUsers(realm);
             } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results) {

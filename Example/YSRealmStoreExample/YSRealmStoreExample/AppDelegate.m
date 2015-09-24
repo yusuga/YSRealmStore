@@ -26,10 +26,6 @@ void uncaughtExceptionHandler(NSException *exception) {
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 #endif
     
-    if (NSClassFromString(@"XCTest")) {
-        self.window.rootViewController = nil;
-    }
-    
     return YES;
 }
 

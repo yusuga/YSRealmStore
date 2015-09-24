@@ -36,7 +36,7 @@
                 XCTAssertNotNil(realm);
             }];
         } else {
-            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
             [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
                 XCTAssertFalse([NSThread isMainThread]);
                 XCTAssertNotNil(transaction);
@@ -62,7 +62,7 @@
     [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
         if (sync) return ;
 
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
@@ -91,7 +91,7 @@
     [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
         if (sync) return ;
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             XCTAssertFalse([NSThread isMainThread]);
@@ -119,7 +119,7 @@
     [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
         if (sync) return ;
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             XCTAssertTrue([NSThread isMainThread]);
@@ -151,7 +151,7 @@
                 [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
             }];            
         } else {
-            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
             
             [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
                 [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
@@ -185,7 +185,7 @@
         if (sync) {
             [store deleteAllObjects];
         } else {
-            XCTestExpectation *expectation = [self expectationWithDescription:nil];
+            XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
             [store deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
                 [expectation fulfill];
             }];
@@ -208,7 +208,7 @@
         XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
         __block int64_t tweetCount = 0;
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             while (!transaction.isInterrupted) {
@@ -235,7 +235,7 @@
         
         XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         YSRealmWriteTransaction *trans = [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         } completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
@@ -262,7 +262,7 @@
         
         XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [realm addObject:[[Tweet alloc] initWithValue:tweetJsonObj]];
@@ -291,7 +291,7 @@
         [store addTweetsWithTweetJsonObjects:@[tweetObj]];
         XCTAssertNotNil([Tweet objectInRealm:[store realm] forPrimaryKey:tweetID]);
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:tweetID];
@@ -324,7 +324,7 @@
         
         XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 0);
         
-        XCTestExpectation *expectation = [self expectationWithDescription:nil];
+        XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
         
         [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
             [transaction cancel];
