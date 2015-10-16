@@ -29,7 +29,10 @@
 {
     NSString *name = @"database";
     
-    YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:name];
+    RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
+    configuration.path = [YSRealmStore realmPathWithFileName:name];
+    
+    YSRealmStore *store = [[YSRealmStore alloc] initWithConfiguration:configuration];
     
     NSString *path = [store realm].path;
     DDLogDebug(@"%s; path = %@;", __func__, path);

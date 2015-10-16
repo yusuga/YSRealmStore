@@ -10,10 +10,8 @@
 
 @interface YSRealmStore ()
 
-@property (copy, nonatomic, readwrite) NSString *realmPath;
-@property (nonatomic, readwrite) BOOL inMemory;
+@property (nonatomic, readwrite) RLMRealmConfiguration *configuration;
 @property (nonatomic) RLMRealm *realmInMemory;
-@property (nonatomic, readwrite) BOOL encrypted;
 
 @end
 
@@ -21,50 +19,14 @@
 
 #pragma mark - Life cycle
 
-- (instancetype)initWithRealmName:(NSString *)realmName
-{
-    return [self initWithRealmName:realmName inMemory:NO];
-}
-
-- (instancetype)initWithRealmName:(NSString *)realmName
-                         inMemory:(BOOL)inMemory
+- (instancetype)initWithConfiguration:(RLMRealmConfiguration *)configuration
 {
     if (self = [super init]) {
-        if (realmName) {
-            self.realmPath = [[self class] realmPathWithFileName:realmName];
-        }
-        self.inMemory = inMemory;
-        if (inMemory) {
+        self.configuration = configuration;
+        
+        if ([self inMemory]) {
             [self realm]; // Init realm in memory
-        } else {
-            if ([self respondsToSelector:@selector(migrationWithMigration:oldSchemaVersion:)] &&
-                [self respondsToSelector:@selector(schemaVersion)])
-            {
-                [RLMRealm setSchemaVersion:self.schemaVersion
-                            forRealmAtPath:self.realmPath
-                        withMigrationBlock:^(RLMMigration *migration, uint64_t oldSchemaVersion) {
-                            [self migrationWithMigration:migration oldSchemaVersion:oldSchemaVersion];
-                        }];
-            }
         }
-    }
-    return self;
-}
-
-- (instancetype)initEncryptionWithRealmName:(NSString *)realmName
-{
-    return [self initEncryptionWithRealmName:realmName
-                          keychainIdentifier:[NSBundle mainBundle].bundleIdentifier];
-}
-
-- (instancetype)initEncryptionWithRealmName:(NSString *)realmName
-                         keychainIdentifier:(NSString *)keychainIdentifier
-{
-    NSParameterAssert(keychainIdentifier);
-    if (self = [self initWithRealmName:realmName]) {
-        [RLMRealm setEncryptionKey:[[self class] encryptionKeyForKeychainIdentifier:keychainIdentifier]
-                   forRealmsAtPath:self.realmPath];
-        self.encrypted = YES;
     }
     return self;
 }
@@ -73,19 +35,28 @@
 
 - (RLMRealm *)realm
 {
-    if (self.inMemory) {
+    if ([self inMemory]) {
         if (!self.realmInMemory) {
             // Hold onto a strong reference
-            self.realmInMemory = [RLMRealm inMemoryRealmWithIdentifier:[self.realmPath lastPathComponent]];
+            self.realmInMemory = [RLMRealm realmWithConfiguration:self.configuration error:nil];
         }
         return self.realmInMemory;
     } else {
-        if (self.realmPath) {
-            return [RLMRealm realmWithPath:self.realmPath];
-        } else {
-            return [RLMRealm defaultRealm];
-        }
+        return [RLMRealm realmWithConfiguration:self.configuration error:nil];
     }
+}
+
+
+- (BOOL)inMemory
+{
+    NSParameterAssert(self.configuration);
+    return self.configuration.inMemoryIdentifier != nil;
+}
+
+- (BOOL)encrypted
+{
+    NSParameterAssert(self.configuration);
+    return self.configuration.encryptionKey != nil;
 }
 
 + (dispatch_queue_t)queue
@@ -102,17 +73,17 @@
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
-                                                  inMemory:self.inMemory
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path
+                                                  inMemory:[self inMemory]
                                                 writeBlock:writeBlock];
 }
 
 - (YSRealmWriteTransaction *)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                                  completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    return [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
+    return [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path
                                                             queue:[YSRealmStore queue]
-                                                         inMemory:self.inMemory
+                                                         inMemory:[self inMemory]
                                                        writeBlock:writeBlock
                                                        completion:^(YSRealmWriteTransaction *transaction)
             {
@@ -125,17 +96,17 @@
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation writeOperationWithRealmPath:self.realmPath
-                                         inMemory:self.inMemory
+    [YSRealmOperation writeOperationWithRealmPath:self.realm.path
+                                         inMemory:[self inMemory]
                                      objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreOperationCompletion)completion
 {
-    return [YSRealmOperation writeOperationWithRealmPath:self.realmPath
+    return [YSRealmOperation writeOperationWithRealmPath:self.realm.path
                                                    queue:[YSRealmStore queue]
-                                                inMemory:self.inMemory
+                                                inMemory:[self inMemory]
                                             objectsBlock:objectsBlock
                                               completion:^(YSRealmOperation *operation)
             {
@@ -147,17 +118,17 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    [YSRealmOperation deleteOperationWithRealmPath:self.realmPath
-                                          inMemory:self.inMemory
+    [YSRealmOperation deleteOperationWithRealmPath:self.realm.path
+                                          inMemory:[self inMemory]
                                       objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmStoreOperationCompletion)completion
 {
-    return [YSRealmOperation deleteOperationWithRealmPath:self.realmPath
+    return [YSRealmOperation deleteOperationWithRealmPath:self.realm.path
                                                     queue:[YSRealmStore queue]
-                                                 inMemory:self.inMemory
+                                                 inMemory:[self inMemory]
                                              objectsBlock:objectsBlock
                                                completion:^(YSRealmOperation *operation)
             {
@@ -167,8 +138,8 @@
 
 - (void)deleteAllObjects
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
-                                                  inMemory:self.inMemory
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path
+                                                  inMemory:[self inMemory]
                                                 writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm)
      {
          [realm deleteAllObjects];
@@ -177,9 +148,9 @@
 
 - (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion
 {
-    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realmPath
+    [YSRealmWriteTransaction writeTransactionWithRealmPath:self.realm.path
                                                      queue:[YSRealmStore queue]
-                                                  inMemory:self.inMemory
+                                                  inMemory:[self inMemory]
                                                 writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm)
      {
          [realm deleteAllObjects];
@@ -192,17 +163,17 @@
 
 - (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath
-                                                inMemory:self.inMemory
+    return [YSRealmOperation fetchOperationWithRealmPath:self.realm.path
+                                                inMemory:[self inMemory]
                                             objectsBlock:objectsBlock];
 }
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion
 {
-    return [YSRealmOperation fetchOperationWithRealmPath:self.realmPath
+    return [YSRealmOperation fetchOperationWithRealmPath:self.realm.path
                                                    queue:[YSRealmStore queue]
-                                                inMemory:self.inMemory
+                                                inMemory:[self inMemory]
                                             objectsBlock:objectsBlock
                                               completion:^(YSRealmOperation *operation, RLMResults *results)
             {
@@ -225,6 +196,11 @@
         path = [path stringByAppendingPathExtension:@"realm"];
     }
     return path;
+}
+
++ (NSData *)defaultEncryptionKey
+{
+    return [self encryptionKeyForKeychainIdentifier:[NSBundle mainBundle].bundleIdentifier];
 }
 
 /**

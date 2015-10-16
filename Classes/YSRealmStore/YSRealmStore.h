@@ -15,59 +15,39 @@ typedef void(^YSRealmStoreOperationCompletion)(YSRealmStore *store, YSRealmOpera
 typedef void(^YSRealmStoreFetchOperationCompletion)(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results);
 typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm);
 
-@protocol YSRealmStoreProtocol <NSObject>
+@interface YSRealmStore : NSObject
 
-///----------
-/// Migration
-///----------
+///-----------------
+/// @name Initialize
+///-----------------
 
-@optional
-- (void)migrationWithMigration:(RLMMigration *)migration
-              oldSchemaVersion:(uint64_t) oldSchemaVersion;
-- (uint64_t)schemaVersion;
+- (instancetype)initWithConfiguration:(RLMRealmConfiguration *)configuration;
+@property (nonatomic, readonly) RLMRealmConfiguration *configuration;
 
-@end
-
-@interface YSRealmStore : NSObject <YSRealmStoreProtocol>
-
-///-----------
-/// Initialize
-///-----------
-
-- (instancetype)initWithRealmName:(NSString*)realmName;
-- (instancetype)initWithRealmName:(NSString *)realmName
-                         inMemory:(BOOL)inMemory;
-
-- (instancetype)initEncryptionWithRealmName:(NSString *)realmName;
-- (instancetype)initEncryptionWithRealmName:(NSString *)realmName
-                         keychainIdentifier:(NSString *)keychainIdentifier;
-
-@property (copy, nonatomic, readonly) NSString *realmPath;
-@property (nonatomic, readonly) BOOL inMemory;
-@property (nonatomic, readonly) BOOL encrypted;
-
-- (RLMRealm*)realm;
+- (RLMRealm *)realm;
+- (BOOL)inMemory;
+- (BOOL)encrypted;
 + (dispatch_queue_t)queue;
 
-///------------
-/// Transaction
-///------------
+///------------------
+/// @name Transaction
+///------------------
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock;
 - (YSRealmWriteTransaction*)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                                 completion:(YSRealmStoreWriteTransactionCompletion)completion;
 
-///----------------
-/// Operation Write
-///----------------
+///----------------------
+/// @name Operation Write
+///----------------------
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreOperationCompletion)completion;
 
-///-----------------
-/// Operation Delete
-///-----------------
+///-----------------------
+/// @name Operation Delete
+///-----------------------
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
@@ -76,12 +56,21 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (void)deleteAllObjects;
 - (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion;
 
-///----------------
-/// Operation Fetch
-///----------------
+///----------------------
+/// @name Operation Fetch
+///----------------------
 
 - (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion;
+
+///--------------
+/// @name Utility
+///--------------
+
++ (NSString*)realmPathWithFileName:(NSString *)fileName;
+
++ (NSData *)defaultEncryptionKey;
++ (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier;
 
 @end

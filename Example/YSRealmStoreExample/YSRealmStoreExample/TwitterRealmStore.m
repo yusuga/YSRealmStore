@@ -16,7 +16,23 @@
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __instance =  [[self alloc] initWithRealmName:@"twitter"];
+        RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
+        configuration.path = [YSRealmStore realmPathWithFileName:@"twitter"];
+        
+        configuration.objectClasses = @[[Tweet class],
+                                        [User class],
+                                        [Entities class],
+                                        [Url class],
+                                        [Mention class]];
+        
+        configuration.schemaVersion = 12;
+        configuration.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion)
+        {
+            [TwitterRealmStore migrationWithMigration:migration
+                                     oldSchemaVersion:oldSchemaVersion];
+        };
+        
+        __instance =  [[self alloc] initWithConfiguration:configuration];
         DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
@@ -27,8 +43,10 @@
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __instance = [[self alloc] initWithRealmName:@"twitter-in-memory"
-                                            inMemory:YES];
+        RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
+        configuration.inMemoryIdentifier = @"twitter";
+        
+        __instance =  [[self alloc] initWithConfiguration:configuration];
         DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
@@ -63,7 +81,8 @@
     return [self writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         for (NSDictionary *tweetObj in tweetJsonObjects) {
             if (transaction.isInterrupted) return ;
-            [realm addOrUpdateObject:[[Tweet alloc] initWithValue:tweetObj]];
+            Tweet *tweet = [[Tweet alloc] initWithValue:tweetObj];
+            [realm addOrUpdateObject:tweet];
         }
     } completion:completion];
 }
@@ -88,9 +107,10 @@
     return [[Tweet allObjectsInRealm:[self realm]] sortedResultsUsingProperty:@"id" ascending:NO];
 }
 
-#pragma mark - YSRealmStoreProtocol
+#pragma mark - Migration
 
-- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(uint64_t)oldSchemaVersion
++ (void)migrationWithMigration:(RLMMigration *)migration
+              oldSchemaVersion:(uint64_t)oldSchemaVersion
 {
     DDLogDebug(@"oldSchemaVersion: %zd", oldSchemaVersion);
     if (oldSchemaVersion < 2) {
@@ -126,10 +146,5 @@
         }];
     }
 }
-
-- (uint64_t)schemaVersion
-{
-    return 12;
-}
-
+                       
 @end
