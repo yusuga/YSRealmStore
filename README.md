@@ -2,10 +2,9 @@
 Simple wrapper for [Realm Cocoa](https://github.com/realm/realm-cocoa).
 
 ## Features
-- Support Realm Cocoa (0.94.1)
+- Support Realm Cocoa (0.95.3)
 - Simple Initialize.
 - Async/Cancel operation.
-- Simple migration process.
 
 ## Installation
 ```
@@ -16,15 +15,21 @@ pod 'YSRealmStore'
 
 ### Initialize
 ```
-// Default Realm
-YSRealmStore *store = [[YSRealmStore alloc] init];
-
-// Other Realm
-NSString *custumDatabaseName = @"database";
-YSRealmStore *store = [[YSRealmStore alloc] initWithRealmName:custumDatabaseName];
-
-// Encryption Realm
-YSRealmStore *store = [[YSRealmStore alloc] initEncryptionWithRealmName:@"encryption-database"];
+RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
+configuration.path = [YSRealmStore realmPathWithFileName:@"twitter"];
+    
+configuration.objectClasses = @[[Tweet class],
+                                [User class],
+                                [Entities class],
+                                [Url class],
+                                [Mention class]];
+    
+configuration.schemaVersion = 2;
+configuration.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) {
+    /* Migration */
+};
+    
+TwitterRealmStore *store =  [[TwitterRealmStore alloc] initWithConfiguration:configuration];
 ```
 
 ### Write transaction
@@ -107,39 +112,4 @@ YSRealmOperation *operation = [store writeObjectsWithObjectsBlock:objectsBlock
                                                        completion:completion];
 
 [operation cancel];
-```
-
-### Migration
-```
-@protocol YSRealmStoreProtocol <NSObject>
-
-@optional
-- (void)migrationWithMigration:(RLMMigration *)migration
-              oldSchemaVersion:(NSUInteger) oldSchemaVersion;
-- (NSUInteger)schemaVersion;
-
-@end
-
-// Example
-@interface Store : YSRealmStore
-
-@end
-
-@implementation Store
-
-- (void)migrationWithMigration:(RLMMigration *)migration oldSchemaVersion:(uint64_t)oldSchemaVersion
-{
-    if (oldSchemaVersion < 2) {
-        [migration enumerateObjects:Tweet.className block:^(RLMObject *oldObject, RLMObject *newObject) {
-            // Migration
-        }];
-    }
-}
-
-- (uint64_t)schemaVersion
-{
-    return 2; // Current schema version
-}
-
-@end
 ```
