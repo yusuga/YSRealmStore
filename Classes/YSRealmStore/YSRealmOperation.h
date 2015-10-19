@@ -21,43 +21,37 @@ typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMR
 /// Write
 ///------
 
-+ (void)writeOperationWithRealmPath:(NSString*)realmPath
-                           inMemory:(BOOL)inMemory
-                       objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
++ (void)writeOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                           objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
-+ (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
-                                      queue:(dispatch_queue_t)queue
-                                   inMemory:(BOOL)inMemory
-                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                 completion:(YSRealmOperationCompletion)completion;
++ (instancetype)writeOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                                          queue:(dispatch_queue_t)queue
+                                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                     completion:(YSRealmOperationCompletion)completion;
 
 ///-------
 /// Delete
 ///-------
 
-+ (void)deleteOperationWithRealmPath:(NSString*)realmPath
-                            inMemory:(BOOL)inMemory
-                        objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
++ (void)deleteOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                            objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
-+ (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
-                                       queue:(dispatch_queue_t)queue
-                                    inMemory:(BOOL)inMemory
-                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                  completion:(YSRealmOperationCompletion)completion;
++ (instancetype)deleteOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                                           queue:(dispatch_queue_t)queue
+                                    objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                      completion:(YSRealmOperationCompletion)completion;
 
 ///------
 /// Fetch
 ///------
 
-+ (id)fetchOperationWithRealmPath:(NSString*)realmPath
-                         inMemory:(BOOL)inMemory
-                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
++ (id)fetchOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                         objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 
-+ (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
-                                      queue:(dispatch_queue_t)queue
-                                   inMemory:(BOOL)inMemory
-                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                 completion:(YSRealmOperationFetchCompletion)completion;
++ (instancetype)fetchOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                                          queue:(dispatch_queue_t)queue
+                                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                     completion:(YSRealmOperationFetchCompletion)completion;
 
 ///------
 /// State

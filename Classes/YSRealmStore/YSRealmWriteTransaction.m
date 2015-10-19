@@ -10,8 +10,7 @@
 
 @interface YSRealmWriteTransaction ()
 
-@property (copy, nonatomic) NSString *realmPath;
-@property (nonatomic) BOOL inMemory;
+@property (nonatomic) RLMRealmConfiguration *configuration;
 
 @property (nonatomic, readwrite, getter=isInterrupted) BOOL interrupted;
 @property (nonatomic, readwrite, getter=isCancelled) BOOL cancelled;
@@ -22,13 +21,11 @@
 
 #pragma mark - Life cycle
 
-- (instancetype)initWithRealmPath:(NSString*)realmPath
-                         inMemory:(BOOL)inMemory
+- (instancetype)initWithConfiguration:(RLMRealmConfiguration *)configuration
 {
     if (self = [super init]) {
-        NSParameterAssert(realmPath != nil);
-        self.realmPath = realmPath;
-        self.inMemory = inMemory;
+        NSParameterAssert(configuration);
+        self.configuration = configuration;
     }
     return self;
 }
@@ -44,36 +41,24 @@
 
 - (RLMRealm *)realm
 {
-    if (self.inMemory) {
-        return [RLMRealm inMemoryRealmWithIdentifier:[self.realmPath lastPathComponent]];
-    } else {
-        if (self.realmPath) {
-            return [RLMRealm realmWithPath:self.realmPath];
-        } else {
-            return [RLMRealm defaultRealm];
-        }
-    }
+    return [RLMRealm realmWithConfiguration:self.configuration error:nil];
 }
 
 #pragma mark - Transaction
 
-+ (void)writeTransactionWithRealmPath:(NSString*)realmPath
-                             inMemory:(BOOL)inMemory
-                           writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
++ (void)writeTransactionWithConfiguration:(RLMRealmConfiguration *)configuration
+                               writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
-    YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath
-                                                            inMemory:inMemory];
+    YSRealmWriteTransaction *trans = [[self alloc] initWithConfiguration:configuration];
     [trans writeTransactionWithWriteBlock:writeBlock];
 }
 
-+ (instancetype)writeTransactionWithRealmPath:(NSString*)realmPath
-                                        queue:(dispatch_queue_t)queue
-                                     inMemory:(BOOL)inMemory
-                                   writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-                                   completion:(YSRealmWriteTransactionCompletion)completion
++ (instancetype)writeTransactionWithConfiguration:(RLMRealmConfiguration *)configuration
+                                            queue:(dispatch_queue_t)queue
+                                       writeBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
+                                       completion:(YSRealmWriteTransactionCompletion)completion
 {
-    YSRealmWriteTransaction *trans = [[self alloc] initWithRealmPath:realmPath
-                                                            inMemory:inMemory];
+    YSRealmWriteTransaction *trans = [[self alloc] initWithConfiguration:configuration];
     [trans writeTransactionWithQueue:queue writeBlock:writeBlock completion:completion];
     return trans;
 }
@@ -81,7 +66,7 @@
 #pragma mark - Transaction Private
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
-{    
+{
     RLMRealm *realm = [self realm];
     [realm beginWriteTransaction];
     

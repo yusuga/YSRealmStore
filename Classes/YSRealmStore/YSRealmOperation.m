@@ -15,8 +15,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 @interface YSRealmOperation ()
 
-@property (copy, nonatomic) NSString *realmPath;
-@property (nonatomic) BOOL inMemory;
+@property (nonatomic) RLMRealmConfiguration *configuration;
 
 @property (nonatomic, readwrite, getter=isCancelled) BOOL cancelled;
 
@@ -26,13 +25,11 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 #pragma mark - Life cycle
 
-- (instancetype)initWithRealmPath:(NSString*)realmPath
-                         inMemory:(BOOL)inMemory
+- (instancetype)initWithConfiguration:(RLMRealmConfiguration *)configuration
 {
     if (self = [super init]) {
-        NSParameterAssert(realmPath != nil);
-        self.realmPath = realmPath;
-        self.inMemory = inMemory;
+        NSParameterAssert(configuration);
+        self.configuration = configuration;
     }
     return self;
 }
@@ -48,95 +45,73 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
 
 - (RLMRealm *)realm
 {
-    if (self.inMemory) {
-        return [RLMRealm inMemoryRealmWithIdentifier:[self.realmPath lastPathComponent]];
-    } else {
-        if (self.realmPath) {
-            return [RLMRealm realmWithPath:self.realmPath];
-        } else {
-            return [RLMRealm defaultRealm];
-        }
-    }
+    return [RLMRealm realmWithConfiguration:self.configuration error:nil];
 }
 
 #pragma mark - Operation
 #pragma mark Write
 
-+ (void)writeOperationWithRealmPath:(NSString*)realmPath
-                           inMemory:(BOOL)inMemory
-                       objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
++ (void)writeOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                           objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(objectsBlock);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
-                                                   inMemory:inMemory];
+    YSRealmOperation *ope = [[self alloc] initWithConfiguration:configuration];
     [ope writeObjectsWithObjectsBlock:objectsBlock];
 }
 
-+ (instancetype)writeOperationWithRealmPath:(NSString*)realmPath
-                                      queue:(dispatch_queue_t)queue
-                                   inMemory:(BOOL)inMemory
-                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                 completion:(YSRealmOperationCompletion)completion
++ (instancetype)writeOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                                          queue:(dispatch_queue_t)queue
+                                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                     completion:(YSRealmOperationCompletion)completion
 {
-    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(objectsBlock);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
-                                                   inMemory:inMemory];
+    YSRealmOperation *ope = [[self alloc] initWithConfiguration:configuration];
     [ope writeObjectsWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
 #pragma mark Delete
 
-+ (void)deleteOperationWithRealmPath:(NSString*)realmPath
-                            inMemory:(BOOL)inMemory
-                        objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
++ (void)deleteOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                            objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(objectsBlock);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
-                                                   inMemory:inMemory];
+    YSRealmOperation *ope = [[self alloc] initWithConfiguration:configuration];
     [ope deleteObjectsWithObjectsBlock:objectsBlock];
 }
 
-+ (instancetype)deleteOperationWithRealmPath:(NSString*)realmPath
-                                       queue:(dispatch_queue_t)queue
-                                    inMemory:(BOOL)inMemory
-                                objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                  completion:(YSRealmOperationCompletion)completion
++ (instancetype)deleteOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                                           queue:(dispatch_queue_t)queue
+                                    objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                      completion:(YSRealmOperationCompletion)completion
 {
-    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(objectsBlock);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
-                                                   inMemory:inMemory];
+    YSRealmOperation *ope = [[self alloc] initWithConfiguration:configuration];
     [ope deleteObjectsWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
 
 #pragma mark Fetch
 
-+ (id)fetchOperationWithRealmPath:(NSString*)realmPath
-                         inMemory:(BOOL)inMemory
-                     objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
++ (id)fetchOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                         objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    NSParameterAssert(objectsBlock != NULL);
+    NSParameterAssert(objectsBlock);
     
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
-                                                   inMemory:inMemory];
+    YSRealmOperation *ope = [[self alloc] initWithConfiguration:configuration];
     return [ope fetchOperationWithObjectsBlock:objectsBlock];
 }
 
-+ (instancetype)fetchOperationWithRealmPath:(NSString*)realmPath
-                                      queue:(dispatch_queue_t)queue
-                                   inMemory:(BOOL)inMemory
-                               objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
-                                 completion:(YSRealmOperationFetchCompletion)completion
++ (instancetype)fetchOperationWithConfiguration:(RLMRealmConfiguration *)configuration
+                                          queue:(dispatch_queue_t)queue
+                                   objectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
+                                     completion:(YSRealmOperationFetchCompletion)completion
 {
-    NSParameterAssert(objectsBlock != NULL);
-    
-    YSRealmOperation *ope = [[self alloc] initWithRealmPath:realmPath
-                                                   inMemory:inMemory];
+    YSRealmOperation *ope = [[self alloc] initWithConfiguration:configuration];
     [ope fetchOperationWithQueue:queue objectsBlock:objectsBlock completion:completion];
     return ope;
 }
