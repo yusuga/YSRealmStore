@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B81062091A65086F00392DC6 /* RLMObject+YSRealmStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B81062081A65086F00392DC6 /* RLMObject+YSRealmStore.m */; };
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
 		B84FB8FF1A6F367C0014536E /* Mention.m in Sources */ = {isa = PBXBuildFile; fileRef = B84FB8FE1A6F367C0014536E /* Mention.m */; };
@@ -56,8 +55,6 @@
 		0AAE81F79A0CF1ECCDF8F05D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1334DBDE6AAA5F8549BE0C0E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		8E621EFFD268E78113302843 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		B81062071A65086F00392DC6 /* RLMObject+YSRealmStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMObject+YSRealmStore.h"; sourceTree = "<group>"; };
-		B81062081A65086F00392DC6 /* RLMObject+YSRealmStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMObject+YSRealmStore.m"; sourceTree = "<group>"; };
 		B8191B1D1A35275D0063FE1F /* YSRealmWriteTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmWriteTransaction.h; sourceTree = "<group>"; };
 		B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmWriteTransaction.m; sourceTree = "<group>"; };
 		B8191B201A352E500063FE1F /* WriteTransactionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriteTransactionTests.m; sourceTree = "<group>"; };
@@ -196,8 +193,6 @@
 		B8AE95BA1A5C3D6F0053B140 /* Category */ = {
 			isa = PBXGroup;
 			children = (
-				B81062071A65086F00392DC6 /* RLMObject+YSRealmStore.h */,
-				B81062081A65086F00392DC6 /* RLMObject+YSRealmStore.m */,
 				B8AE95C71A5C3EE70053B140 /* RLMArray+YSRealmStore.h */,
 				B8AE95C81A5C3EE70053B140 /* RLMArray+YSRealmStore.m */,
 				B8C35DEB1AB01D0F00C08D6F /* RLMResults+YSRealmStore.h */,
@@ -321,6 +316,7 @@
 				B8D545F619FD00F5008FA04F /* Frameworks */,
 				B8D545F719FD00F5008FA04F /* Resources */,
 				0F2CB92B5D733FD30CEF1F56 /* Copy Pods Resources */,
+				06B11AEE1B65EA8759E25425 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -408,6 +404,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		06B11AEE1B65EA8759E25425 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		0F2CB92B5D733FD30CEF1F56 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -447,7 +458,6 @@
 			files = (
 				B88DA10C1A5A103F00DF36D3 /* Tweet.m in Sources */,
 				B88DA11A1A5A10FF00DF36D3 /* TwitterRequest.m in Sources */,
-				B81062091A65086F00392DC6 /* RLMObject+YSRealmStore.m in Sources */,
 				B8AE95BD1A5C3E6B0053B140 /* NSDictionary+YSRealmStore.m in Sources */,
 				B84FB8FF1A6F367C0014536E /* Mention.m in Sources */,
 				B8AE95C01A5C3E7E0053B140 /* NSString+YSRealmStore.m in Sources */,

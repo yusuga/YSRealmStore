@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 Yu Sugawara. All rights reserved.
 //
 
-#import "RLMArray.h"
+#import <realm/RLMArray.h>
 
 @interface RLMArray (YSRealmStore)
 

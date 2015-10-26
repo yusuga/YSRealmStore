@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 Yu Sugawara. All rights reserved.
 //
 
-#import "RLMResults.h"
+#import <realm/RLMResults.h>
 
 @interface RLMResults (YSRealmStore)
 

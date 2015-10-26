@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "TwitterRealmStore.h"
-#import "RLMObject+YSRealmStore.h"
 #import "RLMArray+YSRealmStore.h"
 #import "RLMResults+YSRealmStore.h"
 #import "NSDictionary+YSRealmStore.h"
