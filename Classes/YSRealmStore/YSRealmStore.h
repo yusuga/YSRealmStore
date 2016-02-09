@@ -25,6 +25,7 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 @property (nonatomic, readonly) RLMRealmConfiguration *configuration;
 
 - (RLMRealm *)realm;
+- (RLMRealm *)realmWithError:(NSError **)errorPtr;
 - (BOOL)inMemory;
 - (BOOL)encrypted;
 + (dispatch_queue_t)queue;
@@ -63,6 +64,13 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock;
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion;
+
+///---------------
+/// @name File
+///---------------
+
+- (BOOL)addSkipBackupAttributeToRealmFile;
+- (void)removeRealmFileWithError:(NSError **)errorPtr;
 
 ///--------------
 /// @name Utility

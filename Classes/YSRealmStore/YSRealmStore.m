@@ -42,14 +42,19 @@
 
 - (RLMRealm *)realm
 {
+    return [self realmWithError:nil];
+}
+
+- (RLMRealm *)realmWithError:(NSError **)errorPtr
+{
     if ([self inMemory]) {
         if (!self.realmInMemory) {
             // Hold onto a strong reference
-            self.realmInMemory = [RLMRealm realmWithConfiguration:self.configuration error:nil];
+            self.realmInMemory = [RLMRealm realmWithConfiguration:self.configuration error:errorPtr];
         }
         return self.realmInMemory;
     } else {
-        return [RLMRealm realmWithConfiguration:self.configuration error:nil];
+        return [RLMRealm realmWithConfiguration:self.configuration error:errorPtr];
     }
 }
 
@@ -175,6 +180,37 @@
             {
                 if (completion) completion(self, operation, self.realm, results);
             }];
+}
+
+#pragma mark - File
+
+/*
+ *  Technical Q&A QA1719
+ *  How do I prevent files from being backed up to iCloud and iTunes?
+ *  Q:  My app has a number of files that need to be stored on the device permanently for my app to function properly offline. However, those files do not contain user data and don't need to be backed up. How can I prevent them from being backed up?
+ *  https://developer.apple.com/library/ios/qa/qa1719/_index.html
+ */
+- (BOOL)addSkipBackupAttributeToRealmFile
+{
+    NSURL *URL = [NSURL fileURLWithPath:self.configuration.path];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[URL path]]) {
+        NSLog(@"Warning, Realm file does not exist. path: %@", [URL path]);
+        return NO;
+    }
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue:[NSNumber numberWithBool: YES]
+                                  forKey:NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
+}
+
+- (void)removeRealmFileWithError:(NSError *__autoreleasing *)errorPtr
+{
+    [[NSFileManager defaultManager] removeItemAtPath:self.configuration.path
+                                               error:errorPtr];
 }
 
 #pragma mark - Utility

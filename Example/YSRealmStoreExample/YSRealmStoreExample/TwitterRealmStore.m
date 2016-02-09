@@ -25,7 +25,7 @@
                                         [Url class],
                                         [Mention class]];
         
-        configuration.schemaVersion = 12;
+        configuration.schemaVersion = 13;
         configuration.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion)
         {
             [TwitterRealmStore migrationWithMigration:migration
@@ -33,7 +33,6 @@
         };
         
         __instance =  [[self alloc] initWithConfiguration:configuration];
-        DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
 }
@@ -47,7 +46,6 @@
         configuration.inMemoryIdentifier = @"twitter";
         
         __instance =  [[self alloc] initWithConfiguration:configuration];
-        DDLogInfo(@"class = %@; path = %@", NSStringFromClass([self class]), [__instance realm].path);
     });
     return __instance;
 }

@@ -26,7 +26,6 @@ static NSString * const kCellIdentifier = @"Cell";
 - (void)awakeFromNib
 {
     self.limitOfRequestTweet = 5;
-    self.tweets = [[TwitterRealmStore sharedStore] fetchAllTweets];
 }
 
 - (void)viewDidLoad
@@ -34,6 +33,37 @@ static NSString * const kCellIdentifier = @"Cell";
     [super viewDidLoad];
     
     [self.tableView registerNib:[TweetCell nib] forCellReuseIdentifier:kCellIdentifier];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];    
+    
+    if (!self.tweets) {
+        // Initial
+        TwitterRealmStore *store = [TwitterRealmStore sharedStore];
+        
+        NSError *error = nil;
+        [store realmWithError:&error];
+        if (error) {
+            /*
+             *  なんらかの原因でrealmファイルが開けなくなっている。
+             *  この場合はrealmファイル自体を削除して再度作成させるしかなさそう。
+             */
+            NSLog(@"Realm initialization error: %@", error);
+#if 1
+            NSError *error = nil;
+            [store removeRealmFileWithError:&error];
+            NSAssert(!error, @"Fatal error: %@", error);
+            if (!error) NSLog(@"Remove realm file. path: %@", store.configuration.path);
+#endif
+        }
+#if 0
+        NSLog(@"add skip backup attribute, success: %d, path: %@", [store addSkipBackupAttributeToRealmFile], store.configuration.path);
+#endif
+        
+        self.tweets = [store fetchAllTweets];
+    }
 }
 
 #pragma mark - Table view data source
@@ -88,7 +118,7 @@ static NSString * const kCellIdentifier = @"Cell";
     [TwitterRequest resetState];
     
     __weak typeof(self) wself = self;
-    [[TwitterRealmStore sharedStore] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {        
+    [[TwitterRealmStore sharedStore] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [wself.tableView reloadData];
     }];
 }

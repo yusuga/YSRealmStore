@@ -1331,13 +1331,14 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        XCTAssertNotNil(weakTweet);
+        XCTAssertNotNil(tweet.realm);
+        
         @try {
-            XCTAssertNotNil(weakTweet);
-            XCTAssertNotNil(tweet.realm);
-            weakTweet.text = text;
+            NSLog(@"%s, text: %@", __func__, weakTweet.text);
         }
-        @catch (NSException *exception) {
-            DDLogInfo(@"%s; exception = %@;", __func__, exception);
+        @catch (...) {
+            DDLogInfo(@"%s, As expected.", __func__);
             [expectation fulfill];
         }
         @finally {
