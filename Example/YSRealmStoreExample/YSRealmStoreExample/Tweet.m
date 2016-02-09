@@ -16,7 +16,7 @@
  initWithValue:をOverrideする理由 (Realm 0.92.0)
  
  - NSNullは例外
- - RLMObject, RLMArrayの空オブジェクトの表現がオブジェクト。(@countが使用できないのでnilを使いたい)
+ - RLMObject, RLMArrayの空オブジェクトの表現がオブジェクト。(@countが使用できないのでnilを使いたい -> 0.96.0から@countが使えるようになった)
  
  APIやDBを自分で制御できる場合ならデフォルトの initWithValue: をそのまま使用した方が楽。
  (その場合はJSONにnull(NSNull)を含めない、下位互換を考慮した仕様変更をする)

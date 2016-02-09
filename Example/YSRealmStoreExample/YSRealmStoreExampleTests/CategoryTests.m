@@ -106,6 +106,7 @@
                 XCTAssertEqual([watchers count], 2);
             }
             
+#if 0
             // RLMObject does not have a primary key
             {
                 Entities *entities = tweet.entities;
@@ -130,9 +131,66 @@
                 XCTAssertNotEqual(url, fetchedURL); // Pointer is different.
                 XCTAssertTrue([urls ys_containsObject:fetchedURL]); // The row of the database matches.
             }
+#endif
         }];
     }];
 }
+
+#warning bug? -[RLMResults indexOfObject:] failed.
+#if 0
+- (void)testRLMArray2
+{
+    [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
+        if (!sync) return ;
+        
+        int64_t tweetID = 0;
+        NSUInteger userCount = 10;
+        
+        [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:tweetID userID:0]];
+        
+        [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            for (NSUInteger userID = 0; userID < userCount; userID++) {
+                User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
+                if (user == nil) {
+                    user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
+                }
+                [realm addObject:user];
+            }
+        }];
+        XCTAssertEqual([[User allObjectsInRealm:[store realm]] count], userCount);
+        
+        RLMRealm *realm = [store realm];
+        
+        Tweet *tweet = [Tweet objectInRealm:realm forPrimaryKey:@(tweetID)];
+        XCTAssertNotNil(tweet);
+        
+        RLMArray *watchers = tweet.watchers;
+        XCTAssertNotNil(watchers);
+        XCTAssertEqual([watchers count], 0);
+        
+        User *user0 = [User objectInRealm:realm forPrimaryKey:@(0)];
+        User *user1 = [User objectInRealm:realm forPrimaryKey:@(1)];
+        XCTAssertNotNil(user0);
+        XCTAssertNotNil(user0.realm);
+        XCTAssertNotNil(user1);
+        XCTAssertNotNil(user1.realm);
+        
+        XCTAssertFalse([watchers ys_containsObject:user0]);
+        
+        [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+            [watchers addObject:user0];
+        }];
+        
+        XCTAssertEqual([watchers count], 1);
+        XCTAssertTrue([watchers ys_containsObject:user0]);
+        XCTAssertFalse([watchers ys_containsObject:user1]);
+        
+        RLMResults *results = [watchers objectsWhere:@"id >= 0"];
+        NSLog(@"%zd, %zd", [watchers indexOfObject:user0], [watchers indexOfObject:user1]/* == NSNotFound */);
+        NSLog(@"%zd", [results indexOfObject:user1]); // crash :(
+    }];
+}
+#endif
 
 #pragma mark - RLMResults
 

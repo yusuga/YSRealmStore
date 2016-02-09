@@ -856,10 +856,12 @@
     }
 }
 
+/*
+ *  Supported! (Realm 0.96.0)
+ *  https://realm.io/news/realm-objc-swift-0.96.0/
+ */
 - (void)testCount
 {
-#warning Unsupported (Realm 0.92.0)
-#if 0
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
     [store addTweetsWithCount:1];
@@ -879,22 +881,16 @@
     }];
     
     XCTAssertEqual([[User allObjectsInRealm:[store realm]] count], watchersCount);
-#if 1
-    // failed: caught "Invalid predicate", "RLMArray predicates must contain the ANY modifier"
+    
     RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"watchers.@count = %d", watchersCount];
-#else
-    // failed: caught "Invalid column name", "Column name @count not found in table"
-    RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"ANY watchers.@count = %d", watchersCount];
-#endif
     XCTAssertEqual([tweets count], 1);
-#endif
 }
 
-- (void)testCount2
+/**
+ *  KeyPathでの@countはまだサポートされていない(Realm 0.96.0)
+ */
+- (void)testCountWithKeyPath
 {
-#warning Unsupported (Realm 0.92.0)
-    // failed: caught "Invalid column name", "Column name @count not found in table"
-#if 0
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     
     for (NSUInteger i = 0; i < 10; i++) {
@@ -905,22 +901,24 @@
     NSUInteger urlCount = 3;
     [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
     
-#if 1
-    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)]];
+    NSPredicate *predicate;
+    
+#if 0
+#warning Unsupported (Realm 0.96.0)
+    // failed: caught "Invalid column name", "Column name @count not found in table"
+    predicate = [NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)];
 #else
-    NSArray *predicates = @[[NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)],
-                            [NSPredicate predicateWithFormat:@"entities.urls.@count = 3"]];
+#warning workaround
+    // countは取れないがゼロかどうかはnil等で判定すれば取れる
+    predicate = [NSPredicate predicateWithFormat:@"entities.urls.url != nil"];
 #endif
     
-    for (NSPredicate *predicate in predicates) {
-        RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
-        XCTAssertEqual([results count], 1);
-        Tweet *tweet = [results firstObject];
-        XCTAssertEqual(tweet.id, id);
-        XCTAssertEqual(tweet.user.id, id);
-        XCTAssertEqual([tweet.entities.urls count], urlCount);
-    }
-#endif
+    RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
+    XCTAssertEqual([results count], 1);
+    Tweet *tweet = [results firstObject];
+    XCTAssertEqual(tweet.id, id);
+    XCTAssertEqual(tweet.user.id, id);
+    XCTAssertEqual([tweet.entities.urls count], urlCount);
 }
 
 - (void)testToManyWithBEGINSWITH

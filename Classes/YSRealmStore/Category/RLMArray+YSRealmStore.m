@@ -11,10 +11,15 @@
 
 @implementation RLMArray (YSRealmStore)
 
-- (BOOL)ys_containsObject:(RLMObject*)object
+- (BOOL)ys_containsObject:(RLMObject *)object
 {
     if (!object) return NO;
-    return [self indexOfObject:object] != NSNotFound;
+    
+    NSString *primaryKey = [[object class] primaryKey];
+    NSAssert(primaryKey.length, @"%s, Primary key is required. class: %@", __func__, NSStringFromClass([object class]));
+    if (!primaryKey.length) return NO;
+    
+    return [self indexOfObjectWhere:@"%K = %@", primaryKey, [object valueForKey:primaryKey]] != NSNotFound;
 }
 
 - (void)ys_uniqueAddObject:(RLMObject*)object
