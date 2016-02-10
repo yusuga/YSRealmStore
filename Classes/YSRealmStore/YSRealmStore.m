@@ -209,8 +209,27 @@
 
 - (void)removeRealmFileWithError:(NSError *__autoreleasing *)errorPtr
 {
-    [[NSFileManager defaultManager] removeItemAtPath:self.configuration.path
-                                               error:errorPtr];
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    /*
+     *  Auxiliary Realm Files
+     *  https://realm.io/docs/objc/latest/#auxiliary-realm-files
+     */
+    NSArray<NSString *> *realmFilePaths = @[self.configuration.path,
+                                            [self.configuration.path stringByAppendingPathExtension:@"lock"],
+                                            [self.configuration.path stringByAppendingPathExtension:@"log"],
+                                            [self.configuration.path stringByAppendingPathExtension:@"log_a"],
+                                            [self.configuration.path stringByAppendingPathExtension:@"log_b"],
+                                            [self.configuration.path stringByAppendingPathExtension:@"note"]];
+    
+    for (NSString *path in realmFilePaths) {
+        if ([manager fileExistsAtPath:path]) {
+            [manager removeItemAtPath:path error:errorPtr];
+            if (errorPtr && *errorPtr) {
+                break;
+            }
+        }
+    }    
 }
 
 #pragma mark - Utility
