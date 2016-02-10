@@ -72,13 +72,19 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (BOOL)addSkipBackupAttributeToRealmFile;
 - (void)removeRealmFileWithError:(NSError **)errorPtr;
 
+///-----------------
+/// @name Encryption
+///-----------------
+
++ (NSString *)defaultKeychainIdentifier;
++ (NSData *)defaultEncryptionKey;
++ (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier;
+- (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier;
+
 ///--------------
 /// @name Utility
 ///--------------
 
 + (NSString*)realmPathWithFileName:(NSString *)fileName;
-
-+ (NSData *)defaultEncryptionKey;
-+ (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier;
 
 @end

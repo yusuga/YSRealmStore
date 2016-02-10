@@ -26,7 +26,13 @@
 - (void)setUp
 {
     [super setUp];
+    
     [[TwitterRealmStore sharedStore] deleteAllObjects];
+}
+
+- (void)tearDown
+{    
+    [super tearDown];
 }
 
 #pragma mark - RLMObject

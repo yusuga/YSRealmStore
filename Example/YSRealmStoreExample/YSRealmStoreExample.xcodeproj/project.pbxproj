@@ -38,6 +38,7 @@
 		B8D5462819FD029B008FA04F /* YSRealmOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5462719FD029B008FA04F /* YSRealmOperation.m */; };
 		B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */; };
 		B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464C19FDCEC9008FA04F /* OperationTests.m */; };
+		B8F9B8A91C6B08D200AE54C5 /* StoreUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8F9B8A81C6B08D200AE54C5 /* StoreUtilityTests.m */; };
 		CD61284CB44F3AE3BFE86B01 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAE81F79A0CF1ECCDF8F05D /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8D545F819FD00F5008FA04F;
 			remoteInfo = YSRealmExample;
+		};
+		B8F9B8AB1C6B08D200AE54C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8D545F119FD00F5008FA04F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8D545F819FD00F5008FA04F;
+			remoteInfo = YSRealmStoreExample;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -112,6 +120,9 @@
 		B8D5462719FD029B008FA04F /* YSRealmOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmOperation.m; sourceTree = "<group>"; };
 		B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreRealmTests.m; sourceTree = "<group>"; };
 		B8D5464C19FDCEC9008FA04F /* OperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OperationTests.m; sourceTree = "<group>"; };
+		B8F9B8A61C6B08D200AE54C5 /* StoreUtilityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StoreUtilityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8F9B8A81C6B08D200AE54C5 /* StoreUtilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StoreUtilityTests.m; sourceTree = "<group>"; };
+		B8F9B8AA1C6B08D200AE54C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +135,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B8D5460F19FD00F6008FA04F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8F9B8A31C6B08D200AE54C5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -216,6 +234,7 @@
 				B8D5462219FD0281008FA04F /* YSRealmStore */,
 				B88DA1011A5A102000DF36D3 /* TwitterStore */,
 				B8D5461519FD00F6008FA04F /* YSRealmStoreExampleTests */,
+				B8F9B8A71C6B08D200AE54C5 /* StoreUtilityTests */,
 				B8D545FA19FD00F5008FA04F /* Products */,
 				550B28108FDB4CC39DB022D0 /* Frameworks */,
 				DA63751ED27EAB693E5C9480 /* Pods */,
@@ -227,6 +246,7 @@
 			children = (
 				B8D545F919FD00F5008FA04F /* YSRealmStoreExample.app */,
 				B8D5461219FD00F6008FA04F /* YSRealmStoreExampleTests.xctest */,
+				B8F9B8A61C6B08D200AE54C5 /* StoreUtilityTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -295,6 +315,15 @@
 			path = ../../Classes/YSRealmStore;
 			sourceTree = "<group>";
 		};
+		B8F9B8A71C6B08D200AE54C5 /* StoreUtilityTests */ = {
+			isa = PBXGroup;
+			children = (
+				B8F9B8A81C6B08D200AE54C5 /* StoreUtilityTests.m */,
+				B8F9B8AA1C6B08D200AE54C5 /* Info.plist */,
+			);
+			path = StoreUtilityTests;
+			sourceTree = "<group>";
+		};
 		DA63751ED27EAB693E5C9480 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -345,6 +374,24 @@
 			productReference = B8D5461219FD00F6008FA04F /* YSRealmStoreExampleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		B8F9B8A51C6B08D200AE54C5 /* StoreUtilityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8F9B8AF1C6B08D200AE54C5 /* Build configuration list for PBXNativeTarget "StoreUtilityTests" */;
+			buildPhases = (
+				B8F9B8A21C6B08D200AE54C5 /* Sources */,
+				B8F9B8A31C6B08D200AE54C5 /* Frameworks */,
+				B8F9B8A41C6B08D200AE54C5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B8F9B8AC1C6B08D200AE54C5 /* PBXTargetDependency */,
+			);
+			name = StoreUtilityTests;
+			productName = StoreUtilityTests;
+			productReference = B8F9B8A61C6B08D200AE54C5 /* StoreUtilityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -359,6 +406,10 @@
 					};
 					B8D5461119FD00F6008FA04F = {
 						CreatedOnToolsVersion = 6.1;
+						TestTargetID = B8D545F819FD00F5008FA04F;
+					};
+					B8F9B8A51C6B08D200AE54C5 = {
+						CreatedOnToolsVersion = 7.2;
 						TestTargetID = B8D545F819FD00F5008FA04F;
 					};
 				};
@@ -378,6 +429,7 @@
 			targets = (
 				B8D545F819FD00F5008FA04F /* YSRealmStoreExample */,
 				B8D5461119FD00F6008FA04F /* YSRealmStoreExampleTests */,
+				B8F9B8A51C6B08D200AE54C5 /* StoreUtilityTests */,
 			);
 		};
 /* End PBXProject section */
@@ -395,6 +447,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B8D5461019FD00F6008FA04F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8F9B8A41C6B08D200AE54C5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -493,6 +552,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B8F9B8A21C6B08D200AE54C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8F9B8A91C6B08D200AE54C5 /* StoreUtilityTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -500,6 +567,11 @@
 			isa = PBXTargetDependency;
 			target = B8D545F819FD00F5008FA04F /* YSRealmStoreExample */;
 			targetProxy = B8D5461319FD00F6008FA04F /* PBXContainerItemProxy */;
+		};
+		B8F9B8AC1C6B08D200AE54C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8D545F819FD00F5008FA04F /* YSRealmStoreExample */;
+			targetProxy = B8F9B8AB1C6B08D200AE54C5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -674,6 +746,47 @@
 			};
 			name = Release;
 		};
+		B8F9B8AD1C6B08D200AE54C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/Pods/Headers/**",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				INFOPLIST_FILE = StoreUtilityTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yusuga.StoreUtilityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YSRealmStoreExample.app/YSRealmStoreExample";
+			};
+			name = Debug;
+		};
+		B8F9B8AE1C6B08D200AE54C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/Pods/Headers/**",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				INFOPLIST_FILE = StoreUtilityTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yusuga.StoreUtilityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YSRealmStoreExample.app/YSRealmStoreExample";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -703,6 +816,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		B8F9B8AF1C6B08D200AE54C5 /* Build configuration list for PBXNativeTarget "StoreUtilityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8F9B8AD1C6B08D200AE54C5 /* Debug */,
+				B8F9B8AE1C6B08D200AE54C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

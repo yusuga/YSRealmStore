@@ -43,7 +43,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
-        configuration.inMemoryIdentifier = @"twitter";
+        configuration.inMemoryIdentifier = @"twitter-in-memory";
         
         __instance =  [[self alloc] initWithConfiguration:configuration];
     });

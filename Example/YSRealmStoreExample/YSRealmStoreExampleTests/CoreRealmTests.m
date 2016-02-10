@@ -23,6 +23,11 @@
     [[TwitterRealmStore sharedStore] deleteAllObjects];
 }
 
+- (void)tearDown
+{    
+    [super tearDown];
+}
+
 #pragma mark - Init
 
 - (void)testInit
@@ -437,7 +442,7 @@
     XCTAssertEqual([[Url allObjectsInRealm:realm] count], 0);
     
     [realm cancelWriteTransaction];
-
+    
     XCTAssertGreaterThan([[Tweet allObjectsInRealm:realm] count], 0);
     XCTAssertGreaterThan([[User allObjectsInRealm:realm] count], 0);
     XCTAssertGreaterThan([[Entities allObjectsInRealm:realm] count], 0);
@@ -560,7 +565,7 @@
         // Memo: "RLMArray predicates must contain the ANY modifier"
         RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"ANY watchers.id = %lld", i];
         XCTAssertEqual([tweets count], count - i);
-    }    
+    }
 }
 
 - (void)testANYWithPrimitiveValues
@@ -932,9 +937,9 @@
     int64_t id = INT64_MAX;
     NSUInteger urlCount = 3;
     [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
-
+    
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH 'h'"];
-
+    
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
@@ -1354,20 +1359,24 @@
 - (void)testRefreshWithAdd
 {
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    [store realm].autorefresh = NO;
+    RLMRealm *realm = [store realm];
+    realm.autorefresh = NO;
     
     XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
         RLMRealm *realm = [store realm];
+        
         [realm beginWriteTransaction];
         [realm addOrUpdateObject:tweet];
         [realm commitWriteTransaction];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             RLMRealm *realm = [store realm];
             XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 0);
             [realm refresh];
             XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 1);
+            
             [expectation fulfill];
         });
     });
@@ -1375,7 +1384,7 @@
         XCTAssertNil(error, @"error: %@", error);
     }];
     
-    [store realm].autorefresh = YES;
+    realm.autorefresh = YES;
 }
 
 - (void)testRefreshWithUpdate

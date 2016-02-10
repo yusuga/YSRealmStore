@@ -23,6 +23,11 @@
     [[TwitterRealmStore sharedStore] deleteAllObjects];
 }
 
+- (void)tearDown
+{    
+    [super tearDown];
+}
+
 #pragma mark - State
 
 - (void)testStateInWriteTransaction

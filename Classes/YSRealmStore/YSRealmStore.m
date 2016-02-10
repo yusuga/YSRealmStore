@@ -232,26 +232,17 @@
     }    
 }
 
-#pragma mark - Utility
+#pragma mark - Encryption
 
-+ (NSString*)realmPathWithFileName:(NSString*)fileName
+
++ (NSString *)defaultKeychainIdentifier
 {
-    NSParameterAssert(fileName);
-    
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                         NSUserDomainMask,
-                                                         YES)[0];
-    path = [path stringByAppendingPathComponent:fileName];
-    
-    if ([path pathExtension].length == 0) {
-        path = [path stringByAppendingPathExtension:@"realm"];
-    }
-    return path;
+    return [NSBundle mainBundle].bundleIdentifier;
 }
 
 + (NSData *)defaultEncryptionKey
 {
-    return [self encryptionKeyForKeychainIdentifier:[NSBundle mainBundle].bundleIdentifier];
+    return [self encryptionKeyForKeychainIdentifier:[self defaultKeychainIdentifier]];
 }
 
 /**
@@ -292,6 +283,46 @@
     NSAssert(status == errSecSuccess, @"Failed to insert new key in the keychain");
     
     return keyData;
+}
+
+- (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier
+{
+    NSParameterAssert(identifier.length);
+    if (!identifier.length) return NO;
+    
+    // Identifier for our keychain entry - should be unique for your application
+    NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)identifier.UTF8String
+                                               length:strlen(identifier.UTF8String) + 1
+                                         freeWhenDone:NO];
+    
+    NSDictionary *query = @{(__bridge id)kSecClass: (__bridge id)kSecClassKey,
+                            (__bridge id)kSecAttrApplicationTag: tag,
+                            (__bridge id)kSecAttrKeySizeInBits: @512,
+                            (__bridge id)kSecReturnData: @YES};
+    
+    OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
+    if (status != errSecSuccess && status != errSecItemNotFound) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+#pragma mark - Utility
+
++ (NSString*)realmPathWithFileName:(NSString*)fileName
+{
+    NSParameterAssert(fileName);
+    
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask,
+                                                         YES)[0];
+    path = [path stringByAppendingPathComponent:fileName];
+    
+    if ([path pathExtension].length == 0) {
+        path = [path stringByAppendingPathExtension:@"realm"];
+    }
+    return path;
 }
 
 @end
