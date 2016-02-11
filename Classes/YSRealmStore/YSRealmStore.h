@@ -65,12 +65,12 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion;
 
-///---------------
+///-----------
 /// @name File
-///---------------
+///-----------
 
-- (BOOL)addSkipBackupAttributeToRealmFile;
-- (void)removeRealmFileWithError:(NSError **)errorPtr;
+- (BOOL)addSkipBackupAttributeToRealmFilesWithError:(NSError **)errorPtr;
+- (void)removeRealmFilesWithError:(NSError **)errorPtr;
 
 ///-----------------
 /// @name Encryption

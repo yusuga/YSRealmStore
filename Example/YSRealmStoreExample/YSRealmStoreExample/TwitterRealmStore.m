@@ -32,6 +32,11 @@
                                      oldSchemaVersion:oldSchemaVersion];
         };
         
+#if 1
+        configuration.encryptionKey = [self defaultEncryptionKey];
+        NSLog(@"encryptionKey: %@", [configuration.encryptionKey.description stringByReplacingOccurrencesOfString:@" " withString:@""]);
+#endif
+        
         __instance =  [[self alloc] initWithConfiguration:configuration];
     });
     return __instance;

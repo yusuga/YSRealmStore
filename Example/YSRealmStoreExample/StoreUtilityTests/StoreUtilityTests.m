@@ -41,14 +41,14 @@
         
         error = nil;
         
-        [store removeRealmFileWithError:&error];
+        [store removeRealmFilesWithError:&error];
         
         XCTAssertNil(error);
         
         XCTAssertFalse([fileManager fileExistsAtPath:realmPath]);
         
         error = nil;
-        [store removeRealmFileWithError:&error];
+        [store removeRealmFilesWithError:&error];
         XCTAssertNil(error);
     }
     
@@ -73,7 +73,7 @@
     
     {
         NSError *error = nil;
-        [store removeRealmFileWithError:&error];
+        [store removeRealmFilesWithError:&error];
         XCTAssertNil(error);
     }
     
@@ -100,6 +100,7 @@
     newConfiguration.encryptionKey = newKey;
     YSRealmStore *newStore = [[YSRealmStore alloc] initWithConfiguration:newConfiguration];
     
+    // 旧storeではencryptionKeyが古いのでrealmファイルにアクセスできない
     {
         NSError *error = nil;
         @autoreleasepool {
@@ -108,6 +109,7 @@
         XCTAssertNil(error);
     }
     
+    // 新storeでアクセスできることを確認
     {
         NSError *error = nil;
         @autoreleasepool {
@@ -118,13 +120,7 @@
     
     {
         NSError *error = nil;
-        [newStore removeRealmFileWithError:&error];
-        XCTAssertNil(error);
-    }
-    
-    {
-        NSError *error = nil;
-        [newStore realmWithError:&error];
+        [newStore removeRealmFilesWithError:&error]; // clean up
         XCTAssertNil(error);
     }
 }

@@ -24,12 +24,12 @@
         switch (count++) {
             case 0:
                 XCTAssertFalse(store.inMemory);
-                XCTAssertFalse(store.encrypted);
+                XCTAssertTrue(store.encrypted);
                 XCTAssertTrue(sync);
                 break;
             case 1:
                 XCTAssertFalse(store.inMemory);
-                XCTAssertFalse(store.encrypted);
+                XCTAssertTrue(store.encrypted);
                 XCTAssertFalse(sync);
                 break;
             case 2:

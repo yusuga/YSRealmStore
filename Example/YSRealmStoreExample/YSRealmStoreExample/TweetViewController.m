@@ -50,18 +50,26 @@ static NSString * const kCellIdentifier = @"Cell";
         if (error) {
             /*
              *  なんらかの原因でrealmファイルが開けなくなっている。
+             *  - EncryptionKeyが変更された
+             *  - 暗号化していないrealmから暗号化に変更した
+             *
              *  この場合はrealmファイル自体を削除して再度作成させるしかなさそう。
              */
             NSLog(@"Realm initialization error: %@", error);
 #if 1
             NSError *error = nil;
-            [store removeRealmFileWithError:&error];
+            [store removeRealmFilesWithError:&error];
             NSAssert(!error, @"Fatal error: %@", error);
             if (!error) NSLog(@"Remove realm file. path: %@", store.configuration.path);
 #endif
         }
 #if 0
-        NSLog(@"add skip backup attribute, success: %d, path: %@", [store addSkipBackupAttributeToRealmFile], store.configuration.path);
+        /*
+         *  do not backupを追加する
+         */
+        error = nil;
+        [store addSkipBackupAttributeToRealmFilesWithError:&error];
+        NSLog(@"add skip backup attribute, error: %@, path: %@", error, store.configuration.path);
 #endif
         
         self.tweets = [store fetchAllTweets];

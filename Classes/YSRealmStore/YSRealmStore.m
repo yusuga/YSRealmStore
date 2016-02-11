@@ -190,46 +190,51 @@
  *  Q:  My app has a number of files that need to be stored on the device permanently for my app to function properly offline. However, those files do not contain user data and don't need to be backed up. How can I prevent them from being backed up?
  *  https://developer.apple.com/library/ios/qa/qa1719/_index.html
  */
-- (BOOL)addSkipBackupAttributeToRealmFile
-{
-    NSURL *URL = [NSURL fileURLWithPath:self.configuration.path];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[URL path]]) {
-        NSLog(@"Warning, Realm file does not exist. path: %@", [URL path]);
-        return NO;
-    }
-    
-    NSError *error = nil;
-    BOOL success = [URL setResourceValue:[NSNumber numberWithBool: YES]
-                                  forKey:NSURLIsExcludedFromBackupKey error: &error];
-    if(!success){
-        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
-    }
-    return success;
-}
-
-- (void)removeRealmFileWithError:(NSError *__autoreleasing *)errorPtr
+- (BOOL)addSkipBackupAttributeToRealmFilesWithError:(NSError **)errorPtr
 {
     NSFileManager *manager = [NSFileManager defaultManager];
     
-    /*
-     *  Auxiliary Realm Files
-     *  https://realm.io/docs/objc/latest/#auxiliary-realm-files
-     */
-    NSArray<NSString *> *realmFilePaths = @[self.configuration.path,
-                                            [self.configuration.path stringByAppendingPathExtension:@"lock"],
-                                            [self.configuration.path stringByAppendingPathExtension:@"log"],
-                                            [self.configuration.path stringByAppendingPathExtension:@"log_a"],
-                                            [self.configuration.path stringByAppendingPathExtension:@"log_b"],
-                                            [self.configuration.path stringByAppendingPathExtension:@"note"]];
-    
-    for (NSString *path in realmFilePaths) {
+    for (NSString *path in [self realmFilePaths]) {
         if ([manager fileExistsAtPath:path]) {
-            [manager removeItemAtPath:path error:errorPtr];
-            if (errorPtr && *errorPtr) {
+            NSURL *URL = [NSURL fileURLWithPath:path];
+            
+            if (![URL setResourceValue:@YES
+                                forKey:NSURLIsExcludedFromBackupKey
+                                 error:errorPtr])
+            {
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
+}
+
+- (void)removeRealmFilesWithError:(NSError *__autoreleasing *)errorPtr
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    for (NSString *path in [self realmFilePaths]) {
+        if ([manager fileExistsAtPath:path]) {
+            if (![manager removeItemAtPath:path error:errorPtr]) {
                 break;
             }
         }
-    }    
+    }
+}
+
+/**
+ *  Auxiliary Realm Files
+ *  https://realm.io/docs/objc/latest/#auxiliary-realm-files
+ */
+- (NSArray<NSString *> *)realmFilePaths
+{
+    return @[self.configuration.path,
+             [self.configuration.path stringByAppendingPathExtension:@"lock"],
+             [self.configuration.path stringByAppendingPathExtension:@"log"],
+             [self.configuration.path stringByAppendingPathExtension:@"log_a"],
+             [self.configuration.path stringByAppendingPathExtension:@"log_b"],
+             [self.configuration.path stringByAppendingPathExtension:@"note"]];
 }
 
 #pragma mark - Encryption
