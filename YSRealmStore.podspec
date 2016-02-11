@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'YSRealmStore'
-  s.version = '0.9.2'
+  s.version = '0.9.3'
   s.summary = 'Simple wrapper for Realm Cocoa.'
   s.homepage = 'https://github.com/yusuga/YSRealmStore'
   s.license = 'MIT'
