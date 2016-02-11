@@ -61,8 +61,9 @@
 - (void)testCreateAndRemoveEncriptionKey
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *keychainID = NSStringFromSelector(_cmd);
     
-    NSData *key = [TwitterRealmStore defaultEncryptionKey];
+    NSData *key = [TwitterRealmStore encryptionKeyForKeychainIdentifier:keychainID];
     XCTAssertNotNil(key);
     XCTAssertEqual(key.length, 64);
     
@@ -89,7 +90,7 @@
         XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.path]);
     }
     
-    XCTAssertTrue([[TwitterRealmStore sharedStore] removeEncryptionKeyWithKeychainIdentifier:[TwitterRealmStore defaultKeychainIdentifier]]);
+    XCTAssertTrue([TwitterRealmStore removeEncryptionKeyWithKeychainIdentifier:keychainID]);
     
     NSData *newKey = [TwitterRealmStore defaultEncryptionKey];
     XCTAssertNotEqualObjects(configuration.encryptionKey, newKey);

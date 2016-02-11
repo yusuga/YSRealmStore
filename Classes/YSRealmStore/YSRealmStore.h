@@ -79,7 +79,8 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 + (NSString *)defaultKeychainIdentifier;
 + (NSData *)defaultEncryptionKey;
 + (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier;
-- (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier;
++ (BOOL)removeDefaultEncryptionKey;
++ (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier;
 
 ///--------------
 /// @name Utility

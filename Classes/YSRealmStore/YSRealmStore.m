@@ -239,7 +239,6 @@
 
 #pragma mark - Encryption
 
-
 + (NSString *)defaultKeychainIdentifier
 {
     return [NSBundle mainBundle].bundleIdentifier;
@@ -290,7 +289,12 @@
     return keyData;
 }
 
-- (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier
++ (BOOL)removeDefaultEncryptionKey
+{
+    return [self removeEncryptionKeyWithKeychainIdentifier:[self defaultKeychainIdentifier]];
+}
+
++ (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier
 {
     NSParameterAssert(identifier.length);
     if (!identifier.length) return NO;
