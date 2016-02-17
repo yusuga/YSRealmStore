@@ -61,7 +61,7 @@
     Tweet *addedTweet = [[Tweet allObjectsInRealm:[store realm]] firstObject];
     XCTAssertNotNil(addedTweet);
     
-    XCTAssertEqual(addedTweet.id, INT64_MAX);
+    XCTAssertEqualObjects(addedTweet.id, @(INT64_MAX));
     XCTAssertGreaterThan(addedTweet.text.length, 0);
     
     User *user = addedTweet.user;
@@ -91,7 +91,7 @@
     RLMResults *tweets = [[Tweet allObjectsInRealm:[store realm]] sortedResultsUsingProperty:@"id" ascending:YES];
     for (NSUInteger i = 0; i < [tweets count]; i++) {
         Tweet *tweet = tweets[i];
-        XCTAssertEqual(tweet.id, i);
+        XCTAssertEqualObjects(tweet.id, @(i));
         XCTAssertEqual(tweet.user.id, i);
     }
 }
@@ -105,7 +105,7 @@
     Tweet *addedTweet = [[Tweet allObjectsInRealm:[store realm]] firstObject];
     XCTAssertNotNil(addedTweet);
     
-    XCTAssertEqual(addedTweet.id, INT64_MAX);
+    XCTAssertEqualObjects(addedTweet.id, @(INT64_MAX));
     XCTAssertGreaterThan(addedTweet.text.length, 0);
     
     User *user = addedTweet.user;
@@ -126,7 +126,7 @@
     Tweet *addedTweet = [[Tweet allObjectsInRealm:[store realm]] firstObject];
     XCTAssertNotNil(addedTweet);
     
-    XCTAssertEqual(addedTweet.id, 0);
+    XCTAssertEqualObjects(addedTweet.id, nil);
     XCTAssertEqual(addedTweet.text.length, 0);
     
     User *user = addedTweet.user;
@@ -147,7 +147,7 @@
     Tweet *addedTweet = [[Tweet allObjectsInRealm:[store realm]] firstObject];
     XCTAssertNotNil(addedTweet);
     
-    XCTAssertEqual(addedTweet.id, 0);
+    XCTAssertEqualObjects(addedTweet.id, nil);
     XCTAssertEqual(addedTweet.text.length, 0);
     
     User *user = addedTweet.user;
@@ -235,7 +235,7 @@
     XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], 1);
     Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
     XCTAssertEqualObjects(tweet, addedTweet);
-    XCTAssertEqual(addedTweet.id, INT64_MAX);
+    XCTAssertEqualObjects(addedTweet.id, @(INT64_MAX));
     XCTAssertEqualObjects(addedTweet.text, @"");
     XCTAssertNil(addedTweet.user);
     XCTAssertNil(addedTweet.entities);
@@ -415,7 +415,7 @@
     
     [realm cancelWriteTransaction];
     
-    XCTAssertEqual(addedTweet.id, [tweetJsonObj[@"id"] longLongValue]);
+    XCTAssertEqualObjects(addedTweet.id, tweetJsonObj[@"id"]);
     XCTAssertEqualObjects(addedTweet.text, tweetJsonObj[@"text"]);
     XCTAssertNotNil(addedTweet.user);
     XCTAssertNotNil(addedTweet.entities);
@@ -468,7 +468,7 @@
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"id = %lld", INT64_MAX]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, INT64_MAX);
+    XCTAssertEqualObjects(tweet.id, @(INT64_MAX));
 }
 
 - (void)testPredicateWithUint64Max
@@ -481,7 +481,9 @@
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"id = %llu", UINT64_MAX]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, UINT64_MAX);
+    
+#warning Unsupported UINT64_MAX. realm-cocoa (0.97.1)
+    XCTAssertNotEqualObjects(tweet.id, @(UINT64_MAX));
 }
 
 - (void)testFetchTweetWithUserID
@@ -490,13 +492,13 @@
     
     [store addTweetsWithCount:10];
     
-    int64_t id = 5;
+    int64_t identifier = 5;
     
-    RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"user.id = %@", @(id)]];
+    RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"user.id = %@", @(identifier)]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, id);
-    XCTAssertEqual(tweet.user.id, id);
+    XCTAssertEqualObjects(tweet.id, @(identifier));
+    XCTAssertEqual(tweet.user.id, identifier);
 }
 
 - (void)testFetchTweetWithUser
@@ -505,13 +507,13 @@
     
     [store addTweetsWithCount:10];
     
-    int64_t id = 5;
+    int64_t identifier = 5;
     
-    RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"user = %@", [User objectInRealm:[store realm] forPrimaryKey:@(id)]]];
+    RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"user = %@", [User objectInRealm:[store realm] forPrimaryKey:@(identifier)]]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, id);
-    XCTAssertEqual(tweet.user.id, id);
+    XCTAssertEqualObjects(tweet.id, @(identifier));
+    XCTAssertEqual(tweet.user.id, identifier);
 }
 
 - (void)testNil
@@ -529,13 +531,13 @@
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"entities = nil"]];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, 0);
+    XCTAssertEqualObjects(tweet.id, @(0));
     XCTAssertNil(tweet.entities);
     
     results = [Tweet objectsInRealm:[store realm] withPredicate:[NSPredicate predicateWithFormat:@"entities != nil"]];
     XCTAssertEqual([results count], 1);
     tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, 1);
+    XCTAssertEqualObjects(tweet.id, @(1));
     XCTAssertNotNil(tweet.entities);
 }
 
@@ -549,7 +551,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (Tweet *tweet in [[Tweet allObjectsInRealm:realm] sortedResultsUsingProperty:@"id" ascending:YES]) {
-            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+            for (NSUInteger userID = 0; userID <= tweet.id.longLongValue; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
                     user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
@@ -578,7 +580,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (Tweet *tweet in [[Tweet allObjectsInRealm:realm] sortedResultsUsingProperty:@"id" ascending:YES]) {
-            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+            for (NSUInteger userID = 0; userID <= tweet.id.longLongValue; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
                     user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
@@ -675,7 +677,7 @@
             XCTAssertEqual([tweets count], 2);
             for (Tweet *tweet in tweets) {
                 NSArray *ids = @[@(tweetID2), @(tweetID3)];
-                XCTAssertTrue([ids containsObject:@(tweet.id)]);
+                XCTAssertTrue([ids containsObject:tweet.id]);
             }
         }
     }
@@ -691,7 +693,7 @@
             }
             XCTAssertEqual([tweets count], 1);
             Tweet *tweet = [tweets firstObject];
-            XCTAssertEqual(tweet.id, tweetID3);
+            XCTAssertEqualObjects(tweet.id, @(tweetID3));
         }
     }
     
@@ -707,7 +709,7 @@
             XCTAssertEqual([tweets count], 2);
             for (Tweet *tweet in tweets) {
                 NSArray *ids = @[@(tweetID2), @(tweetID3)];
-                XCTAssertTrue([ids containsObject:@(tweet.id)]);
+                XCTAssertTrue([ids containsObject:tweet.id]);
             }
         }
     }
@@ -746,7 +748,7 @@
             }
             XCTAssertEqual([tweets count], 1);
             Tweet *tweet = [tweets firstObject];
-            XCTAssertEqual(tweet.id, tweetID3);
+            XCTAssertEqualObjects(tweet.id, @(tweetID3));
         }
     }
     
@@ -773,7 +775,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (Tweet *tweet in [[Tweet allObjectsInRealm:realm] sortedResultsUsingProperty:@"id" ascending:YES]) {
-            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+            for (NSUInteger userID = 0; userID <= tweet.id.longLongValue; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
                     user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
@@ -801,7 +803,7 @@
     
     [self realmWriteTransaction:^(RLMRealm *realm) {
         for (Tweet *tweet in [[Tweet allObjectsInRealm:realm] sortedResultsUsingProperty:@"id" ascending:YES]) {
-            for (NSUInteger userID = 0; userID <= tweet.id; userID++) {
+            for (NSUInteger userID = 0; userID <= tweet.id.longLongValue; userID++) {
                 User *user = [User objectInRealm:realm forPrimaryKey:@(userID)];
                 if (user == nil) {
                     user = [[User alloc] initWithValue:[JsonGenerator userWithID:userID]];
@@ -902,9 +904,9 @@
         [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:i userID:i urlCount:0]];
     }
     
-    int64_t id = INT64_MAX;
+    int64_t identifier = INT64_MAX;
     NSUInteger urlCount = 3;
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:identifier userID:identifier urlCount:urlCount]];
     
     NSPredicate *predicate;
     
@@ -921,8 +923,8 @@
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, id);
-    XCTAssertEqual(tweet.user.id, id);
+    XCTAssertEqualObjects(tweet.id, @(identifier));
+    XCTAssertEqual(tweet.user.id, identifier);
     XCTAssertEqual([tweet.entities.urls count], urlCount);
 }
 
@@ -934,17 +936,17 @@
         [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:i userID:i urlCount:0]];
     }
     
-    int64_t id = INT64_MAX;
+    int64_t identifier = INT64_MAX;
     NSUInteger urlCount = 3;
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:id userID:id urlCount:urlCount]];
+    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:identifier userID:identifier urlCount:urlCount]];
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH 'h'"];
     
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
     XCTAssertEqual([results count], 1);
     Tweet *tweet = [results firstObject];
-    XCTAssertEqual(tweet.id, id);
-    XCTAssertEqual(tweet.user.id, id);
+    XCTAssertEqualObjects(tweet.id, @(identifier));
+    XCTAssertEqual(tweet.user.id, identifier);
     XCTAssertEqual([tweet.entities.urls count], urlCount);
 }
 
@@ -959,7 +961,7 @@
     RLMResults *results = [Tweet allObjectsInRealm:[store realm]];
     Tweet *tweet = [results firstObject];
     XCTAssertEqual([results count], 1);
-    XCTAssertEqual(tweet.id, INT64_MAX);
+    XCTAssertEqualObjects(tweet.id, @(INT64_MAX));
     
     [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
         [realm deleteObjects:[Tweet allObjectsInRealm:realm]];
@@ -967,27 +969,6 @@
     
     XCTAssertEqual([results count], 0);
     XCTAssertTrue(tweet.invalidated);
-}
-
-- (void)testDuplicateIndexedObject
-{
-    TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithID:1]];
-    [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithID:2]];
-    
-    XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 2);
-    
-    NSString *idString = @(INT64_MAX).stringValue;
-    
-    [store writeTransactionWithWriteBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        for (Tweet *tweet in [Tweet allObjectsInRealm:[store realm]]) {
-            tweet.idString = idString;
-        }
-    }];
-    
-    RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"idString = %@", idString];
-    XCTAssertEqual([tweets count], 2);
 }
 
 - (void)testLinkingObjects
@@ -1390,7 +1371,7 @@
 - (void)testRefreshWithUpdate
 {
     Tweet *tweet = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
-    int64_t tweetID = tweet.id;
+    int64_t tweetID = tweet.id.longLongValue;
     
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     [store realm].autorefresh = NO;
@@ -1460,8 +1441,8 @@
     [realm addOrUpdateObject:tweet];
     [realm commitWriteTransaction];
     
-    int64_t twID = tweet.id;
-    XCTAssertEqual([Tweet objectInRealm:realm forPrimaryKey:@(twID)].id, tweet.id);
+    int64_t twID = tweet.id.longLongValue;
+    XCTAssertEqualObjects([Tweet objectInRealm:realm forPrimaryKey:@(twID)].id, tweet.id);
 }
 
 - (void)realmWriteTransaction:(void(^)(RLMRealm *realm))transaction

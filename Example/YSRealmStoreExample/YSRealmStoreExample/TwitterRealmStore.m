@@ -25,7 +25,7 @@
                                         [Url class],
                                         [Mention class]];
         
-        configuration.schemaVersion = 13;
+        configuration.schemaVersion = 14;
         configuration.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion)
         {
             [TwitterRealmStore migrationWithMigration:migration
@@ -64,7 +64,7 @@
     RLMRealm *realm = [self realm];
     NSNumber *twID = tweetJsonObject[@"id"];
     if ([twID isKindOfClass:[NSNumber class]] && twID) {
-        NSAssert2([Tweet objectInRealm:realm forPrimaryKey:twID].id == [twID longLongValue], @"%zd - %zd", [Tweet objectInRealm:realm forPrimaryKey:twID].id, [twID longLongValue]);
+        NSAssert2([[Tweet objectInRealm:realm forPrimaryKey:twID].id isEqualToNumber:twID], @"%@ - %@", [Tweet objectInRealm:realm forPrimaryKey:twID].id, twID);
     }
 }
 
@@ -147,6 +147,10 @@
         [migration enumerateObjects:[Tweet className] block:^(RLMObject *oldObject, RLMObject *newObject) {
             newObject[@"idString"] = [newObject[@"id"] stringValue];
         }];
+    }
+    
+    if (oldSchemaVersion < 14) {
+        // TweetにRLMIntを導入
     }
 }
                        

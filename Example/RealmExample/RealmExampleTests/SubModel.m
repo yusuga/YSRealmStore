@@ -16,10 +16,16 @@
     return @{@"boolean" : @([self defaultBoolean]),
              @"integer" : @([self defaultInteger]),
              @"int64" : @([self defaultInt64]),
+             // @"uint64" : @([self defaultUint64]),
              @"decimal" : @([self defaultDecimal]),
              @"string" : [Model defaultString],
              @"date" : [Model defaultDate],
-             @"data" : [Model defaultData]};
+             @"data" : [Model defaultData],
+             @"rlmInt" : @([self defaultInt64]),
+             // @"rlmUint" : @([self defaultUint64]),
+             @"rlmBool" : @([self defaultBoolean]),
+             @"rlmDouble" : @([self defaultDouble]),
+             @"rlmFloat" : @([self defaultFloat])};
 }
 
 + (BOOL)defaultBoolean
@@ -29,17 +35,32 @@
 
 + (NSInteger)defaultInteger
 {
-    return NSIntegerMax/2;
+    return NSIntegerMax;
 }
 
 + (int64_t)defaultInt64
 {
-    return INT64_MAX/2;
+    return INT64_MAX;
+}
+
++ (int64_t)defaultUint64
+{
+    return UINT64_MAX;
 }
 
 + (CGFloat)defaultDecimal
 {
-    return CGFLOAT_MAX/2.f;
+    return CGFLOAT_MAX;
+}
+
++ (double)defaultDouble
+{
+    return DBL_MAX;
+}
+
++ (double)defaultFloat
+{
+    return FLT_MAX;
 }
 
 @end

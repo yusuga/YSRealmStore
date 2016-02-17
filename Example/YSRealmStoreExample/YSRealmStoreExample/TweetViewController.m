@@ -56,7 +56,7 @@ static NSString * const kCellIdentifier = @"Cell";
              *  この場合はrealmファイル自体を削除して再度作成させるしかなさそう。
              */
             NSLog(@"Realm initialization error: %@", error);
-#if 1
+#if 0
             NSError *error = nil;
             [store removeRealmFilesWithError:&error];
             NSAssert(!error, @"Fatal error: %@", error);

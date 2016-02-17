@@ -225,7 +225,7 @@
         }
         
         Tweet *tweet = [Tweet objectInRealm:[store realm] forPrimaryKey:@(tweetID)];
-        XCTAssertEqual(tweet.id, tweetID);
+        XCTAssertEqualObjects(tweet.id, @(tweetID));
         XCTAssertEqualObjects(tweet.text, @"");
         XCTAssertNil(tweet.user);
         XCTAssertNil(tweet.entities);
@@ -364,7 +364,7 @@
         
         XCTAssertEqual([objects count], count);
         for (NSUInteger i = 0; i < [objects count]; i++) {
-            XCTAssertEqual(((Tweet*)[objects objectAtIndex:i]).id, i);
+            XCTAssertEqualObjects(((Tweet*)[objects objectAtIndex:i]).id, @(i));
         }
     }];
 }
@@ -499,7 +499,7 @@
             Tweet *tweet = [[Tweet alloc] initWithValue:tweetJsonObj];
             Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
             
-            XCTAssertEqual(addedTweet.id, tweet.id);
+            XCTAssertEqualObjects(addedTweet.id, tweet.id);
             XCTAssertEqualObjects(addedTweet.text, tweet.text);
             XCTAssertNotNil(addedTweet.user);
             XCTAssertNotNil(addedTweet.entities);
@@ -545,7 +545,7 @@
             Tweet *tweet = [[Tweet alloc] initWithValue:tweetJsonObj];
             Tweet *addedTweet = [[Tweet allObjectsInRealm:realm] firstObject];
             
-            XCTAssertEqual(addedTweet.id, tweet.id);
+            XCTAssertEqualObjects(addedTweet.id, tweet.id);
             XCTAssertEqualObjects(addedTweet.text, tweet.text);
             XCTAssertNotNil(addedTweet.user);
             XCTAssertNotNil(addedTweet.entities);

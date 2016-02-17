@@ -12,13 +12,12 @@
 
 @interface Tweet : RLMObject
 
-@property int64_t id;
+@property NSNumber<RLMInt> *id;
 @property NSString *text;
 @property User *user;
 @property Entities *entities;
 @property RLMArray<User> *watchers;
 @property BOOL retweeted;
-@property NSString *idString;
 
 /**
  *  Unavailable Methods

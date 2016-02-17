@@ -34,7 +34,7 @@
     User *user = tweet.user;
     
     self.nameLabel.text = [NSString stringWithFormat:@"%@ @%@", user.name, user.screen_name];
-    self.bodyLabel.text = [NSString stringWithFormat:@"%@ (tweet id: %lld)", tweet.text, tweet.id];
+    self.bodyLabel.text = [NSString stringWithFormat:@"%@ (tweet id: %@)", tweet.text, tweet.id];
     
     self.profileImageView.image = [[self class] profileImageWithUserId:user.id];
 }

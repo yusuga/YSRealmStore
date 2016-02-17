@@ -54,12 +54,11 @@
     }
     
     if (self = [super init]) {
-        self.id = [[value ys_objectOrNilForKey:@"id"] longLongValue];
+        self.id = [value ys_objectOrNilForKey:@"id"];
         self.text = [value ys_stringOrDefaultStringForKey:@"text"];
         self.user = [[User alloc] initWithValue:[value ys_objectOrNilForKey:@"user"]];
         self.entities = [[Entities alloc] initWithValue:[value ys_objectOrNilForKey:@"entities"]];
         self.retweeted = [[value ys_objectOrNilForKey:@"retweeted"] boolValue];
-        self.idString = [NSString stringWithFormat:@"%lld", self.id];
     }
     return self;
 }
@@ -71,7 +70,7 @@
 
 + (NSArray *)indexedProperties
 {
-    return @[NSStringFromSelector(@selector(idString))];
+    return @[NSStringFromSelector(@selector(id))];
 }
 
 @end
