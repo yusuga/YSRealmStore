@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Realm/Realm.h>
+#import "YSRealmCancellableProtocol.h"
 @class YSRealmOperation;
 
 typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation, RLMRealm *realm);
@@ -15,7 +16,7 @@ typedef id(^YSRealmOperationObjectsBlock)(YSRealmOperation *operation, RLMRealm 
 typedef void(^YSRealmOperationCompletion)(YSRealmOperation *operation);
 typedef void(^YSRealmOperationFetchCompletion)(YSRealmOperation *operation, RLMResults *results);
 
-@interface YSRealmOperation : NSObject
+@interface YSRealmOperation : NSObject <YSRealmCancellableProtocol>
 
 ///------
 /// Write

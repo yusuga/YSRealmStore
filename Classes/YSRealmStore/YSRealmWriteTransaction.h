@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <Realm/Realm.h>
+#import "YSRealmCancellableProtocol.h"
 @class YSRealmWriteTransaction;
 
 typedef void(^YSRealmWriteTransactionWriteBlock)(YSRealmWriteTransaction *transaction, RLMRealm *realm);
 typedef void(^YSRealmWriteTransactionCompletion)(YSRealmWriteTransaction *transaction);
 
-@interface YSRealmWriteTransaction : NSObject
+@interface YSRealmWriteTransaction : NSObject <YSRealmCancellableProtocol>
 
 ///------------
 /// Transaction

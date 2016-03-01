@@ -66,6 +66,7 @@
 		B8191B1D1A35275D0063FE1F /* YSRealmWriteTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmWriteTransaction.h; sourceTree = "<group>"; };
 		B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmWriteTransaction.m; sourceTree = "<group>"; };
 		B8191B201A352E500063FE1F /* WriteTransactionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriteTransactionTests.m; sourceTree = "<group>"; };
+		B81D4C261C84376F00F474E6 /* YSRealmCancellableProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmCancellableProtocol.h; sourceTree = "<group>"; };
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
 		B84FB8FD1A6F367C0014536E /* Mention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mention.h; path = YSRealmStoreExample/Mention.h; sourceTree = "<group>"; };
 		B84FB8FE1A6F367C0014536E /* Mention.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mention.m; path = YSRealmStoreExample/Mention.m; sourceTree = "<group>"; };
@@ -305,6 +306,7 @@
 			children = (
 				B8D5462319FD0291008FA04F /* YSRealmStore.h */,
 				B8D5462419FD0291008FA04F /* YSRealmStore.m */,
+				B81D4C261C84376F00F474E6 /* YSRealmCancellableProtocol.h */,
 				B8191B1D1A35275D0063FE1F /* YSRealmWriteTransaction.h */,
 				B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */,
 				B8D5462619FD029B008FA04F /* YSRealmOperation.h */,
@@ -824,6 +826,7 @@
 				B8F9B8AE1C6B08D200AE54C5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
