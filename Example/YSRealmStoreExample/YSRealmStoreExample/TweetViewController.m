@@ -9,15 +9,12 @@
 #import "TweetViewController.h"
 #import "TweetCell.h"
 #import "TwitterRequest.h"
-#import "TwitterRealmStore.h"
 
 static NSString * const kCellIdentifier = @"Cell";
 
 @interface TweetViewController ()
 
 @property (nonatomic) NSUInteger limitOfRequestTweet;
-@property (nonatomic) RLMResults *tweets;
-@property (nonatomic) RLMNotificationToken *notificationToken;
 
 @end
 
@@ -74,6 +71,18 @@ static NSString * const kCellIdentifier = @"Cell";
         
         self.tweets = [store fetchAllTweets];
     }
+    
+    [self.tableView reloadData];
+}
+
+- (NSArray *)createTweetValues
+{
+    return [TwitterRequest requestTweetsWithMaxCount:self.limitOfRequestTweet];
+}
+
+- (void)resetState
+{
+    [TwitterRequest resetState];
 }
 
 #pragma mark - Table view data source
@@ -112,11 +121,11 @@ static NSString * const kCellIdentifier = @"Cell";
 {
     __weak typeof(self) wself = self;
     
-    NSArray *tweetObjects = [TwitterRequest requestTweetsWithMaxCount:self.limitOfRequestTweet];
+    NSArray *tweetValues = [self createTweetValues];
     
-    [[TwitterRealmStore sharedStore] addTweetsWithTweetJsonObjects:tweetObjects completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
-        NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[tweetObjects count]];
-        for (NSUInteger i = 0; i < [tweetObjects count]; i++) {
+    [[TwitterRealmStore sharedStore] addTweetsWithTweetJsonObjects:tweetValues completion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {
+        NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[tweetValues count]];
+        for (NSUInteger i = 0; i < [tweetValues count]; i++) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
         [wself.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -125,7 +134,7 @@ static NSString * const kCellIdentifier = @"Cell";
 
 - (IBAction)deleteTweetsButtonDidPush:(id)sender
 {
-    [TwitterRequest resetState];
+    [self resetState];
     
     __weak typeof(self) wself = self;
     [[TwitterRealmStore sharedStore] deleteAllObjectsWithCompletion:^(YSRealmStore *store, YSRealmWriteTransaction *transaction, RLMRealm *realm) {

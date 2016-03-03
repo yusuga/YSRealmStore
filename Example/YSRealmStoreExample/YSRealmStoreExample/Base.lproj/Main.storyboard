@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vSK-Fq-MUs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="dp3-Cx-kgC">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
-        <!--Tweet View Controller-->
+        <!--Manual update-->
         <scene sceneID="6A6-Py-jxl">
             <objects>
                 <tableViewController id="2SR-qz-WhP" customClass="TweetViewController" sceneMemberID="viewController">
@@ -15,8 +15,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="xjA-Bv-AcO">
+                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xjA-Bv-AcO" id="gHg-SG-3oH">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -40,16 +42,17 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="M4N-q9-cKg"/>
+                    <navigationItem key="navigationItem" title="Manual update" id="M4N-q9-cKg"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uNp-NV-i52" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1497" y="522"/>
+            <point key="canvasLocation" x="2309" y="522"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Manual-->
         <scene sceneID="uUH-XR-cmM">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="vSK-Fq-MUs" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Manual" id="eUi-p2-nnz"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Zmq-Y2-GRE">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -57,6 +60,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="1KJ-1j-rel">
+                        <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
@@ -65,7 +69,96 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pph-t0-BYE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1497" y="522"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="8Tj-VR-hxS">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dp3-Cx-kgC" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="oIB-dV-uE1">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="vSK-Fq-MUs" kind="relationship" relationship="viewControllers" id="ejv-gU-PBq"/>
+                        <segue destination="Mr1-P3-XOj" kind="relationship" relationship="viewControllers" id="DKm-07-YUt"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bf8-Mi-PO6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
             <point key="canvasLocation" x="685" y="522"/>
+        </scene>
+        <!--Collection Notification-->
+        <scene sceneID="3Qw-fr-IMK">
+            <objects>
+                <tableViewController id="zB2-iS-DIN" customClass="FetchedResultsController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="TsM-hB-fav">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="zzo-bN-76e">
+                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zzo-bN-76e" id="ztw-Q6-jHV">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="zB2-iS-DIN" id="21J-Md-AUk"/>
+                            <outlet property="delegate" destination="zB2-iS-DIN" id="lVe-Bu-pZO"/>
+                        </connections>
+                    </tableView>
+                    <toolbarItems>
+                        <barButtonItem title="Insert" id="gVd-JL-4MP">
+                            <connections>
+                                <action selector="insertButtonDidPush:" destination="zB2-iS-DIN" id="TgN-Bq-plo"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="asyncInsert" id="IRQ-gr-5cz">
+                            <connections>
+                                <action selector="asyncInsertButtonDidPush:" destination="zB2-iS-DIN" id="A1Y-9Q-WK9"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="BMl-TJ-YcV"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="IEN-Fa-O5w"/>
+                        <barButtonItem title="Delete" id="N0d-jG-qFX">
+                            <connections>
+                                <action selector="deleteTweetsButtonDidPush:" destination="zB2-iS-DIN" id="UeL-H3-7W9"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Collection Notification" id="RE7-wL-ABX"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y7W-kv-UL9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2309" y="1386"/>
+        </scene>
+        <!--Notification-->
+        <scene sceneID="s6R-m7-mch">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="Mr1-P3-XOj" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Notification" id="OU7-Zy-uNJ"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="I3q-qv-0Pi">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="8SC-Nu-eXp">
+                        <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="zB2-iS-DIN" kind="relationship" relationship="rootViewController" id="gKa-Y9-8bB"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bvb-rw-Vcj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1497" y="1386"/>
         </scene>
     </scenes>
 </document>

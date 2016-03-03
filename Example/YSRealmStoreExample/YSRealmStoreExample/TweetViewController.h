@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TwitterRealmStore.h"
 
 @interface TweetViewController : UITableViewController
+
+@property (nonatomic) RLMResults *tweets;
+
+- (NSArray *)createTweetValues;
+- (void)resetState;
 
 @end

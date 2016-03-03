@@ -13,8 +13,10 @@
 
 @interface TwitterRealmStore : YSRealmStore
 
-+ (instancetype)sharedStore;
-+ (instancetype)sharedStoreInMemory;
++ (TwitterRealmStore *)sharedStore;
++ (TwitterRealmStore *)sharedStoreInMemory;
+
++ (RLMRealm *)sharedStoreRealm;
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject;
 - (void)addTweetsWithCount:(NSUInteger)count;

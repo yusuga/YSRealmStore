@@ -604,16 +604,6 @@
 
 - (void)testANYInChildObject
 {
-    /**
-     *  Realm 0.92.0
-     *
-     *  子オブジェクトの配列に対する操作が強制でANYになる
-     *  ANYをつけると、
-     *  "Invalid predicate", "ANY modifier can only be used for RLMArray properties"
-     *  とエラーが投げられる。
-     *  子オブジェクトに対するANYと解釈される仕様で、結果としては意図したFetchはできるがまぎらわしい。
-     */
-    
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
     int64_t tweetID1 = 1;
     int64_t tweetID2 = 2;
@@ -645,9 +635,6 @@
     XCTAssertEqual([[Tweet allObjectsInRealm:[store realm]] count], 3);
     
     // ANY Contains userID1
-#warning Unsupported (Realm 0.92.0)
-    // failed: caught "Invalid predicate", "ANY modifier can only be used for RLMArray properties"
-#if 0
     {
         for (NSUInteger i = 0; i < 2; i++) {
             RLMResults *tweets;
@@ -659,37 +646,19 @@
             XCTAssertEqual([tweets count], 2);
             for (Tweet *tweet in tweets) {
                 NSArray *ids = @[@(tweetID2), @(tweetID3)];
-                XCTAssertTrue([ids containsObject:@(tweet.id)]);
-            }
-        }
-    }
-#endif
-    
-    // Contains userID1
-    {
-        for (NSUInteger i = 0; i < 2; i++) {
-            RLMResults *tweets;
-            if (i == 0) {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.id = %lld", userID1];
-            } else {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.name = %@", name1];
-            }
-            XCTAssertEqual([tweets count], 2);
-            for (Tweet *tweet in tweets) {
-                NSArray *ids = @[@(tweetID2), @(tweetID3)];
                 XCTAssertTrue([ids containsObject:tweet.id]);
             }
         }
     }
     
-    // Contains userID2
+    // ANY Contains userID2
     {
         for (NSUInteger i = 0; i < 2; i++) {
             RLMResults *tweets;
             if (i == 0) {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.id = %lld", userID2];
+                tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.id = %lld", userID2];
             } else {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.name = %@", name2];
+                tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.name = %@", name2];
             }
             XCTAssertEqual([tweets count], 1);
             Tweet *tweet = [tweets firstObject];
@@ -697,14 +666,14 @@
         }
     }
     
-    // Contains userID1 or userID2
+    // ANY Contains userID1 or userID2
     {
         for (NSUInteger i = 0; i < 2; i++) {
             RLMResults *tweets;
             if (i == 0) {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.id IN %@", @[@(userID1), @(userID2)]];
+                tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.id IN %@", @[@(userID1), @(userID2)]];
             } else {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.name IN %@", @[name1, name2]];
+                tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.name IN %@", @[name1, name2]];
             }
             XCTAssertEqual([tweets count], 2);
             for (Tweet *tweet in tweets) {
@@ -714,7 +683,7 @@
         }
     }
     
-#warning Unsupported (Realm 0.92.0)
+#warning Unsupported (Realm 0.98.3)
     // failed: caught "Invalid predicate", "ALL modifier not supported"
 #if 0
     // Contains userID1 AND userID2
@@ -731,20 +700,20 @@
             
             for (Tweet *tweet in tweets) {
                 NSArray *ids = @[@(tweetID2), @(tweetID3)];
-                XCTAssertTrue([ids containsObject:@(tweet.id)]);
+                XCTAssertTrue([ids containsObject:tweet.id]);
             }
         }
     }
 #endif
     
-    // Contains userID2 or userID3
+    // ANY Contains userID2 or userID3
     {
         for (NSUInteger i = 0; i < 2; i++) {
             RLMResults *tweets;
             if (i == 0) {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.id IN %@", @[@(userID2), @(userID3)]];
+                tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.id IN %@", @[@(userID2), @(userID3)]];
             } else {
-                tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.name IN %@", @[name2, name3]];
+                tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.name IN %@", @[name2, name3]];
             }
             XCTAssertEqual([tweets count], 1);
             Tweet *tweet = [tweets firstObject];
@@ -752,15 +721,15 @@
         }
     }
     
-    // Contains userID3
+    // ANY Contains userID3
     {
-        RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.id = %lld", userID3];
+        RLMResults *tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.id = %lld", userID3];
         XCTAssertEqual([tweets count], 0);
-        tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.name = %@", name3];
+        tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.name = %@", name3];
         XCTAssertEqual([tweets count], 0);
-        tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.id IN %@", @[@(userID3)]];
+        tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.id IN %@", @[@(userID3)]];
         XCTAssertEqual([tweets count], 0);
-        tweets = [Tweet objectsInRealm:[store realm] where:@"entities.mentions.name IN %@", @[name3, @"other name"]];
+        tweets = [Tweet objectsInRealm:[store realm] where:@"ANY entities.mentions.name IN %@", @[name3, @"other name"]];
         XCTAssertEqual([tweets count], 0);
     }
 }
@@ -908,17 +877,7 @@
     NSUInteger urlCount = 3;
     [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:identifier userID:identifier urlCount:urlCount]];
     
-    NSPredicate *predicate;
-    
-#if 0
-#warning Unsupported (Realm 0.96.0)
-    // failed: caught "Invalid column name", "Column name @count not found in table"
-    predicate = [NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)];
-#else
-#warning workaround
-    // countは取れないがゼロかどうかはnil等で判定すれば取れる
-    predicate = [NSPredicate predicateWithFormat:@"entities.urls.url != nil"];
-#endif
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"entities.urls.@count = %@", @(urlCount)];
     
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
     XCTAssertEqual([results count], 1);
@@ -940,7 +899,7 @@
     NSUInteger urlCount = 3;
     [store addTweetWithTweetJsonObject:[JsonGenerator tweetWithTweetID:identifier userID:identifier urlCount:urlCount]];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"entities.urls.url BEGINSWITH 'h'"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ANY entities.urls.url BEGINSWITH 'h'"];
     
     RLMResults *results = [Tweet objectsInRealm:[store realm] withPredicate:predicate];
     XCTAssertEqual([results count], 1);

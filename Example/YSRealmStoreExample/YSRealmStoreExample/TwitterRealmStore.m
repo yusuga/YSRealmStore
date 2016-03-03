@@ -11,7 +11,7 @@
 
 @implementation TwitterRealmStore
 
-+ (instancetype)sharedStore
++ (TwitterRealmStore *)sharedStore
 {
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
@@ -42,7 +42,7 @@
     return __instance;
 }
 
-+ (instancetype)sharedStoreInMemory
++ (TwitterRealmStore *)sharedStoreInMemory
 {
     static TwitterRealmStore *__instance;
     static dispatch_once_t onceToken;
@@ -53,6 +53,13 @@
         __instance =  [[self alloc] initWithConfiguration:configuration];
     });
     return __instance;
+}
+
++ (RLMRealm *)sharedStoreRealm
+{
+    @synchronized([self sharedStore]) {
+        return [[self sharedStore] realm];
+    }
 }
 
 - (void)addTweetWithTweetJsonObject:(NSDictionary*)tweetJsonObject
