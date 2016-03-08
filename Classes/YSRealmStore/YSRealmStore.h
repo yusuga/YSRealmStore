@@ -69,6 +69,7 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 /// @name File
 ///-----------
 
+- (unsigned long long)realmFileSize;
 - (BOOL)addSkipBackupAttributeToRealmFilesWithError:(NSError **)errorPtr;
 - (void)removeRealmFilesWithError:(NSError **)errorPtr;
 

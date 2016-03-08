@@ -15,6 +15,8 @@ static NSString * const kCellIdentifier = @"Cell";
 @interface TweetViewController ()
 
 @property (nonatomic) NSUInteger limitOfRequestTweet;
+@property (nonatomic) RLMNotificationToken *notificationToken;
+@property (nonatomic) UILabel *fileSizeLabel;
 
 @end
 
@@ -30,6 +32,14 @@ static NSString * const kCellIdentifier = @"Cell";
     [super viewDidLoad];
     
     [self.tableView registerNib:[TweetCell nib] forCellReuseIdentifier:kCellIdentifier];
+    self.fileSizeLabel = [[UILabel alloc] init];
+    self.fileSizeLabel.textAlignment = NSTextAlignmentCenter;
+    [self updateRealmFileSizeLabel];
+    
+    __weak typeof(self) wself = self;
+    self.notificationToken = [[TwitterRealmStore sharedStore].realm addNotificationBlock:^(NSString * _Nonnull notification, RLMRealm * _Nonnull realm) {
+        [wself updateRealmFileSizeLabel];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -85,14 +95,19 @@ static NSString * const kCellIdentifier = @"Cell";
     [TwitterRequest resetState];
 }
 
+- (void)updateRealmFileSizeLabel
+{
+    unsigned long long size = [[TwitterRealmStore sharedStore] realmFileSize];
+    NSLog(@"realm size: %lld byte", size);
+    self.fileSizeLabel.text = [NSString stringWithFormat:@"Size: %.f KB", (CGFloat)size/1000.];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.tweets count];
 }
-
-#pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -113,6 +128,18 @@ static NSString * const kCellIdentifier = @"Cell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSLog(@"%@", self.tweets[indexPath.row]);
+}
+
+#pragma mark Section header
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return self.fileSizeLabel;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 60.;
 }
 
 #pragma mark - Button action

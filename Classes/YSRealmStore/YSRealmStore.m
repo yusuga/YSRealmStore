@@ -184,6 +184,11 @@
 
 #pragma mark - File
 
+- (unsigned long long)realmFileSize
+{
+    return [[[NSFileManager defaultManager] attributesOfItemAtPath:self.configuration.path error:nil] fileSize];;
+}
+
 /*
  *  Technical Q&A QA1719
  *  How do I prevent files from being backed up to iCloud and iTunes?
