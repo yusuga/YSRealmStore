@@ -69,9 +69,21 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 /// @name File
 ///-----------
 
+/**
+ *  Add in place compact method
+ *  https://github.com/realm/realm-cocoa/issues/1243
+ *
+ *  RLMRealmを1つもretainしていないタイミングで実行する必要がある。
+ */
++ (BOOL)compactRealmFileWithConfiguration:(RLMRealmConfiguration *)configuration
+                                    error:(NSError **)errorPtr;
 - (unsigned long long)realmFileSize;
+
 - (BOOL)addSkipBackupAttributeToRealmFilesWithError:(NSError **)errorPtr;
-- (void)deleteRealmFilesWithError:(NSError **)errorPtr;
+
+- (BOOL)deleteRealmFilesWithError:(NSError **)errorPtr;
++ (BOOL)deleteRealmFilesWithRealmFilePath:(NSString *)realmFilePath
+                                    error:(NSError **)errorPtr;
 
 ///-----------------
 /// @name Encryption

@@ -25,7 +25,7 @@
     [super tearDown];
 }
 
-- (void)testRemoveRealmFile
+- (void)testDeleteRealmFile
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
@@ -58,7 +58,7 @@
     XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.path]);
 }
 
-- (void)testCreateAndRemoveEncriptionKey
+- (void)testCreateAndDeleteEncriptionKey
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *keychainID = NSStringFromSelector(_cmd);

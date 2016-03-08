@@ -36,6 +36,12 @@
         configuration.encryptionKey = [self defaultEncryptionKey];
         NSLog(@"encryptionKey: %@", [configuration.encryptionKey.description stringByReplacingOccurrencesOfString:@" " withString:@""]);
 #endif
+
+#if 1
+        NSError *error = nil;
+        [YSRealmStore compactRealmFileWithConfiguration:configuration error:&error];
+        if (error) NSLog(@"Fatal error: %@", error);
+#endif
         
         __instance =  [[self alloc] initWithConfiguration:configuration];
     });

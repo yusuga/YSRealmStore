@@ -25,6 +25,9 @@ void uncaughtExceptionHandler(NSException *exception) {
 #ifdef DEBUG
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 #endif
+    if (NSClassFromString(@"XCTest")) {
+        self.window.rootViewController = [[UIViewController alloc] init];
+    }
     
     return YES;
 }

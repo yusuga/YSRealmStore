@@ -45,9 +45,7 @@ static NSString * const kCellIdentifier = @"Cell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    if (NSClassFromString(@"XCTest")) return;
-    
+        
     if (!self.tweets) {
         // Initial
         TwitterRealmStore *store = [TwitterRealmStore sharedStore];

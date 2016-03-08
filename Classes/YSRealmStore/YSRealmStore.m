@@ -184,6 +184,70 @@
 
 #pragma mark - File
 
++ (BOOL)compactRealmFileWithConfiguration:(RLMRealmConfiguration *)configuration
+                                    error:(NSError **)errorPtr
+{
+    @autoreleasepool {
+        NSError *error = nil;
+        
+        RLMRealm *realm = [RLMRealm realmWithConfiguration:configuration error:&error];
+        if (error) {
+            if (errorPtr) {
+                *errorPtr = error;
+            }
+            return NO;
+        }
+        
+        NSString *compactedRealmPath = [configuration.path stringByAppendingPathExtension:@"compacted"];
+        
+        // is compacted realm file exist?
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:compactedRealmPath]) {
+            if (![self deleteRealmFilesWithRealmFilePath:compactedRealmPath error:errorPtr]) {
+                return NO;
+            }
+        }
+        
+        // Create compacted realm file.
+        
+        if (configuration.encryptionKey) {
+            if (![realm writeCopyToPath:compactedRealmPath encryptionKey:configuration.encryptionKey error:errorPtr]) {
+                return NO;
+            }
+        } else {
+            if (![realm writeCopyToPath:compactedRealmPath error:errorPtr]) {
+                return NO;
+            }
+        }
+        
+        // Delete original realm files.
+        
+        if (![self deleteRealmFilesWithRealmFilePath:configuration.path error:errorPtr]) {
+            return NO;
+        }
+        
+        // Move compacted realm file to original realm file path.
+        
+        if (configuration.encryptionKey) {
+            if (![realm writeCopyToPath:configuration.path encryptionKey:configuration.encryptionKey error:errorPtr]) {
+                return NO;
+            }
+        } else {
+            if (![realm writeCopyToPath:configuration.path error:errorPtr]) {
+                return NO;
+            }
+        }
+        
+        // Delete compacted realm file.
+        
+        if (![self deleteRealmFilesWithRealmFilePath:compactedRealmPath error:&error]) {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
 - (unsigned long long)realmFileSize
 {
     return [[[NSFileManager defaultManager] attributesOfItemAtPath:self.configuration.path error:nil] fileSize];;
@@ -215,31 +279,47 @@
     return YES;
 }
 
-- (void)deleteRealmFilesWithError:(NSError *__autoreleasing *)errorPtr
+- (BOOL)deleteRealmFilesWithError:(NSError **)errorPtr
+{
+    return [[self class] deleteRealmFilesWithRealmFilePath:self.configuration.path
+                                                     error:errorPtr];
+}
+
++ (BOOL)deleteRealmFilesWithRealmFilePath:(NSString *)realmFilePath
+                                    error:(NSError **)errorPtr
 {
     NSFileManager *manager = [NSFileManager defaultManager];
     
-    for (NSString *path in [self realmFilePaths]) {
+    for (NSString *path in [self realmFilePathsWithRealmFilePath:realmFilePath]) {
         if ([manager fileExistsAtPath:path]) {
             if (![manager removeItemAtPath:path error:errorPtr]) {
-                break;
+                return NO;
             }
         }
     }
+    return YES;
+}
+
+- (NSArray<NSString *> *)realmFilePaths
+{
+    return [[self class] realmFilePathsWithRealmFilePath:self.configuration.path];
+}
+
++ (NSArray<NSString *> *)realmFilePathsWithRealmFilePath:(NSString *)path
+{
+    return [@[path] arrayByAddingObjectsFromArray:[self auxiliaryRealmFilePathsWithRealmFilePath:path]];
 }
 
 /**
- *  Auxiliary Realm Files
  *  https://realm.io/docs/objc/latest/#auxiliary-realm-files
  */
-- (NSArray<NSString *> *)realmFilePaths
++ (NSArray<NSString *> *)auxiliaryRealmFilePathsWithRealmFilePath:(NSString *)path
 {
-    return @[self.configuration.path,
-             [self.configuration.path stringByAppendingPathExtension:@"lock"],
-             [self.configuration.path stringByAppendingPathExtension:@"log"],
-             [self.configuration.path stringByAppendingPathExtension:@"log_a"],
-             [self.configuration.path stringByAppendingPathExtension:@"log_b"],
-             [self.configuration.path stringByAppendingPathExtension:@"note"]];
+    return @[[path stringByAppendingPathExtension:@"lock"],
+             [path stringByAppendingPathExtension:@"log"],
+             [path stringByAppendingPathExtension:@"log_a"],
+             [path stringByAppendingPathExtension:@"log_b"],
+             [path stringByAppendingPathExtension:@"note"]];
 }
 
 #pragma mark - Encryption

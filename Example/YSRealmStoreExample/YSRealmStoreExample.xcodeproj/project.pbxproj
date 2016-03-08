@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
+		B829812F1C8EB87A00DA1B73 /* FileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B829812E1C8EB87A00DA1B73 /* FileTests.m */; };
 		B84F22561C87C6E900F9BDF8 /* FetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = B84F22551C87C6E900F9BDF8 /* FetchedResultsController.m */; };
 		B84FB8FF1A6F367C0014536E /* Mention.m in Sources */ = {isa = PBXBuildFile; fileRef = B84FB8FE1A6F367C0014536E /* Mention.m */; };
 		B853DFDE1A9AC365005C17F1 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = B853DFDD1A9AC365005C17F1 /* Utility.m */; };
@@ -44,6 +45,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B82981311C8EB87A00DA1B73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8D545F119FD00F5008FA04F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8D545F819FD00F5008FA04F;
+			remoteInfo = YSRealmStoreExample;
+		};
 		B8D5461319FD00F6008FA04F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8D545F119FD00F5008FA04F /* Project object */;
@@ -68,6 +76,9 @@
 		B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmWriteTransaction.m; sourceTree = "<group>"; };
 		B8191B201A352E500063FE1F /* WriteTransactionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriteTransactionTests.m; sourceTree = "<group>"; };
 		B81D4C261C84376F00F474E6 /* YSRealmCancellableProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmCancellableProtocol.h; sourceTree = "<group>"; };
+		B829812C1C8EB87A00DA1B73 /* FileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B829812E1C8EB87A00DA1B73 /* FileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileTests.m; sourceTree = "<group>"; };
+		B82981301C8EB87A00DA1B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B8302DD81A007E60004C9DA9 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = SOURCE_ROOT; };
 		B84F22541C87C6E900F9BDF8 /* FetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchedResultsController.h; sourceTree = "<group>"; };
 		B84F22551C87C6E900F9BDF8 /* FetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchedResultsController.m; sourceTree = "<group>"; };
@@ -130,6 +141,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B82981291C8EB87A00DA1B73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8D545F619FD00F5008FA04F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -161,6 +179,15 @@
 				0AAE81F79A0CF1ECCDF8F05D /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B829812D1C8EB87A00DA1B73 /* FileTests */ = {
+			isa = PBXGroup;
+			children = (
+				B829812E1C8EB87A00DA1B73 /* FileTests.m */,
+				B82981301C8EB87A00DA1B73 /* Info.plist */,
+			);
+			path = FileTests;
 			sourceTree = "<group>";
 		};
 		B853DFDB1A9AC1E1005C17F1 /* Utility */ = {
@@ -239,6 +266,7 @@
 				B88DA1011A5A102000DF36D3 /* TwitterStore */,
 				B8D5461519FD00F6008FA04F /* YSRealmStoreExampleTests */,
 				B8F9B8A71C6B08D200AE54C5 /* StoreUtilityTests */,
+				B829812D1C8EB87A00DA1B73 /* FileTests */,
 				B8D545FA19FD00F5008FA04F /* Products */,
 				550B28108FDB4CC39DB022D0 /* Frameworks */,
 				DA63751ED27EAB693E5C9480 /* Pods */,
@@ -251,6 +279,7 @@
 				B8D545F919FD00F5008FA04F /* YSRealmStoreExample.app */,
 				B8D5461219FD00F6008FA04F /* YSRealmStoreExampleTests.xctest */,
 				B8F9B8A61C6B08D200AE54C5 /* StoreUtilityTests.xctest */,
+				B829812C1C8EB87A00DA1B73 /* FileTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -343,6 +372,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B829812B1C8EB87A00DA1B73 /* FileTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B82981351C8EB87A00DA1B73 /* Build configuration list for PBXNativeTarget "FileTests" */;
+			buildPhases = (
+				B82981281C8EB87A00DA1B73 /* Sources */,
+				B82981291C8EB87A00DA1B73 /* Frameworks */,
+				B829812A1C8EB87A00DA1B73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B82981321C8EB87A00DA1B73 /* PBXTargetDependency */,
+			);
+			name = FileTests;
+			productName = FileTests;
+			productReference = B829812C1C8EB87A00DA1B73 /* FileTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B8D545F819FD00F5008FA04F /* YSRealmStoreExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B8D5461C19FD00F6008FA04F /* Build configuration list for PBXNativeTarget "YSRealmStoreExample" */;
@@ -408,6 +455,10 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Yu Sugawara";
 				TargetAttributes = {
+					B829812B1C8EB87A00DA1B73 = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = B8D545F819FD00F5008FA04F;
+					};
 					B8D545F819FD00F5008FA04F = {
 						CreatedOnToolsVersion = 6.1;
 					};
@@ -437,11 +488,19 @@
 				B8D545F819FD00F5008FA04F /* YSRealmStoreExample */,
 				B8D5461119FD00F6008FA04F /* YSRealmStoreExampleTests */,
 				B8F9B8A51C6B08D200AE54C5 /* StoreUtilityTests */,
+				B829812B1C8EB87A00DA1B73 /* FileTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B829812A1C8EB87A00DA1B73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8D545F719FD00F5008FA04F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -518,6 +577,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B82981281C8EB87A00DA1B73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B829812F1C8EB87A00DA1B73 /* FileTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8D545F519FD00F5008FA04F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -571,6 +638,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B82981321C8EB87A00DA1B73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8D545F819FD00F5008FA04F /* YSRealmStoreExample */;
+			targetProxy = B82981311C8EB87A00DA1B73 /* PBXContainerItemProxy */;
+		};
 		B8D5461419FD00F6008FA04F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B8D545F819FD00F5008FA04F /* YSRealmStoreExample */;
@@ -603,6 +675,39 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		B82981331C8EB87A00DA1B73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = "${SRCROOT}/Pods/Headers/**";
+				INFOPLIST_FILE = FileTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yusuga.FileTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YSRealmStoreExample.app/YSRealmStoreExample";
+			};
+			name = Debug;
+		};
+		B82981341C8EB87A00DA1B73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = "${SRCROOT}/Pods/Headers/**";
+				INFOPLIST_FILE = FileTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yusuga.FileTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YSRealmStoreExample.app/YSRealmStoreExample";
+			};
+			name = Release;
+		};
 		B8D5461A19FD00F6008FA04F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -798,6 +903,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B82981351C8EB87A00DA1B73 /* Build configuration list for PBXNativeTarget "FileTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B82981331C8EB87A00DA1B73 /* Debug */,
+				B82981341C8EB87A00DA1B73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		B8D545F419FD00F5008FA04F /* Build configuration list for PBXProject "YSRealmStoreExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
