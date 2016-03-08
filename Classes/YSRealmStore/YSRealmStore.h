@@ -71,7 +71,7 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 
 - (unsigned long long)realmFileSize;
 - (BOOL)addSkipBackupAttributeToRealmFilesWithError:(NSError **)errorPtr;
-- (void)removeRealmFilesWithError:(NSError **)errorPtr;
+- (void)deleteRealmFilesWithError:(NSError **)errorPtr;
 
 ///-----------------
 /// @name Encryption
@@ -80,8 +80,8 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 + (NSString *)defaultKeychainIdentifier;
 + (NSData *)defaultEncryptionKey;
 + (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier;
-+ (BOOL)removeDefaultEncryptionKey;
-+ (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier;
++ (BOOL)deleteDefaultEncryptionKey;
++ (BOOL)deleteEncryptionKeyWithKeychainIdentifier:(NSString *)identifier;
 
 ///--------------
 /// @name Utility

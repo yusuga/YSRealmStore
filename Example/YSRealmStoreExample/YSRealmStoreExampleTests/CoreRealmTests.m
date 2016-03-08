@@ -862,9 +862,6 @@
     XCTAssertEqual([tweets count], 1);
 }
 
-/**
- *  KeyPathでの@countはまだサポートされていない(Realm 0.96.0)
- */
 - (void)testCountWithKeyPath
 {
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];

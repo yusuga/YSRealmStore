@@ -41,14 +41,14 @@
         
         error = nil;
         
-        [store removeRealmFilesWithError:&error];
+        [store deleteRealmFilesWithError:&error];
         
         XCTAssertNil(error);
         
         XCTAssertFalse([fileManager fileExistsAtPath:realmPath]);
         
         error = nil;
-        [store removeRealmFilesWithError:&error];
+        [store deleteRealmFilesWithError:&error];
         XCTAssertNil(error);
     }
     
@@ -74,7 +74,7 @@
     
     {
         NSError *error = nil;
-        [store removeRealmFilesWithError:&error];
+        [store deleteRealmFilesWithError:&error];
         XCTAssertNil(error);
     }
     
@@ -90,7 +90,7 @@
         XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.path]);
     }
     
-    XCTAssertTrue([TwitterRealmStore removeEncryptionKeyWithKeychainIdentifier:keychainID]);
+    XCTAssertTrue([TwitterRealmStore deleteEncryptionKeyWithKeychainIdentifier:keychainID]);
     
     NSData *newKey = [TwitterRealmStore defaultEncryptionKey];
     XCTAssertNotEqualObjects(configuration.encryptionKey, newKey);
@@ -121,7 +121,7 @@
     
     {
         NSError *error = nil;
-        [newStore removeRealmFilesWithError:&error]; // clean up
+        [newStore deleteRealmFilesWithError:&error]; // clean up
         XCTAssertNil(error);
     }
 }

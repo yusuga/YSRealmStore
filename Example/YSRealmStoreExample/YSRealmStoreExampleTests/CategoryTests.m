@@ -142,8 +142,6 @@
     }];
 }
 
-#warning bug? -[RLMResults indexOfObject:] failed.
-#if 0
 - (void)testRLMArray2
 {
     [Utility enumerateAllCase:^(TwitterRealmStore *store, BOOL sync) {
@@ -193,10 +191,9 @@
         
         RLMResults *results = [watchers objectsWhere:@"id >= 0"];
         NSLog(@"%zd, %zd", [watchers indexOfObject:user0], [watchers indexOfObject:user1]/* == NSNotFound */);
-        NSLog(@"%zd", [results indexOfObject:user1]); // crash :(
+        NSLog(@"%zd", [results indexOfObject:user1]); // crash :( -> Fixed realm-cocoa (0.98.1)
     }];
 }
-#endif
 
 #pragma mark - RLMResults
 

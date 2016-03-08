@@ -215,7 +215,7 @@
     return YES;
 }
 
-- (void)removeRealmFilesWithError:(NSError *__autoreleasing *)errorPtr
+- (void)deleteRealmFilesWithError:(NSError *__autoreleasing *)errorPtr
 {
     NSFileManager *manager = [NSFileManager defaultManager];
     
@@ -294,12 +294,12 @@
     return keyData;
 }
 
-+ (BOOL)removeDefaultEncryptionKey
++ (BOOL)deleteDefaultEncryptionKey
 {
-    return [self removeEncryptionKeyWithKeychainIdentifier:[self defaultKeychainIdentifier]];
+    return [self deleteEncryptionKeyWithKeychainIdentifier:[self defaultKeychainIdentifier]];
 }
 
-+ (BOOL)removeEncryptionKeyWithKeychainIdentifier:(NSString *)identifier
++ (BOOL)deleteEncryptionKeyWithKeychainIdentifier:(NSString *)identifier
 {
     NSParameterAssert(identifier.length);
     if (!identifier.length) return NO;

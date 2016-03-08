@@ -16,7 +16,7 @@
 
 @interface FetchedResultsController ()
 
-@property (nonatomic) RLMNotificationToken *notificationToken;
+@property (nonatomic) RLMNotificationToken *collectionNotificationToken;
 
 @end
 
@@ -27,7 +27,7 @@
     [super viewWillAppear:animated];
     
     __weak typeof(self) wself = self;
-    self.notificationToken = [self.tweets addNotificationBlock:^(RLMResults * _Nullable results, NSError * _Nullable error) {
+    self.collectionNotificationToken = [self.tweets addNotificationBlock:^(RLMResults * _Nullable results, NSError * _Nullable error) {
         [wself.tableView reloadData];
     }];
 }
@@ -63,11 +63,13 @@
     [self resetState];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        RLMRealm *realm = [TwitterRealmStore sharedStoreRealm];
-        
-        [realm transactionWithBlock:^{
-            [realm deleteAllObjects];
-        }];
+        @autoreleasepool {
+            RLMRealm *realm = [TwitterRealmStore sharedStoreRealm];
+            
+            [realm transactionWithBlock:^{
+                [realm deleteAllObjects];
+            }];
+        }
     });
 }
 
