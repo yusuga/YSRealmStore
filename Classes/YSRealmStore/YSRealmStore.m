@@ -279,6 +279,29 @@
     return YES;
 }
 
+/*
+ *  Using Realm with Background App Refresh
+ *  https://realm.io/docs/objc/latest/#using-realm-with-background-app-refresh
+ */
+- (BOOL)addFileProtectionNoneAttributeToRealmFilesWithError:(NSError **)errorPtr
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    for (NSString *path in [self realmFilePaths]) {
+        if ([manager fileExistsAtPath:path]) {
+
+            if (![manager setAttributes:@{NSFileProtectionKey : NSFileProtectionNone}
+                           ofItemAtPath:path
+                                  error:errorPtr])
+            {
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
+}
+
 - (BOOL)deleteRealmFilesWithError:(NSError **)errorPtr
 {
     return [[self class] deleteRealmFilesWithRealmFilePath:self.configuration.path
