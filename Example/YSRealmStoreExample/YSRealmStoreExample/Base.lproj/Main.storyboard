@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="dp3-Cx-kgC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="dp3-Cx-kgC">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--Manual update-->
@@ -113,12 +113,12 @@
                         </connections>
                     </tableView>
                     <toolbarItems>
-                        <barButtonItem title="Insert" id="gVd-JL-4MP">
+                        <barButtonItem title="sync+" id="gVd-JL-4MP">
                             <connections>
                                 <action selector="insertButtonDidPush:" destination="zB2-iS-DIN" id="TgN-Bq-plo"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="asyncInsert" id="IRQ-gr-5cz">
+                        <barButtonItem title="async+" id="IRQ-gr-5cz">
                             <connections>
                                 <action selector="asyncInsertButtonDidPush:" destination="zB2-iS-DIN" id="A1Y-9Q-WK9"/>
                             </connections>

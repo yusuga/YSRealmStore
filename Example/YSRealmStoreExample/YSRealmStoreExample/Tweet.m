@@ -7,6 +7,7 @@
 //
 
 #import "Tweet.h"
+#import "User.h"
 #import "NSDictionary+YSRealmStore.h"
 #import "NSString+YSRealmStore.h"
 

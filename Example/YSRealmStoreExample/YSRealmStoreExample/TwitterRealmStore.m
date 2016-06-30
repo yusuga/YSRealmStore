@@ -17,7 +17,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
-        configuration.path = [YSRealmStore realmPathWithFileName:@"twitter"];
+        configuration.fileURL = [YSRealmStore realmFileURLWithRealmName:@"twitter"];
         
         configuration.objectClasses = @[[Tweet class],
                                         [User class],
@@ -35,12 +35,6 @@
 #if 1
         configuration.encryptionKey = [self defaultEncryptionKey];
         NSLog(@"encryptionKey: %@", [configuration.encryptionKey.description stringByReplacingOccurrencesOfString:@" " withString:@""]);
-#endif
-
-#if 1
-        NSError *error = nil;
-        [YSRealmStore compactRealmFileWithConfiguration:configuration error:&error];
-        if (error) NSLog(@"Fatal error: %@", error);
 #endif
         
         __instance =  [[self alloc] initWithConfiguration:configuration];

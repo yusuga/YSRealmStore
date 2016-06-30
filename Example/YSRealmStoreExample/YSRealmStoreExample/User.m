@@ -37,4 +37,8 @@
     return @{@"color" : [NSData ys_realmDefaultData]};
 }
 
++ (NSDictionary *)linkingObjectsProperties {
+    return @{NSStringFromSelector(@selector(watchedTweets)): [RLMPropertyDescriptor descriptorWithClass:Tweet.class propertyName:@"watchers"]};
+}
+
 @end

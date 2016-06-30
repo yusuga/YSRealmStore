@@ -7,7 +7,7 @@
 //
 
 #import "TweetCell.h"
-#import "Tweet.h"
+#import "Models.h"
 
 @interface TweetCell ()
 

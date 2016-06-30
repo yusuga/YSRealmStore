@@ -29,7 +29,7 @@
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     TwitterRealmStore *store = [TwitterRealmStore sharedStore];
-    NSString *realmPath = store.configuration.path;
+    NSString *realmPath = store.configuration.fileURL.path;
     NSError *error = nil;
     
     @autoreleasepool {
@@ -55,7 +55,7 @@
     XCTAssertNotNil([store realmWithError:&error]); // recreate realm file
     XCTAssertNil(error);
     
-    XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.path]);
+    XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.fileURL.path]);
 }
 
 - (void)testCreateAndDeleteEncriptionKey
@@ -68,7 +68,7 @@
     XCTAssertEqual(key.length, 64);
     
     RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
-    configuration.path = [YSRealmStore realmPathWithFileName:@"encripted"];
+    configuration.fileURL = [YSRealmStore realmFileURLWithRealmName:@"encripted"];
     configuration.encryptionKey = key;
     YSRealmStore *store = [[YSRealmStore alloc] initWithConfiguration:configuration];
     
@@ -78,7 +78,7 @@
         XCTAssertNil(error);
     }
     
-    XCTAssertFalse([fileManager fileExistsAtPath:store.configuration.path]);
+    XCTAssertFalse([fileManager fileExistsAtPath:store.configuration.fileURL.path]);
     
     {
         NSError *error = nil;
@@ -87,7 +87,7 @@
         }
         XCTAssertNil(error);
         
-        XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.path]);
+        XCTAssertTrue([fileManager fileExistsAtPath:store.configuration.fileURL.path]);
     }
     
     XCTAssertTrue([TwitterRealmStore deleteEncryptionKeyWithKeychainIdentifier:keychainID]);
@@ -97,7 +97,7 @@
     NSLog(@"%s {\n\tkey:    %@\n\tnewKey: %@\n}", __func__, configuration.encryptionKey, newKey);
     
     RLMRealmConfiguration *newConfiguration = [[RLMRealmConfiguration alloc] init];
-    newConfiguration.path = configuration.path;
+    newConfiguration.fileURL = configuration.fileURL;
     newConfiguration.encryptionKey = newKey;
     YSRealmStore *newStore = [[YSRealmStore alloc] initWithConfiguration:newConfiguration];
     

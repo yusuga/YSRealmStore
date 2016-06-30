@@ -27,8 +27,23 @@
     [super viewWillAppear:animated];
     
     __weak typeof(self) wself = self;
-    self.collectionNotificationToken = [self.tweets addNotificationBlock:^(RLMResults * _Nullable results, NSError * _Nullable error) {
-        [wself.tableView reloadData];
+    self.collectionNotificationToken = [self.tweets addNotificationBlock:^(RLMResults * _Nullable results, RLMCollectionChange * _Nullable change, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Failed to open Realm on background worker: %@", error);
+            return;
+        }
+        
+        // addNotificationの初期化時の呼び出しはchangeはnilになっている
+        if (!change) {
+            [wself.tableView reloadData];
+            return;
+        }
+        
+        [wself.tableView beginUpdates];
+        [wself.tableView deleteRowsAtIndexPaths:[change deletionsInSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [wself.tableView insertRowsAtIndexPaths:[change insertionsInSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [wself.tableView reloadRowsAtIndexPaths:[change modificationsInSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [wself.tableView endUpdates];
     }];
 }
 

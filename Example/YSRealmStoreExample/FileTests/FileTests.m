@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "YSRealmStore.h"
 #import "TwitterRequest.h"
-#import "Tweet.h"
+#import "Models.h"
 
 @interface FileTests : XCTestCase
 
@@ -24,7 +24,7 @@
     [super setUp];
     
     RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
-    configuration.path = [YSRealmStore realmPathWithFileName:NSStringFromClass([self class])];
+    configuration.fileURL = [YSRealmStore realmFileURLWithRealmName:NSStringFromClass([self class])];
     
     configuration.objectClasses = @[[Tweet class],
                                     [User class],
@@ -48,6 +48,7 @@
     [super tearDown];
 }
 
+/*
 - (void)testCompactRealmFile
 {
     unsigned long long initializedRealmSize = 0;
@@ -60,7 +61,7 @@
         NSError *error = nil;
         RLMRealm *realm = [RLMRealm realmWithConfiguration:self.configuration error:&error];
         XCTAssertNil(error);
-        NSString *realmPath = self.configuration.path;
+        NSString *realmPath = self.configuration.fileURL.path;
         
         initializedRealmSize = [self realmSizeForPath:realmPath];
         XCTAssertGreaterThan(initializedRealmSize, 0);
@@ -99,17 +100,18 @@
     XCTAssertNil(error);
     XCTAssertEqual([[Tweet allObjectsInRealm:realm] count], restCount);
     
-    unsigned long long compactedRealmSize = [self realmSizeForPath:self.configuration.path];
+    unsigned long long compactedRealmSize = [self realmSizeForPath:self.configuration.fileURL.path];
     XCTAssertEqual(compactedRealmSize, initializedRealmSize);
     NSLog(@" {\n\tcompactedRealmSize: %lld bytes (Size has changed🎉)\n\ttweets.count: %zd", compactedRealmSize, [[Tweet allObjectsInRealm:realm] count]);
 }
+ */
 
 #pragma mark - Util
 
 - (void)deleteTestRealm
 {
     NSError *error = nil;
-    [YSRealmStore deleteRealmFilesWithRealmFilePath:self.configuration.path error:&error];
+    [YSRealmStore deleteRealmFilesWithRealmFilePath:self.configuration.fileURL.path error:&error];
     XCTAssertNil(error, @"error: %@", error);
 }
 

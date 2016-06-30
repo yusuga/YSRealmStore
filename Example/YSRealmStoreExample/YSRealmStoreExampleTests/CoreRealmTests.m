@@ -35,11 +35,11 @@
     NSString *name = @"database";
     
     RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
-    configuration.path = [YSRealmStore realmPathWithFileName:name];
+    configuration.fileURL = [YSRealmStore realmFileURLWithRealmName:name];
     
     YSRealmStore *store = [[YSRealmStore alloc] initWithConfiguration:configuration];
     
-    NSString *path = [store realm].path;
+    NSString *path = [store realm].configuration.fileURL.path;
     DDLogDebug(@"%s; path = %@;", __func__, path);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -950,11 +950,10 @@
         }
     }];
     
-    NSArray *linkingObjects = [user linkingObjectsOfClass:[Tweet className]
-                                              forProperty:NSStringFromSelector(@selector(watchers))];
-    XCTAssertEqual([linkingObjects count], count);
+    RLMLinkingObjects<Tweet *> *watchedTweets = user.watchedTweets;
+    XCTAssertEqual([watchedTweets count], count);
     
-    for (Tweet *tweet in linkingObjects) {
+    for (Tweet *tweet in watchedTweets) {
         XCTAssertTrue([tweet isKindOfClass:[Tweet class]]);
         XCTAssertEqual([tweet.watchers count], 1);
         User *user = [tweet.watchers firstObject];

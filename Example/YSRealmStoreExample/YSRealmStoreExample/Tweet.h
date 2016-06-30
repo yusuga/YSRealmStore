@@ -7,8 +7,9 @@
 //
 
 #import <Realm/Realm.h>
-#import "User.h"
 #import "Entities.h"
+@class User;
+RLM_ARRAY_TYPE(User)
 
 @interface Tweet : RLMObject
 

@@ -10,7 +10,6 @@
 #import <XCTest/XCTest.h>
 #import <Realm/Realm.h>
 #import "Model.h"
-#import <Realm+JSON/RLMObject+JSON.h>
 
 @interface RealmExampleTests : XCTestCase
 
@@ -29,7 +28,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSLog(@"defaultRealm.path = %@", realm.path);
+        NSLog(@"defaultRealm.path = %@", realm.configuration.fileURL);
     });
 }
 

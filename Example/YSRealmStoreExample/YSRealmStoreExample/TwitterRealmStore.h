@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YSRealmStore.h"
 #import "JsonGenerator.h"
-#import "Tweet.h"
+#import "Models.h"
 
 @interface TwitterRealmStore : YSRealmStore
 

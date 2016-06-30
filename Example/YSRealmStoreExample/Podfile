@@ -1,4 +1,12 @@
 platform :ios, '7.0'
-pod 'Realm', '0.98.8'
 
-pod 'LumberjackLauncher'
+target 'YSRealmStoreExample' do
+  pod 'Realm', '~> 1.0'
+  
+  pod 'LumberjackLauncher'
+  
+  target 'YSRealmStoreExampleTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+end

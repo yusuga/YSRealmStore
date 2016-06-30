@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D85A3899172C1EF16A53CB3 /* libPods-YSRealmStoreExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E25BD6A1578531F97F4DA14 /* libPods-YSRealmStoreExampleTests.a */; };
+		28803AFF60D6DCA34866C678 /* libPods-YSRealmStoreExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C6AF9042ACD2F6716E0BD506 /* libPods-YSRealmStoreExample.a */; };
 		B8191B1F1A35275D0063FE1F /* YSRealmWriteTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */; };
 		B8191B211A352E500063FE1F /* WriteTransactionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8191B201A352E500063FE1F /* WriteTransactionTests.m */; };
 		B829812F1C8EB87A00DA1B73 /* FileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B829812E1C8EB87A00DA1B73 /* FileTests.m */; };
@@ -41,7 +43,6 @@
 		B8D5464519FDCD9B008FA04F /* CoreRealmTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464419FDCD9B008FA04F /* CoreRealmTests.m */; };
 		B8D5464D19FDCEC9008FA04F /* OperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D5464C19FDCEC9008FA04F /* OperationTests.m */; };
 		B8F9B8A91C6B08D200AE54C5 /* StoreUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8F9B8A81C6B08D200AE54C5 /* StoreUtilityTests.m */; };
-		CD61284CB44F3AE3BFE86B01 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAE81F79A0CF1ECCDF8F05D /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,9 +70,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0AAE81F79A0CF1ECCDF8F05D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		1334DBDE6AAA5F8549BE0C0E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		8E621EFFD268E78113302843 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		149AD20928059740182D1C0A /* Pods-YSRealmStoreExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YSRealmStoreExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YSRealmStoreExampleTests/Pods-YSRealmStoreExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1E25BD6A1578531F97F4DA14 /* libPods-YSRealmStoreExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-YSRealmStoreExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A2EEB9E689ED9016C7AEDD4 /* Pods-YSRealmStoreExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YSRealmStoreExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YSRealmStoreExampleTests/Pods-YSRealmStoreExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		A2BE0ED309F0323CBA4BA928 /* Pods-YSRealmStoreExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YSRealmStoreExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-YSRealmStoreExample/Pods-YSRealmStoreExample.release.xcconfig"; sourceTree = "<group>"; };
+		B26E5111C387BB4CF278352E /* Pods-YSRealmStoreExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YSRealmStoreExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YSRealmStoreExample/Pods-YSRealmStoreExample.debug.xcconfig"; sourceTree = "<group>"; };
 		B8191B1D1A35275D0063FE1F /* YSRealmWriteTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSRealmWriteTransaction.h; sourceTree = "<group>"; };
 		B8191B1E1A35275D0063FE1F /* YSRealmWriteTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSRealmWriteTransaction.m; sourceTree = "<group>"; };
 		B8191B201A352E500063FE1F /* WriteTransactionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WriteTransactionTests.m; sourceTree = "<group>"; };
@@ -84,6 +87,7 @@
 		B84F22551C87C6E900F9BDF8 /* FetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchedResultsController.m; sourceTree = "<group>"; };
 		B84FB8FD1A6F367C0014536E /* Mention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mention.h; path = YSRealmStoreExample/Mention.h; sourceTree = "<group>"; };
 		B84FB8FE1A6F367C0014536E /* Mention.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mention.m; path = YSRealmStoreExample/Mention.m; sourceTree = "<group>"; };
+		B85045391D25150000C78B30 /* Models.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Models.h; sourceTree = "<group>"; };
 		B853DFDC1A9AC365005C17F1 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		B853DFDD1A9AC365005C17F1 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
 		B853DFDF1A9AD2BF005C17F1 /* UtilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityTests.m; sourceTree = "<group>"; };
@@ -138,6 +142,7 @@
 		B8F9B8A61C6B08D200AE54C5 /* StoreUtilityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StoreUtilityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8F9B8A81C6B08D200AE54C5 /* StoreUtilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StoreUtilityTests.m; sourceTree = "<group>"; };
 		B8F9B8AA1C6B08D200AE54C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C6AF9042ACD2F6716E0BD506 /* libPods-YSRealmStoreExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-YSRealmStoreExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD61284CB44F3AE3BFE86B01 /* libPods.a in Frameworks */,
+				28803AFF60D6DCA34866C678 /* libPods-YSRealmStoreExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D85A3899172C1EF16A53CB3 /* libPods-YSRealmStoreExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,10 +179,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		550B28108FDB4CC39DB022D0 /* Frameworks */ = {
+		9651987420B3F3D36A4CA0BA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0AAE81F79A0CF1ECCDF8F05D /* libPods.a */,
+				B26E5111C387BB4CF278352E /* Pods-YSRealmStoreExample.debug.xcconfig */,
+				A2BE0ED309F0323CBA4BA928 /* Pods-YSRealmStoreExample.release.xcconfig */,
+				149AD20928059740182D1C0A /* Pods-YSRealmStoreExampleTests.debug.xcconfig */,
+				2A2EEB9E689ED9016C7AEDD4 /* Pods-YSRealmStoreExampleTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A6F50AC7C50B5396AC379107 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C6AF9042ACD2F6716E0BD506 /* libPods-YSRealmStoreExample.a */,
+				1E25BD6A1578531F97F4DA14 /* libPods-YSRealmStoreExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -214,6 +232,7 @@
 		B88DA1021A5A103100DF36D3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B85045391D25150000C78B30 /* Models.h */,
 				B88DA1051A5A103F00DF36D3 /* Tweet.h */,
 				B88DA1061A5A103F00DF36D3 /* Tweet.m */,
 				B88DA1091A5A103F00DF36D3 /* User.h */,
@@ -268,8 +287,8 @@
 				B8F9B8A71C6B08D200AE54C5 /* StoreUtilityTests */,
 				B829812D1C8EB87A00DA1B73 /* FileTests */,
 				B8D545FA19FD00F5008FA04F /* Products */,
-				550B28108FDB4CC39DB022D0 /* Frameworks */,
-				DA63751ED27EAB693E5C9480 /* Pods */,
+				9651987420B3F3D36A4CA0BA /* Pods */,
+				A6F50AC7C50B5396AC379107 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -360,15 +379,6 @@
 			path = StoreUtilityTests;
 			sourceTree = "<group>";
 		};
-		DA63751ED27EAB693E5C9480 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				8E621EFFD268E78113302843 /* Pods.debug.xcconfig */,
-				1334DBDE6AAA5F8549BE0C0E /* Pods.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -394,12 +404,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B8D5461C19FD00F6008FA04F /* Build configuration list for PBXNativeTarget "YSRealmStoreExample" */;
 			buildPhases = (
-				63CB26ABC6EDC9E9EC3581C6 /* Check Pods Manifest.lock */,
+				6ADF5F36BE0740109B51DF56 /* [CP] Check Pods Manifest.lock */,
 				B8D545F519FD00F5008FA04F /* Sources */,
 				B8D545F619FD00F5008FA04F /* Frameworks */,
 				B8D545F719FD00F5008FA04F /* Resources */,
-				0F2CB92B5D733FD30CEF1F56 /* Copy Pods Resources */,
-				06B11AEE1B65EA8759E25425 /* Embed Pods Frameworks */,
+				67875B58AF7B4B3F4DAABF29 /* [CP] Embed Pods Frameworks */,
+				40E2B027877CA4E4D987AAD8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -414,9 +424,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B8D5461F19FD00F6008FA04F /* Build configuration list for PBXNativeTarget "YSRealmStoreExampleTests" */;
 			buildPhases = (
+				C6685B87E4084A87AC7CEDF4 /* [CP] Check Pods Manifest.lock */,
 				B8D5460E19FD00F6008FA04F /* Sources */,
 				B8D5460F19FD00F6008FA04F /* Frameworks */,
 				B8D5461019FD00F6008FA04F /* Resources */,
+				98BFEBE2078D90F70C8E7048 /* [CP] Embed Pods Frameworks */,
+				77DE5DD2BB9003BB65B256AF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -529,44 +542,89 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		06B11AEE1B65EA8759E25425 /* Embed Pods Frameworks */ = {
+		40E2B027877CA4E4D987AAD8 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YSRealmStoreExample/Pods-YSRealmStoreExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		0F2CB92B5D733FD30CEF1F56 /* Copy Pods Resources */ = {
+		67875B58AF7B4B3F4DAABF29 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YSRealmStoreExample/Pods-YSRealmStoreExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		63CB26ABC6EDC9E9EC3581C6 /* Check Pods Manifest.lock */ = {
+		6ADF5F36BE0740109B51DF56 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		77DE5DD2BB9003BB65B256AF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YSRealmStoreExampleTests/Pods-YSRealmStoreExampleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		98BFEBE2078D90F70C8E7048 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YSRealmStoreExampleTests/Pods-YSRealmStoreExampleTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C6685B87E4084A87AC7CEDF4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -787,7 +845,7 @@
 		};
 		B8D5461D19FD00F6008FA04F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8E621EFFD268E78113302843 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = B26E5111C387BB4CF278352E /* Pods-YSRealmStoreExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -803,7 +861,7 @@
 		};
 		B8D5461E19FD00F6008FA04F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1334DBDE6AAA5F8549BE0C0E /* Pods.release.xcconfig */;
+			baseConfigurationReference = A2BE0ED309F0323CBA4BA928 /* Pods-YSRealmStoreExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -819,6 +877,7 @@
 		};
 		B8D5462019FD00F6008FA04F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 149AD20928059740182D1C0A /* Pods-YSRealmStoreExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -842,6 +901,7 @@
 		};
 		B8D5462119FD00F6008FA04F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2A2EEB9E689ED9016C7AEDD4 /* Pods-YSRealmStoreExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -910,6 +970,7 @@
 				B82981341C8EB87A00DA1B73 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B8D545F419FD00F5008FA04F /* Build configuration list for PBXProject "YSRealmStoreExample" */ = {
 			isa = XCConfigurationList;

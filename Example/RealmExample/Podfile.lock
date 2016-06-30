@@ -1,16 +1,14 @@
 PODS:
-  - Realm (0.98.8):
-    - Realm/Headers (= 0.98.8)
-  - Realm+JSON (0.2.14):
-    - Realm (~> 0.95)
-  - Realm/Headers (0.98.8)
+  - Realm (1.0.1):
+    - Realm/Headers (= 1.0.1)
+  - Realm/Headers (1.0.1)
 
 DEPENDENCIES:
-  - Realm (= 0.98.8)
-  - Realm+JSON
+  - Realm (~> 1.0)
 
 SPEC CHECKSUMS:
-  Realm: 0e293bb62999730599efc3048896bbd4f2e43bcd
-  Realm+JSON: 39bef066156e589b209a14e5f2d68754793f8843
+  Realm: 2e15e39d35b08abb529e212ed5d8af107b5236c8
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: b6402d96149dcf5fb6e14d224503b5d86a12bd81
+
+COCOAPODS: 1.0.1

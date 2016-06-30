@@ -7,6 +7,7 @@
 //
 
 #import <Realm/Realm.h>
+#import "Tweet.h"
 
 @interface User : RLMObject
 
@@ -14,6 +15,7 @@
 @property NSString *name;
 @property NSString *screen_name;
 @property NSData *color;
+@property (readonly) RLMLinkingObjects<Tweet *> *watchedTweets;
 
 /* Unavailable Methods */
 

@@ -1,4 +1,11 @@
 platform :ios, '7.0'
-pod 'Realm', '0.98.8'
 
-pod 'Realm+JSON'
+target 'RealmExample' do
+  pod 'Realm', '~> 1.0'
+
+  target 'RealmExampleTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end

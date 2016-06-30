@@ -74,9 +74,10 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
  *  https://github.com/realm/realm-cocoa/issues/1243
  *
  *  RLMRealmを1つもretainしていないタイミングで実行する必要がある。
+ *  Realm 1.0で動かなかったため一旦廃止。
  */
 + (BOOL)compactRealmFileWithConfiguration:(RLMRealmConfiguration *)configuration
-                                    error:(NSError **)errorPtr;
+                                    error:(NSError **)errorPtr UNAVAILABLE_ATTRIBUTE;
 - (unsigned long long)realmFileSize;
 
 - (BOOL)addSkipBackupAttributeToRealmFilesWithError:(NSError **)errorPtr;
@@ -100,6 +101,6 @@ typedef void(^YSRealmStoreWriteTransactionCompletion)(YSRealmStore *store, YSRea
 /// @name Utility
 ///--------------
 
-+ (NSString*)realmPathWithFileName:(NSString *)fileName;
++ (NSURL *)realmFileURLWithRealmName:(NSString*)realmName;
 
 @end

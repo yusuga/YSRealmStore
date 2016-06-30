@@ -198,49 +198,37 @@
             return NO;
         }
         
-        NSString *compactedRealmPath = [configuration.path stringByAppendingPathExtension:@"compacted"];
+        NSURL *compactedURL = [configuration.fileURL URLByAppendingPathComponent:@"compacted"];
         
         // is compacted realm file exist?
         
-        if ([[NSFileManager defaultManager] fileExistsAtPath:compactedRealmPath]) {
-            if (![self deleteRealmFilesWithRealmFilePath:compactedRealmPath error:errorPtr]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:compactedURL.path]) {
+            if (![self deleteRealmFilesWithRealmFilePath:compactedURL.path error:errorPtr]) {
                 return NO;
             }
         }
         
         // Create compacted realm file.
         
-        if (configuration.encryptionKey) {
-            if (![realm writeCopyToPath:compactedRealmPath encryptionKey:configuration.encryptionKey error:errorPtr]) {
-                return NO;
-            }
-        } else {
-            if (![realm writeCopyToPath:compactedRealmPath error:errorPtr]) {
-                return NO;
-            }
+        if (![realm writeCopyToURL:compactedURL encryptionKey:configuration.encryptionKey error:errorPtr]) {
+            return NO;
         }
         
         // Delete original realm files.
         
-        if (![self deleteRealmFilesWithRealmFilePath:configuration.path error:errorPtr]) {
+        if (![self deleteRealmFilesWithRealmFilePath:configuration.fileURL.path error:errorPtr]) {
             return NO;
         }
         
         // Move compacted realm file to original realm file path.
         
-        if (configuration.encryptionKey) {
-            if (![realm writeCopyToPath:configuration.path encryptionKey:configuration.encryptionKey error:errorPtr]) {
-                return NO;
-            }
-        } else {
-            if (![realm writeCopyToPath:configuration.path error:errorPtr]) {
-                return NO;
-            }
+        if (![realm writeCopyToURL:configuration.fileURL encryptionKey:configuration.encryptionKey error:errorPtr]) {
+            return NO;
         }
         
         // Delete compacted realm file.
         
-        if (![self deleteRealmFilesWithRealmFilePath:compactedRealmPath error:&error]) {
+        if (![self deleteRealmFilesWithRealmFilePath:compactedURL.path error:&error]) {
             return NO;
         }
     }
@@ -250,7 +238,7 @@
 
 - (unsigned long long)realmFileSize
 {
-    return [[[NSFileManager defaultManager] attributesOfItemAtPath:self.configuration.path error:nil] fileSize];;
+    return [[[NSFileManager defaultManager] attributesOfItemAtPath:self.configuration.fileURL.path error:nil] fileSize];;
 }
 
 /*
@@ -304,7 +292,7 @@
 
 - (BOOL)deleteRealmFilesWithError:(NSError **)errorPtr
 {
-    return [[self class] deleteRealmFilesWithRealmFilePath:self.configuration.path
+    return [[self class] deleteRealmFilesWithRealmFilePath:self.configuration.fileURL.path
                                                      error:errorPtr];
 }
 
@@ -325,7 +313,7 @@
 
 - (NSArray<NSString *> *)realmFilePaths
 {
-    return [[self class] realmFilePathsWithRealmFilePath:self.configuration.path];
+    return [[self class] realmFilePathsWithRealmFilePath:self.configuration.fileURL.path];
 }
 
 + (NSArray<NSString *> *)realmFilePathsWithRealmFilePath:(NSString *)path
@@ -427,19 +415,19 @@
 
 #pragma mark - Utility
 
-+ (NSString*)realmPathWithFileName:(NSString*)fileName
++ (NSURL *)realmFileURLWithRealmName:(NSString*)realmName
 {
-    NSParameterAssert(fileName);
+    NSParameterAssert(realmName);
     
     NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                          NSUserDomainMask,
                                                          YES)[0];
-    path = [path stringByAppendingPathComponent:fileName];
+    path = [path stringByAppendingPathComponent:realmName];
     
     if ([path pathExtension].length == 0) {
         path = [path stringByAppendingPathExtension:@"realm"];
     }
-    return path;
+    return [NSURL fileURLWithPath:path];
 }
 
 @end
