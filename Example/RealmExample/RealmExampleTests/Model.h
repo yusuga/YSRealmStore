@@ -15,7 +15,7 @@
 @property BOOL boolean;
 @property NSInteger integer;
 @property int64_t int64;
-// @property uint64_t uint64; // Unsupported (realm-cocoa 0.97.1)
+// @property uint64_t uint64; // Unsupported (realm-cocoa 1.0.1)
 @property CGFloat decimal;
 @property NSString *string;
 @property NSDate *date;

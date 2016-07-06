@@ -25,7 +25,3 @@
 + (instancetype)objectForPrimaryKey:(id)primaryKey __attribute__((unavailable("Use +objectInRealm:forPrimaryKey: instead.")));
 
 @end
-
-// This protocol enables typed collections. i.e.:
-// RLMArray<User>
-RLM_ARRAY_TYPE(User)
