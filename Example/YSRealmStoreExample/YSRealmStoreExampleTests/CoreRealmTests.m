@@ -46,7 +46,7 @@
     XCTAssertTrue([fileManager fileExistsAtPath:path]);
     
     NSError *error = nil;
-    XCTAssertTrue([fileManager removeItemAtPath:path error:&error]);
+    XCTAssertTrue([YSRealmStore deleteRealmFilesWithRealmFilePath:path error:&error]);
     XCTAssertNil(error);
 }
 

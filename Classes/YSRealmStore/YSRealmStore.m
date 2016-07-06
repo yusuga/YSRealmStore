@@ -330,7 +330,8 @@
              [path stringByAppendingPathExtension:@"log"],
              [path stringByAppendingPathExtension:@"log_a"],
              [path stringByAppendingPathExtension:@"log_b"],
-             [path stringByAppendingPathExtension:@"note"]];
+             [path stringByAppendingPathExtension:@"note"],
+             [path stringByAppendingPathExtension:@"management"]];
 }
 
 #pragma mark - Encryption
