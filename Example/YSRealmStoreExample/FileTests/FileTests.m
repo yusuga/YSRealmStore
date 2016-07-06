@@ -8,12 +8,15 @@
 
 #import <XCTest/XCTest.h>
 #import "YSRealmStore.h"
+#import "TwitterRealmStore.h"
 #import "TwitterRequest.h"
 #import "Models.h"
+#import "JsonGenerator.h"
 
 @interface FileTests : XCTestCase
 
-@property (nonatomic) RLMRealmConfiguration *configuration;
+@property (nonatomic) RLMRealmConfiguration *configuration1;
+@property (nonatomic) RLMRealmConfiguration *configuration2;
 
 @end
 
@@ -23,20 +26,30 @@
 {
     [super setUp];
     
-    RLMRealmConfiguration *configuration = [[RLMRealmConfiguration alloc] init];
-    configuration.fileURL = [YSRealmStore realmFileURLWithRealmName:NSStringFromClass([self class])];
+    NSArray *objectClasses = @[[Tweet class],
+                               [User class],
+                               [Entities class],
+                               [Url class],
+                               [Mention class]];
     
-    configuration.objectClasses = @[[Tweet class],
-                                    [User class],
-                                    [Entities class],
-                                    [Url class],
-                                    [Mention class]];
-    
-    configuration.schemaVersion = 1;
-    
-    configuration.encryptionKey = [YSRealmStore defaultEncryptionKey];
-    NSLog(@"%s, encryptionKey: %@", __func__, [configuration.encryptionKey.description stringByReplacingOccurrencesOfString:@" " withString:@""]);
-    self.configuration = configuration;
+    {
+        RLMRealmConfiguration *config = [[RLMRealmConfiguration alloc] init];
+        config.fileURL = [YSRealmStore realmFileURLWithRealmName:[NSString stringWithFormat:@"%@_1", NSStringFromClass([self class])]];
+        config.objectClasses = objectClasses;
+        config.schemaVersion = 1;
+        config.encryptionKey = [@"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" dataUsingEncoding:NSUTF8StringEncoding];
+        NSLog(@"config1.encryptionKey: %@", [config.encryptionKey.description stringByReplacingOccurrencesOfString:@" " withString:@""]);
+        self.configuration1 = config;
+    }
+    {
+        RLMRealmConfiguration *config = [[RLMRealmConfiguration alloc] init];
+        config.fileURL = [YSRealmStore realmFileURLWithRealmName:[NSString stringWithFormat:@"%@_2", NSStringFromClass([self class])]];
+        config.objectClasses = objectClasses;
+        config.schemaVersion = 1;
+        config.encryptionKey = [@"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" dataUsingEncoding:NSUTF8StringEncoding];
+        NSLog(@"config1.encryptionKey: %@", [config.encryptionKey.description stringByReplacingOccurrencesOfString:@" " withString:@""]);
+        self.configuration2 = config;
+    }
     
     [self deleteTestRealm];
 }
@@ -46,6 +59,31 @@
     [self deleteTestRealm];
     
     [super tearDown];
+}
+
+- (void)testCopyRealm
+{
+    TwitterRealmStore *store1 = [[TwitterRealmStore alloc] initWithConfiguration:self.configuration1];
+    
+    Tweet *tweet1 = [[Tweet alloc] initWithValue:[JsonGenerator tweet]];
+    [store1.realm transactionWithBlock:^{
+        [store1.realm addObject:tweet1];
+    }];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    XCTAssertTrue([fileManager fileExistsAtPath:self.configuration1.fileURL.path]);
+    XCTAssertFalse([fileManager fileExistsAtPath:self.configuration2.fileURL.path]);
+    
+    NSError *error = nil;
+    [store1.realm writeCopyToURL:self.configuration2.fileURL encryptionKey:self.configuration2.encryptionKey error:&error];
+    XCTAssertNil(error);
+    XCTAssertTrue([fileManager fileExistsAtPath:self.configuration2.fileURL.path]);
+    
+    TwitterRealmStore *store2 = [[TwitterRealmStore alloc] initWithConfiguration:self.configuration2];
+    Tweet *tweet2 = [Tweet objectInRealm:store2.realm forPrimaryKey:tweet1.id];
+    XCTAssertNotNil(tweet2);
+    XCTAssertEqualObjects(tweet1.id, tweet2.id);
+    XCTAssertEqual(tweet1.user.id, tweet2.user.id);
 }
 
 /*
@@ -111,7 +149,11 @@
 - (void)deleteTestRealm
 {
     NSError *error = nil;
-    [YSRealmStore deleteRealmFilesWithRealmFilePath:self.configuration.fileURL.path error:&error];
+    [YSRealmStore deleteRealmFilesWithRealmFilePath:self.configuration1.fileURL.path error:&error];
+    XCTAssertNil(error, @"error: %@", error);
+    
+    error = nil;
+    [YSRealmStore deleteRealmFilesWithRealmFilePath:self.configuration2.fileURL.path error:&error];
     XCTAssertNil(error, @"error: %@", error);
 }
 
