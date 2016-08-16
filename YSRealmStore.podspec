@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'YSRealmStore'
-  s.version = '0.10.1'
+  s.version = '0.10.1-log.1'
   s.summary = 'Simple wrapper for Realm Cocoa.'
   s.homepage = 'https://github.com/yusuga/YSRealmStore'
   s.license = 'MIT'
@@ -14,6 +14,7 @@ Pod::Spec.new do |s|
   s.compiler_flags = '-fmodules'
   
   s.dependency 'Realm', '~> 1.0'
+  s.dependency 'Crashlytics'
   
   s.subspec 'Category' do |ss|
     ss.source_files = 'Classes/YSRealmStore/Category/*.{h,m}'
