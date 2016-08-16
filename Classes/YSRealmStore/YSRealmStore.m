@@ -7,6 +7,7 @@
 //
 
 #import "YSRealmStore.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface YSRealmStore ()
 
@@ -84,18 +85,22 @@
 
 - (void)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     [YSRealmWriteTransaction writeTransactionWithConfiguration:self.configuration
                                                     writeBlock:writeBlock];
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
 }
 
 - (YSRealmWriteTransaction *)writeTransactionWithWriteBlock:(YSRealmWriteTransactionWriteBlock)writeBlock
                                                  completion:(YSRealmStoreWriteTransactionCompletion)completion
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     return [YSRealmWriteTransaction writeTransactionWithConfiguration:self.configuration
                                                                 queue:[[self class] queue]
                                                            writeBlock:writeBlock
                                                            completion:^(YSRealmWriteTransaction *transaction)
             {
+                CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
                 if (completion) completion(self, transaction, self.realm);
             }];
 }
@@ -105,18 +110,22 @@
 
 - (void)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     [YSRealmOperation writeOperationWithConfiguration:self.configuration
                                          objectsBlock:objectsBlock];
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
 }
 
 - (YSRealmOperation*)writeObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreOperationCompletion)completion
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     return [YSRealmOperation writeOperationWithConfiguration:self.configuration
                                                        queue:[[self class] queue]
                                                 objectsBlock:objectsBlock
                                                   completion:^(YSRealmOperation *operation)
             {
+                CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
                 if (completion) completion(self, operation, self.realm);
             }];
 }
@@ -125,39 +134,47 @@
 
 - (void)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     [YSRealmOperation deleteOperationWithConfiguration:self.configuration
                                           objectsBlock:objectsBlock];
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
 }
 
 - (YSRealmOperation*)deleteObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                         completion:(YSRealmStoreOperationCompletion)completion
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     return [YSRealmOperation deleteOperationWithConfiguration:self.configuration
                                                         queue:[[self class] queue]
                                                  objectsBlock:objectsBlock
                                                    completion:^(YSRealmOperation *operation)
             {
+                CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
                 if (completion) completion(self, operation, self.realm);
             }];
 }
 
 - (void)deleteAllObjects
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     [YSRealmWriteTransaction writeTransactionWithConfiguration:self.configuration
                                                     writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm)
      {
          [realm deleteAllObjects];
      }];
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
 }
 
 - (void)deleteAllObjectsWithCompletion:(YSRealmStoreWriteTransactionCompletion)completion
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     [YSRealmWriteTransaction writeTransactionWithConfiguration:self.configuration
                                                          queue:[[self class] queue]
                                                     writeBlock:^(YSRealmWriteTransaction *transaction, RLMRealm *realm)
      {
          [realm deleteAllObjects];
      } completion:^(YSRealmWriteTransaction *transaction) {
+         CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
          if (completion) completion(self, transaction, self.realm);
      }];
 }
@@ -166,18 +183,23 @@
 
 - (id)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
 {
-    return [YSRealmOperation fetchOperationWithConfiguration:self.configuration
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
+    id results = [YSRealmOperation fetchOperationWithConfiguration:self.configuration
                                                 objectsBlock:objectsBlock];
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
+    return results;
 }
 
 - (YSRealmOperation*)fetchObjectsWithObjectsBlock:(YSRealmOperationObjectsBlock)objectsBlock
                                        completion:(YSRealmStoreFetchOperationCompletion)completion
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     return [YSRealmOperation fetchOperationWithConfiguration:self.configuration
                                                        queue:[[self class] queue]
                                                 objectsBlock:objectsBlock
                                                   completion:^(YSRealmOperation *operation, RLMResults *results)
             {
+                CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
                 if (completion) completion(self, operation, self.realm, results);
             }];
 }
@@ -292,22 +314,28 @@
 
 - (BOOL)deleteRealmFilesWithError:(NSError **)errorPtr
 {
-    return [[self class] deleteRealmFilesWithRealmFilePath:self.configuration.fileURL.path
-                                                     error:errorPtr];
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
+    BOOL ret = [[self class] deleteRealmFilesWithRealmFilePath:self.configuration.fileURL.path
+                                                         error:errorPtr];
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
+    return ret;
 }
 
 + (BOOL)deleteRealmFilesWithRealmFilePath:(NSString *)realmFilePath
                                     error:(NSError **)errorPtr
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
     NSFileManager *manager = [NSFileManager defaultManager];
     
     for (NSString *path in [self realmFilePathsWithRealmFilePath:realmFilePath]) {
         if ([manager fileExistsAtPath:path]) {
             if (![manager removeItemAtPath:path error:errorPtr]) {
+                CLS_LOG(@"Failure: (%@)", NSStringFromClass([self class]));
                 return NO;
             }
         }
     }
+    CLS_LOG(@"Success: (%@)", NSStringFromClass([self class]));
     return YES;
 }
 
@@ -352,6 +380,8 @@
  */
 + (NSData *)encryptionKeyForKeychainIdentifier:(NSString *)identifier
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
+    
     // Identifier for our keychain entry - should be unique for your application
     NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)identifier.UTF8String
                                                length:strlen(identifier.UTF8String) + 1
@@ -366,8 +396,11 @@
     CFTypeRef dataRef = NULL;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataRef);
     if (status == errSecSuccess) {
+        CLS_LOG(@"Success: retrieve encryptionKey (%@)", NSStringFromClass([self class]));
         return (__bridge NSData *)dataRef;
     }
+    
+    CLS_LOG(@"will new create encryptionKey (%@)", NSStringFromClass([self class]));
     
     // No pre-existing key from this application, so generate a new one
     uint8_t buffer[64];
@@ -383,6 +416,7 @@
     status = SecItemAdd((__bridge CFDictionaryRef)query, NULL);
     NSAssert(status == errSecSuccess, @"Failed to insert new key in the keychain");
     
+    CLS_LOG(@"Success: new create encryptionKey (%@)", NSStringFromClass([self class]));
     return keyData;
 }
 
@@ -393,8 +427,12 @@
 
 + (BOOL)deleteEncryptionKeyWithKeychainIdentifier:(NSString *)identifier
 {
+    CLS_LOG(@"will (%@)", NSStringFromClass([self class]));
+    
     NSParameterAssert(identifier.length);
     if (!identifier.length) return NO;
+    
+    CLS_LOG(@"will delete encryption key (%@)", NSStringFromClass([self class]));
     
     // Identifier for our keychain entry - should be unique for your application
     NSData *tag = [[NSData alloc] initWithBytesNoCopy:(void *)identifier.UTF8String
@@ -408,9 +446,10 @@
     
     OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
     if (status != errSecSuccess && status != errSecItemNotFound) {
+        CLS_LOG(@"Failure: delete encryption key (%@)", NSStringFromClass([self class]));
         return NO;
     }
-    
+    CLS_LOG(@"Success: delete encryption key (%@)", NSStringFromClass([self class]));
     return YES;
 }
 

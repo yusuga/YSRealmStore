@@ -4,6 +4,7 @@ target 'YSRealmStoreExample' do
   pod 'Realm', '~> 1.0'
   
   pod 'LumberjackLauncher'
+  pod 'Crashlytics'
   
   target 'YSRealmStoreExampleTests' do
     inherit! :search_paths
