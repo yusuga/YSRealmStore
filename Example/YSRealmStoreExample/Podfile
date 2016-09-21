@@ -1,7 +1,7 @@
 platform :ios, '7.0'
 
 target 'YSRealmStoreExample' do
-  pod 'Realm', '~> 1.0'
+  pod 'Realm', '~> 1.0.0'
   
   pod 'LumberjackLauncher'
   

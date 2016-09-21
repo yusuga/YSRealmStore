@@ -371,7 +371,8 @@
     
     // No pre-existing key from this application, so generate a new one
     uint8_t buffer[64];
-    SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
+    status = SecRandomCopyBytes(kSecRandomDefault, 64, buffer);
+    NSAssert(status == errSecSuccess, @"Failed to random copy bytes in the keychain");
     NSData *keyData = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
     
     // Store the key in the keychain

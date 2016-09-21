@@ -24,6 +24,7 @@ static NSString * const kCellIdentifier = @"Cell";
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     self.limitOfRequestTweet = 5;
 }
 
