@@ -344,14 +344,14 @@
         if (sync) {
             objects = [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
                 RLMResults *tweets = [Tweet allObjectsInRealm:realm];
-                return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
+                return [tweets sortedResultsUsingKeyPath:primaryKey ascending:YES];
             }];
         } else {
             XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%s", __func__]];
             
             [store fetchObjectsWithObjectsBlock:^id(YSRealmOperation *operation, RLMRealm *realm) {
                 RLMResults *tweets = [Tweet allObjectsInRealm:realm];
-                return [tweets sortedResultsUsingProperty:primaryKey ascending:YES];
+                return [tweets sortedResultsUsingKeyPath:primaryKey ascending:YES];
             } completion:^(YSRealmStore *store, YSRealmOperation *operation, RLMRealm *realm, RLMResults *results) {
                 objects = results;
                 [expectation fulfill];

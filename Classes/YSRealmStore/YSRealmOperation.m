@@ -238,7 +238,7 @@ typedef NS_ENUM(NSUInteger, YSRealmOperationType) {
         }
         switch (type) {
             case YSRealmOperationTypeAddOrUpdate:
-                [realm addOrUpdateObjectsFromArray:object];
+                [realm addOrUpdateObjects:object];
                 break;
             case YSRealmOperationTypeDelete:
                 [realm deleteObjects:object];

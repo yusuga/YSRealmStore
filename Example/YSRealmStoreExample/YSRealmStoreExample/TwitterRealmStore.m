@@ -114,7 +114,7 @@
 
 - (RLMResults *)fetchAllTweets
 {
-    return [[Tweet allObjectsInRealm:[self realm]] sortedResultsUsingProperty:@"id" ascending:NO];
+    return [[Tweet allObjectsInRealm:[self realm]] sortedResultsUsingKeyPath:@"id" ascending:NO];
 }
 
 #pragma mark - Migration
