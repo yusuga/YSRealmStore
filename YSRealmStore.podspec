@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.compiler_flags = '-fmodules'
   
-  s.dependency 'Realm', '~> 1.0.0'
+  s.dependency 'Realm', '2.8.1' # Xcode 9.0
   s.dependency 'Crashlytics'
   
   s.subspec 'Category' do |ss|

@@ -1,14 +1,18 @@
 PODS:
-  - Realm (1.0.1):
-    - Realm/Headers (= 1.0.1)
-  - Realm/Headers (1.0.1)
+  - Realm (2.8.1):
+    - Realm/Headers (= 2.8.1)
+  - Realm/Headers (2.8.1)
 
 DEPENDENCIES:
-  - Realm (~> 1.0)
+  - Realm (= 2.8.1)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Realm
 
 SPEC CHECKSUMS:
-  Realm: 2e15e39d35b08abb529e212ed5d8af107b5236c8
+  Realm: 2627602ad6818451f0cb8c2a6e072f7f10a5f360
 
-PODFILE CHECKSUM: b6402d96149dcf5fb6e14d224503b5d86a12bd81
+PODFILE CHECKSUM: 1be0d242440ff1c837bc52f665d4ca45be3a6058
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.5.0

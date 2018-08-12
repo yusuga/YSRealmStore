@@ -17,14 +17,24 @@ PODS:
     - CocoaLumberjack (= 2.0.0)
     - LumberjackConsole
   - NBUCore (2.0.5)
-  - Realm (1.0.2):
-    - Realm/Headers (= 1.0.2)
-  - Realm/Headers (1.0.2)
+  - Realm (2.8.1):
+    - Realm/Headers (= 2.8.1)
+  - Realm/Headers (2.8.1)
 
 DEPENDENCIES:
   - Crashlytics
   - LumberjackLauncher
-  - Realm (~> 1.0.0)
+  - Realm (= 2.8.1)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - CocoaLumberjack
+    - Crashlytics
+    - Fabric
+    - LumberjackConsole
+    - LumberjackLauncher
+    - NBUCore
+    - Realm
 
 SPEC CHECKSUMS:
   CocoaLumberjack: a6f77d987d65dc7ba86b0f84db7d0b9084f77bcb
@@ -33,8 +43,8 @@ SPEC CHECKSUMS:
   LumberjackConsole: 81bad3312fea315b8a17e53926b014f032ec1f44
   LumberjackLauncher: 7bfcc7b9533e0921f8254b82cd061a2c88108886
   NBUCore: bfdce78c97f2a9566c97082f44157547223b22a6
-  Realm: 9d5c46a4d7d27958530a8dfc58f63a99e5c2cba3
+  Realm: 2627602ad6818451f0cb8c2a6e072f7f10a5f360
 
-PODFILE CHECKSUM: 6e83643c35d73e98f80d80f1b6954ff5a54ed26b
+PODFILE CHECKSUM: 75e66f6f506dae89a21f69ce588be813c91ea388
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.5.0
